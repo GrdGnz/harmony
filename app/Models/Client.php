@@ -12,6 +12,7 @@ class Client extends Model
     protected $table = 'CLIENT';
 
     protected $fillable = [
+        'CLT_ID',
         'CLT_TYPE',
         'STATUS',
         'CLT_CODE',
@@ -19,7 +20,6 @@ class Client extends Model
         'CATEGORY',
         'MAIL_ADDRESS',
         'PHONE_NO_1',
-        'FAX_NO_1',
         'FAX_NO_1',
     ];
 
@@ -40,6 +40,6 @@ class Client extends Model
 
     public function contact()
     {
-        return $this->belongsTo(\App\Models\NameContact::class, 'CLT_ID', 'NAME_ID');
+        return $this->belongsTo(NameContact::class, 'CLT_ID', 'NAME_ID');
     }
 }

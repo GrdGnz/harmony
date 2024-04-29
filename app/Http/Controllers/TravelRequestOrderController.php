@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Models\ClientType;
 use App\Models\ClientCategory;
 use App\Models\SalesType;
+use App\Models\SalesFolder;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -73,4 +75,54 @@ class TravelRequestOrderController extends Controller
             return back()->with('error', 'Error: ' . $e->getMessage());
         }
     }
+
+    public function searchForm()
+    {
+        $salesFolders = SalesFolder::all();
+
+        return view('forms.search_tro',
+            compact(
+                'salesFolders',
+            )
+        );
+    }
+
+    public function searchClient()
+    {
+        $clients = Client::all();
+
+        return view('forms.clients_tro', compact([
+            'clients',
+        ]));
+    }
+
+
+    public function clientForm($clientId)
+    {
+        $client = Client::where('CLT_ID', $clientId)
+            ->first();
+
+        $clientTypes = ClientType::all();
+
+        $clientCategories = ClientCategory::all();
+
+        $agents = Employee::select('EMP_ID', 'FULL_NAME')
+            ->distinct()
+            ->where('STATUS', 'Y')
+            ->where('ACCESS_STATUS', 'Y')
+            ->get();
+
+        $salesTypes = SalesType::all();
+
+        return view('forms/tro',
+            compact(
+                    'client',
+                'clientTypes',
+                'clientCategories',
+                'agents',
+                'salesTypes',
+            )
+        );
+    }
+
 }

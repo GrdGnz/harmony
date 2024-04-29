@@ -1,6 +1,6 @@
 <nav class="sb-topnav navbar navbar-expand navbar-dark marsman-bg-color-primary marsman-border-b-secondary-2">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="index.html">
+    <a class="navbar-brand ps-3" href="{{ url('/') }}">
         <img src="{{ asset('images/sun.png') }}" width="50">
         <span class="h6">Marsman Mid Office</span>
     </a>
