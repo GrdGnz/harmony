@@ -51,7 +51,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script>
 
 </head>
-<body class="sb-nav-fixed txt-1">
+<body class="sb-nav-fixed txt-1 marsman-bg-color-semidark">
     <div id="app">
 
         <main>
