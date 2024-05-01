@@ -16,7 +16,7 @@
         <main class="col-lg-12 px-md-4 p-3">
 
             <!-- Form for Stored Procedure (Stock Supply) :: START -->
-            <form>
+            <form action="{{ route('add.stocks') }}" method="post">
                 @csrf
 
             <a href="{{ route('searchForm.tro') }}" class="btn marsman-btn-primary txt-1 mb-2">Back to Search</a>
@@ -51,9 +51,11 @@
                         <li class="nav-item">
                             <a class="nav-link" id="production-tab" data-bs-toggle="tab" data-bs-target="#production" role="tab" aria-controls="production" aria-selected="false">Production</a>
                         </li>
+                        @if(!isset($sf) && isset($client) && session('iNextID') == null)
                         <li>
-                            <a class="btn btn-success txt-1 mx-3">Save Changes</a>
+                            <button type="submit" class="btn btn-success txt-1 mx-3">Save Changes</button>
                         </li>
+                        @endif
                     </ul>
 
                     <!-- Tab panes -->
@@ -69,14 +71,21 @@
                                     </div>
                                     <div class="card-body marsman-bg-color-lightgray">
                                         <div class="form-group">
+
                                             <label for="travelRequestNo" class="form-label my-1 px-1">Travel Request Order No.</label>
-                                            <input type="text" id="ebcNumber" name="ebcNumber" class="form-control txt-1" disabled>
+
+                                            <input type="text" id="ebcNumber" name="ebcNumber" oninput="removeWhitespace(this)" class="form-control txt-1"
+                                                value="@if(isset($sf)){{ trim($sf->SF_NO) }}@else {{ session('iNextID') != null ? trim(session('iNextID')) : old('ebcNumber') }} @endif"
+                                                @if(session('iNextID') == null && !isset($sf)) disabled @else readonly @endif>
                                             <div class="m-2"></div>
                                             <label for="travelRequestDate" class="form-label my-1 px-1">Date</label>
-                                            <input type="date" id="ebcDate" name="ebcDate" class="form-control txt-1" disabled>
+                                            <input type="date" id="ebcDate" name="ebcDate" class="form-control txt-1"
+                                                value="@if(isset($sf)){{ trim(\Carbon\Carbon::parse($sf->SF_DATE)->format('Y-m-d')) }}@else{{ session('dtPeriod') != null ? trim(session('dtPeriod')) : old('ebcDate') }}@endif"
+                                                @if(session('dtPeriod') == null && !isset($sf)) disabled @else readonly @endif>
                                             <div class="m-2"></div>
                                             <label for="tripDate" class="form-label my-1 px-1">Trip Date</label>
-                                            <input type="date" id="tripDate" name="tripDate" class="form-control txt-1" disabled>
+                                            <input type="date" id="tripDate" name="tripDate" class="form-control txt-1"
+                                                @if(session('dtPeriod') == null && !isset($sf)) disabled @endif>
                                         </div>
                                     </div>
                                 </div>
@@ -89,14 +98,25 @@
                                     <div class="card-body marsman-bg-color-lightgray">
                                         <div class="form-group">
 
-                                            <a href="{{ route('forms.tro.clients') }}" class="btn btn-primary txt-1">Select Client</a>
+                                            @if(!isset($sf))
+                                                <a href="{{ route('forms.tro.clients') }}" class="btn btn-primary txt-1">Select Client</a>
+                                            @endif
 
                                             <div class="m-2"></div>
 
                                             <label for="clientType" class="form-label my-1 px-1">*Type</label>
                                             <select id="clientType" name="clientType" class="form-control txt-1">
                                                 @foreach($clientTypes as $types)
-                                                    <option value="{{ $types->code }}">{{ $types->name }}</option>
+                                                    <option value="{{ $types->code }}"
+                                                        @if(isset($client))
+                                                            @if($client->CLT_TYPE == $types->code)
+                                                                selected
+                                                            @endif
+                                                        @elseif(isset($sf))
+                                                            @if($sf->CLT_TYPE == $types->code)
+                                                                selected
+                                                            @endif
+                                                        @endif>{{ $types->name }}</option>
                                                 @endforeach
                                             </select>
 
@@ -104,27 +124,21 @@
 
                                             <label for="clientCode" class="form-label my-1 px-1">Code</label>
                                             <input type="text" id="clientCode" name="clientCode"
-                                            @if(isset($client->CLT_CODE))
-                                                value="{{ $client->CLT_CODE }}"
-                                            @endif
+                                            value="@if(isset($sf)){{ trim($sf->CLT_CODE) }}@elseif(isset($client)){{ $client->CLT_CODE }}@else{{ old('clientCode') }}@endif"
                                             class="form-control txt-1">
 
                                             <div class="m-2"></div>
 
                                             <label for="clientName" class="form-label my-1 px-1">*Name</label>
                                             <input type="text" id="clientName" name="clientName"
-                                            @if(isset($client->FULL_NAME))
-                                                value="{{ $client->FULL_NAME }}"
-                                            @endif
+                                            value="@if(isset($sf)){{ trim($sf->CLT_NAME) }}@elseif(isset($client)){{ $client->FULL_NAME }}@else{{ old('clientName') }}@endif"
                                             class="form-control txt-1">
 
                                             <div class="m-2"></div>
 
                                             <label for="clientAddress" class="form-label my-1 px-1">Address</label>
                                             <input type="text" id="clientAddress" name="clientAddress"
-                                                @if(isset($client->MAIL_ADDRESS))
-                                                    value="{{ trim($client->MAIL_ADDRESS) }}"
-                                                @endif
+                                            value="@if(isset($sf)){{ trim($sf->CLT_ADDRESS) }}@elseif(isset($client)){{ $client->MAIL_ADDRESS }}@else{{ old('clientAddress') }}@endif"
                                             class="form-control txt-1">
 
                                             <div class="m-2"></div>
@@ -132,7 +146,16 @@
                                             <label for="category" class="form-label my-1 px-1">*Category</label>
                                             <select name="category" id="category" class="form-control txt-1">
                                                 @foreach ($clientCategories as $category)
-                                                    <option value="{{ $category->code }}">{{ $category->name }}</option>
+                                                    <option value="{{ $types->code }}"
+                                                        @if(isset($client))
+                                                            @if($client->CATEGORY == $category->code)
+                                                                selected
+                                                            @endif
+                                                        @elseif(isset($sf))
+                                                            @if($sf->CLT_CAT == $category->code)
+                                                                selected
+                                                            @endif
+                                                        @endif>{{ $category->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -153,36 +176,28 @@
                                     <div class="form-group">
                                         <label for="contactPhoneNo" class="form-label txt-1">Phone No.</label>
                                         <input type="text" id="contactPhoneNo" name="contactPhoneNo"
-                                        @if(isset($client->contact->PHONE_NO))
-                                            value="{{ $client->contact->PHONE_NO }}"
-                                        @endif
+                                        value="@if(isset($sf)){{ trim($sf->CLT_PHONE_NO) }}@elseif(isset($client)){{ $client->contact->PHONE_NO }}@else{{ old('contactPhoneNo') }}@endif"
                                         class="form-control txt-1">
 
                                         <div class="m-2"></div>
 
                                         <label for="contactFaxNo" class="form-label txt-1">Fax No.</label>
                                         <input type="text" id="contactFaxNo" name="contactFaxNo"
-                                        @if(isset($client->contact->FAX_NO))
-                                            value="{{ $client->contact->FAX_NO }}"
-                                        @endif
+                                        value="@if(isset($sf)){{ trim($sf->CLT_FAX_NO) }}@elseif(isset($client)){{ $client->contact->FAX_NO }}@else{{ old('contactFaxNo') }}@endif"
                                         class="form-control txt-1">
 
                                         <div class="m-2"></div>
 
                                         <label for="contactEmail" class="form-label txt-1">Email</label>
                                         <input type="text" id="contactEmail" name="contactEmail"
-                                        @if(isset($client->contact->EMAIL))
-                                            value="{{ $client->contact->EMAIL }}"
-                                        @endif
+                                        value="@if(isset($sf)){{ trim($sf->EMAIL) }}@elseif(isset($client)){{ $client->contact->EMAIL }}@else{{ old('contactEmail') }}@endif"
                                         class="form-control txt-1">
 
                                         <div class="m-2"></div>
 
                                         <label for="contactName" class="form-label txt-1">Name</label>
                                         <input type="text" id="contactName" name="contactName"
-                                        @if(isset($client->contact->CONTACT_NAME))
-                                            value="{{ $client->contact->CONTACT_NAME }}"
-                                        @endif
+                                        value="@if(isset($sf)){{ trim($sf->contact->CONTACT_NAME) }}@elseif(isset($client)){{ $client->contact->CONTACT_NAME }}@else{{ old('contactEmail') }}@endif"
                                         class="form-control txt-1">
 
                                     </div>
@@ -654,6 +669,15 @@
 
     </div>
 </div>
+
+<script>
+function removeWhitespace(input) {
+    // Get the value of the input and remove leading and trailing whitespace
+    var trimmedValue = input.value.trim();
+    // Set the trimmed value back to the input
+    input.value = trimmedValue;
+}
+</script>
 
 <style>
 /* Adjustments for two-column layout on desktop */

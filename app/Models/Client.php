@@ -25,7 +25,7 @@ class Client extends Model
 
     public function category()
     {
-        return $this->belongsTo(\App\Models\ClientCategory::class, 'CATEGORY');
+        return $this->belongsTo(ClientCategory::class, 'CATEGORY', 'id');
     }
 
     public function type()
