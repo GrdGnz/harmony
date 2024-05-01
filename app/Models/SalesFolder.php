@@ -113,6 +113,9 @@ class SalesFolder extends Model
         'LAST_COMM_ITEM',
     ];
 
+    // Disable Laravel's timestamps
+    public $timestamps = false;
+
     public function contact()
     {
         return $this->belongsTo(NameContact::class, 'CLT_ID', 'NAME_ID');

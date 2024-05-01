@@ -69,9 +69,37 @@ class TravelRequestOrderController extends Controller
 
             // Execute the procedure
             if ($stmt->execute()) {
-                return back()->with('success', 'Saved')
-                    ->with('iNextID', $iNextID)
-                    ->with('dtPeriod', $dtPeriod);;
+
+                // Create a new SalesFolder record
+            $salesFolder = new SalesFolder();
+            $salesFolder->SF_NO = $iNextID;
+            $salesFolder->SF_DATE = $dtPeriod;
+            $salesFolder->DUE_DATE = $dtPeriod;
+            $salesFolder->STATUS = 'OP';
+            $salesFolder->BILL_CURR_CODE = 'PHP';
+            $salesFolder->FOREIGN_CURR_CODE = 'USD';
+            $salesFolder->BOOK_YEAR = now()->format('Y');
+            $salesFolder->CLT_TYPE = $request->input('clientType');
+            $salesFolder->CLT_CODE = $request->input('clientCode');
+            $salesFolder->CLT_NAME = $request->input('clientName');
+            $salesFolder->CLT_CAT = $request->input('category');
+            $salesFolder->CLT_ADDRESS = $request->input('clientAddress');
+            $salesFolder->CLT_CONTACT = $request->input('contactName');
+            $salesFolder->TRIP_DATE = $request->input('tripDate');
+            $salesFolder->SALES_AGENT = $request->input('salesAgentID');
+            $salesFolder->SALES_TYPE = $request->input('salesTypeID');
+            $salesFolder->BOOKED_BY = $request->input('salesAgentID');
+            $salesFolder->TICKETED_BY = $request->input('salesAgentID');
+            $salesFolder->CRT_BY = $request->input('salesAgentID');
+
+                // Save the SalesFolder record
+                if ($salesFolder->save()) {
+                    return back()->with('success', 'Saved')
+                        ->with('iNextID', $iNextID)
+                        ->with('dtPeriod', $dtPeriod);;
+                } else {
+                    return back()->with('error', 'Error saving SalesFolder record.');
+                }
             } else {
                 return back()->with('error', 'Error saving data');
             }
