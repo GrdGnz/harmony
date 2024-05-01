@@ -42,6 +42,10 @@ class TravelRequestOrderController extends Controller
     public function addStock(Request $request)
     {
         try {
+            // Retrieve the last SF_NO from the SalesFolder table
+            $lastSFNo = SalesFolder::orderBy('SF_NO', 'desc')->pluck('SF_NO')->first();
+            $latestSFNo = $lastSFNo + 1;
+
             // Get PDO connection
             $pdo = DB::connection()->getPdo();
 
@@ -49,10 +53,10 @@ class TravelRequestOrderController extends Controller
             $sql = "EXEC spGetNextMasterID @cLock = ?, @dtPeriod = ?, @sModuleCode = ?, @iNextID = ?";
 
             // Parameters to be passed to the stored procedure
-            $cLock = 'Y';
+            $cLock = 'N';
             $dtPeriod = now()->format('Y-m-d'); // Uses Laravel's helper to format date
             $sModuleCode = 'SFD';
-            $iNextID = -1; // Initial value for the output parameter
+            $iNextID = $latestSFNo; // Initial value for the output parameter
 
             // Prepare the statement
             $stmt = $pdo->prepare($sql);
@@ -65,7 +69,9 @@ class TravelRequestOrderController extends Controller
 
             // Execute the procedure
             if ($stmt->execute()) {
-                return back()->with('success', 'Data saved successfully! Next ID: ' . $iNextID);
+                return back()->with('success', 'Saved')
+                    ->with('iNextID', $iNextID)
+                    ->with('dtPeriod', $dtPeriod);;
             } else {
                 return back()->with('error', 'Error saving data');
             }
@@ -117,6 +123,34 @@ class TravelRequestOrderController extends Controller
         return view('forms/tro',
             compact(
                     'client',
+                'clientTypes',
+                'clientCategories',
+                'agents',
+                'salesTypes',
+            )
+        );
+    }
+
+    public function troForm($troNumber)
+    {
+        $sf = SalesFolder::where('SF_NO', $troNumber)
+            ->first();
+
+        $clientTypes = ClientType::all();
+
+        $clientCategories = ClientCategory::all();
+
+        $agents = Employee::select('EMP_ID', 'FULL_NAME')
+            ->distinct()
+            ->where('STATUS', 'Y')
+            ->where('ACCESS_STATUS', 'Y')
+            ->get();
+
+        $salesTypes = SalesType::all();
+
+        return view('forms/tro',
+            compact(
+                    'sf',
                 'clientTypes',
                 'clientCategories',
                 'agents',

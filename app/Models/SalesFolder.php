@@ -12,6 +12,7 @@ class SalesFolder extends Model
     protected $table = 'SALES_FOLDER';
 
     protected $fillable = [
+        'SF_NO',
         'MNL_SF_NO',
         'SF_DATE',
         'DUE_DATE',
@@ -111,4 +112,9 @@ class SalesFolder extends Model
         'LAST_MISC_ITEM',
         'LAST_COMM_ITEM',
     ];
+
+    public function contact()
+    {
+        return $this->belongsTo(NameContact::class, 'CLT_ID', 'NAME_ID');
+    }
 }

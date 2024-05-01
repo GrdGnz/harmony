@@ -54,11 +54,13 @@
                             <tr>
                                 <th>TRO No.</th>
                                 <th>Client Name</th>
+                                <th>Client Type</th>
+                                <th>Client Category</th>
                                 <th>Date Created</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="hover-color">
 
                         </tbody>
                     </table>
@@ -88,7 +90,20 @@
             "lengthChange": false,
             "columns": [
                 { "data": "SF_NO" },
-                { "data": "CLT_NAME" },
+                {
+                    // Include a link to the client detail page
+                    "data": "CLT_NAME",
+                    "render": function(data, type, row, meta) {
+                        // Extract CLT_CODE from the row data
+                        var sfno = row.SF_NO;
+                        // Generate the URL with the CLT_CODE parameter
+                        var url = "{{ route('forms.tro.sf', ':clientId') }}".replace(':clientId', sfno);
+                        // Create the anchor tag with the generated URL
+                        return '<a href="' + url + '">' + data + '</a>';
+                    }
+                },
+                { "data": "CLT_TYPE" },
+                { "data": "CLT_CAT" },
                 { "data": "SF_DATE" },
                 { "data": "STATUS" }
             ]
@@ -105,9 +120,28 @@
             $('#searchForm').find('input[type=text], input[type=date], select').val('');
             table.ajax.reload();
         });
+
+        // Adjust styling for hover effect
+        $('#salesFoldersTable tbody tr').css('cursor', 'pointer');
     });
 </script>
 
+<style>
+.no-wrap td, .no-wrap th {
+    white-space: nowrap;
+}
+.hover-color tr:hover {
+    background-color: #FFD700; /* Change to desired hover color */
+    cursor: pointer;
+    text-decoration: none;
+}
+.hover-color tr:hover a {
+    color: #fff;
+}
+tr td a {
+    color: #3d3d3d;
+}
+</style>
 
 @endsection
 
