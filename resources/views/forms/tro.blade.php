@@ -74,12 +74,12 @@
 
                                             <label for="travelRequestNo" class="form-label my-1 px-1">Travel Request Order No.</label>
 
-                                            <input type="text" id="ebcNumber" name="ebcNumber" oninput="removeWhitespace(this)" class="form-control txt-1"
+                                            <input type="text" id="travelRequestNo" name="travelRequestNo" oninput="removeWhitespace(this)" class="form-control txt-1"
                                                 value="@if(isset($sf)){{ trim($sf->SF_NO) }}@else {{ session('iNextID') != null ? trim(session('iNextID')) : old('ebcNumber') }} @endif"
                                                 @if(session('iNextID') == null && !isset($sf)) disabled @else readonly @endif>
                                             <div class="m-2"></div>
                                             <label for="travelRequestDate" class="form-label my-1 px-1">Date</label>
-                                            <input type="date" id="ebcDate" name="ebcDate" class="form-control txt-1"
+                                            <input type="date" id="travelRequestDate" name="travelRequestDate" class="form-control txt-1"
                                                 value="@if(isset($sf)){{ trim(\Carbon\Carbon::parse($sf->SF_DATE)->format('Y-m-d')) }}@else{{ session('dtPeriod') != null ? trim(session('dtPeriod')) : old('ebcDate') }}@endif"
                                                 @if(session('dtPeriod') == null && !isset($sf)) disabled @else readonly @endif>
                                             <div class="m-2"></div>
@@ -215,15 +215,15 @@
                                 </div>
                                 <div class="card-body marsman-bg-color-lightgray">
                                     <div class="form-group">
-                                        <label for="salesAgentName" class="form-label txt-1">*Sales Agent</label>
-                                        <select id="salesAgentName" name="salesAgentName" class="form-control txt-1">
+                                        <label for="salesAgentID" class="form-label txt-1">*Sales Agent</label>
+                                        <select id="salesAgentID" name="salesAgentID" class="form-control txt-1">
                                             @foreach ($agents as $agent)
                                                 <option value="{{ $agent->EMP_ID }}">{{ $agent->FULL_NAME }}</option>
                                             @endforeach
                                         </select>
                                         <div class="m-2"></div>
-                                        <label for="salesType" class="form-label txt-1">Sales Type</label>
-                                        <select id="salesType" name="salesType" class="form-control txt-1">
+                                        <label for="salesTypeID" class="form-label txt-1">Sales Type</label>
+                                        <select id="salesTypeID" name="salesTypeID" class="form-control txt-1">
                                             @foreach ($salesTypes as $salesType)
                                                 <option value="{{ $salesType->SALES_TYPE }}">{{ $salesType->SALES_DESCR }}</option>
                                             @endforeach
