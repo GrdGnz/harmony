@@ -21,6 +21,13 @@ Route::get('/forms/tro/clients', [App\Http\Controllers\TravelRequestOrderControl
 Route::get('/forms/search/tro', [App\Http\Controllers\TravelRequestOrderController::class, 'searchForm'])->name('searchForm.tro');
 Route::post('/add/stock', [App\Http\Controllers\TravelRequestOrderController::class, 'addStock'])->name('add.stocks');
 
+Route::get('/forms/tro/add-product/{troNumber}', [App\Http\Controllers\TravelRequestOrderController::class, 'addProductForm'])->name('forms.tro.add_product');
+
 //Sales Folder
 Route::get('/sales-folder/data', [App\Http\Controllers\SalesFolderController::class, 'getData'])->name('sales-folder.data');
 
+//Sales Folder Group
+Route::post('/sales-folder-group/store', [App\Http\Controllers\SalesFolderGroupController::class, 'store'])->name('sales-folder-group.store');
+
+//Sales Folder Hotel
+Route::post('/sales-folder-hotel/store', [App\Http\Controllers\SalesFolderHotelController::class, 'store'])->name('sales-folder-hotel.store');
