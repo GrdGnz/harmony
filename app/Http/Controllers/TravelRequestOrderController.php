@@ -2,14 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BookingStatus;
+use App\Models\CarCategory;
+use App\Models\CarType;
 use App\Models\Client;
-use App\Models\Employee;
-use Illuminate\Http\Request;
-use App\Models\ClientType;
 use App\Models\ClientCategory;
-use App\Models\SalesType;
+use App\Models\ClientType;
+use App\Models\Employee;
+use App\Models\Hotel;
+use App\Models\MealType;
+use App\Models\ProductCategory;
+use App\Models\ProductType;
+use App\Models\Route;
 use App\Models\SalesFolder;
+use App\Models\SalesType;
+use App\Models\Vessel;
+use App\Models\RoomCategory;
+use App\Models\RoomType;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 
@@ -72,13 +83,17 @@ class TravelRequestOrderController extends Controller
 
                 // Create a new SalesFolder record
             $salesFolder = new SalesFolder();
-            $salesFolder->SF_NO = $iNextID;
+            $salesFolder->SF_NO = '0'.$iNextID;
             $salesFolder->SF_DATE = $dtPeriod;
             $salesFolder->DUE_DATE = $dtPeriod;
+            $salesFolder->CRT_DATE = $dtPeriod;
+            $salesFolder->CREDIT_TERM = 0;
             $salesFolder->STATUS = 'OP';
+            $salesFolder->BOOK_STATUS = 'OP';
             $salesFolder->BILL_CURR_CODE = 'PHP';
             $salesFolder->FOREIGN_CURR_CODE = 'USD';
             $salesFolder->BOOK_YEAR = now()->format('Y');
+            $salesFolder->CLT_ID = $request->input('clientID');
             $salesFolder->CLT_TYPE = $request->input('clientType');
             $salesFolder->CLT_CODE = $request->input('clientCode');
             $salesFolder->CLT_NAME = $request->input('clientName');
@@ -95,7 +110,7 @@ class TravelRequestOrderController extends Controller
                 // Save the SalesFolder record
                 if ($salesFolder->save()) {
                     return back()->with('success', 'Saved')
-                        ->with('iNextID', $iNextID)
+                        ->with('iNextID', '0'.$iNextID)
                         ->with('dtPeriod', $dtPeriod);;
                 } else {
                     return back()->with('error', 'Error saving SalesFolder record.');
@@ -185,6 +200,45 @@ class TravelRequestOrderController extends Controller
                 'salesTypes',
             )
         );
+    }
+
+    public function addProductForm($troNumber)
+    {
+        $products = ProductType::all();
+        $productCategories = ProductCategory::all();
+        $routes = Route::all();
+
+        //Hotel Itinerary
+        $hotels = Hotel::all();
+        $roomTypes = RoomType::all();
+        $roomCategories = RoomCategory::all();
+        //Meals
+        $meals = MealType::all();
+
+        //Car / Transfer
+        $carTypes = CarType::all();
+        $carCategories = CarCategory::all();
+
+        //booking status
+        $bookStatus = BookingStatus::all();
+
+        //Vessel
+        $vessels = Vessel::all();
+
+        return view('forms.tro_add_product', compact(
+            'troNumber',
+            'products',
+            'routes',
+            'vessels',
+            'hotels',
+            'roomCategories',
+            'roomTypes',
+            'bookStatus',
+            'meals',
+            'carTypes',
+            'carCategories',
+            'productCategories',
+        ));
     }
 
 }

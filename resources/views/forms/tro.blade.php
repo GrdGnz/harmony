@@ -19,6 +19,12 @@
             <form action="{{ route('add.stocks') }}" method="post">
                 @csrf
 
+                @if(isset($client))
+                    <input type="hidden" id="clientID" name="clientID" value="{{ $client->CLT_ID }}">
+                @elseif(isset($sf))
+                    <input type="hidden" id="clientID" name="clientID" value="{{ $sf->CLT_ID }}">
+                @endif
+
             <a href="{{ route('searchForm.tro') }}" class="btn marsman-btn-primary txt-1 mb-2">Back to Search</a>
 
             <div class="card" id="troForm">
@@ -85,6 +91,7 @@
                                             <div class="m-2"></div>
                                             <label for="tripDate" class="form-label my-1 px-1">Trip Date</label>
                                             <input type="date" id="tripDate" name="tripDate" class="form-control txt-1"
+                                                value="@if(isset($sf)){{ trim(\Carbon\Carbon::parse($sf->SF_DATE)->format('Y-m-d')) }}@else{{ session('dtPeriod') != null ? trim(session('dtPeriod')) : old('ebcDate') }}@endif"
                                                 @if(session('dtPeriod') == null && !isset($sf)) disabled @endif>
                                         </div>
                                     </div>
@@ -197,7 +204,7 @@
 
                                         <label for="contactName" class="form-label txt-1">Name</label>
                                         <input type="text" id="contactName" name="contactName"
-                                        value="@if(isset($sf)){{ trim($sf->contact->CONTACT_NAME) }}@elseif(isset($client)){{ $client->contact->CONTACT_NAME }}@else{{ old('contactEmail') }}@endif"
+                                        value="@if(isset($sf->contact->CONTACT_NAME)){{ trim($sf->contact->CONTACT_NAME) }}@elseif(isset($client)){{ $client->contact->CONTACT_NAME }}@else{{ old('contactName') }}@endif"
                                         class="form-control txt-1">
 
                                     </div>
@@ -281,7 +288,7 @@
             <!-- TAB CONTENTS -->
             <div class="tab-content marsman-bg-color-lightgray p-3">
                 <div class="tab-pane fade show active p-3" id="products" role="tabpanel" aria-labelledby="products-tab">
-                    <div class="row">
+                    <div class="row marsman-bg-color-lightgray">
                         <table class="table table-bordered table-striped">
                             <thead class="marsman-bg-color-dark text-white">
                                 <tr>
@@ -303,12 +310,19 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="row justify-content-end w-100">
-                        <div class="col-sm-2">
-                            <button class="btn btn-success txt-1">Add</button>
+                    @if(isset($sf) || session('iNextID') != null)
+                        <div class="row justify-content-end w-100">
+                            <div class="col-sm-2">
+                                @if(isset($sf))
+                                    <a href="{{ url('forms/tro/add-product/'.$sf->SF_NO) }}" class="btn btn-success txt-1">Add</a>
+                                @elseif(session('iNextID') != null)
+                                <a href="{{ url('forms/tro/add-product/'.session('iNextID')) }}" class="btn btn-success txt-1">Add</a>
+                                @endif
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
+
 
                 <!-- TAB 2 : Client Reference -->
                 <div class="tab-pane fade marsman-bg-color-lightblue p-2" id="reference" role="tabpanel" aria-labelledby="reference-tab">
