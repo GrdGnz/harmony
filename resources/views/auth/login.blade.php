@@ -11,7 +11,7 @@
                     <span class="text-white h1 py-3">Marsman Mid Office</span>
                 </div>
 
-                <div class="card-body marsman-bg-color-lightblue">
+                <div class="card-body marsman-bg-color-lightgray">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 

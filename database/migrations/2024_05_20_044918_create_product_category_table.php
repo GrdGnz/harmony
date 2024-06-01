@@ -16,18 +16,18 @@ class CreateProductCategoryTable extends Migration
     {
         Schema::create('PRODUCT_CATEGORY', function (Blueprint $table) {
             $table->id();
-            $table->string('prod_cat');
-            $table->string('prod_name');
-            $table->boolean('status');
+            $table->string('PROD_CAT');
+            $table->string('PROD_CAT_DESCR');
+            $table->boolean('STATUS');
             $table->timestamps();
         });
 
         // Insert default values
         DB::table('PRODUCT_CATEGORY')->insert([
-            ['prod_cat' => 'A', 'prod_name' => 'AIR', 'status' => 1],
-            ['prod_cat' => 'H', 'prod_name' => 'HOTEL', 'status' => 1],
-            ['prod_cat' => 'C', 'prod_name' => 'CAR / TRANSFER', 'status' => 1],
-            ['prod_cat' => 'M', 'prod_name' => 'MISCELLANEOUS', 'status' => 1],
+            ['PROD_CAT' => 'A', 'PROD_CAT_DESCR' => 'AIR', 'STATUS' => 1],
+            ['PROD_CAT' => 'H', 'PROD_CAT_DESCR' => 'HOTEL', 'STATUS' => 1],
+            ['PROD_CAT' => 'C', 'PROD_CAT_DESCR' => 'CAR / TRANSFER', 'STATUS' => 1],
+            ['PROD_CAT' => 'M', 'PROD_CAT_DESCR' => 'MISCELLANEOUS', 'STATUS' => 1],
         ]);
     }
 

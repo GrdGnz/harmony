@@ -159,4 +159,14 @@ class SalesFolderGroup extends Model
       'DISC_AR_POSTING',
       'SUPP_COMM_AR',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(ProductType::class, 'PROD_TYPE', 'PROD_TYPE');
+    }
+
+    public function productCategory()
+    {
+        return $this->belongsTo(ProductCategory::class, 'PROD_CAT', 'PROD_CAT');
+    }
 }

@@ -12,22 +12,28 @@ class SalesFolderHotelController extends Controller
     public function store(Request $request)
     {
         try {
-
             $troNumber = $request->input('troNumber');
+            Log::info('Received troNumber:', ['troNumber' => $troNumber]);
 
             $sfGroup = SalesFolderGroup::where('sf_no', $troNumber)
-                ->orderBy('DOC_ID','desc')
+                ->orderBy('DOC_ID', 'desc')
                 ->first();
 
-            //Get Next Doc ID
-            $docId = $sfGroup->DOC_ID;
-            $nextDocId = $docId + 1;
+            if (!$sfGroup) {
+                // Get Next Doc ID
+                $docId = 1;
+            } else {
+                // Get Next Doc ID
+                $docId = $sfGroup->DOC_ID + 1;
+            }
+
+            Log::info('Next DOC_ID:', ['nextDocId' => $docId]);
 
             Log::info('Request data:', $request->all());
 
             SalesFolderHotel::create([
                 'SF_NO' => $troNumber,
-                'DOC_ID' => $nextDocId,
+                'DOC_ID' => $docId,
                 'HOTEL_CODE' => $request->input('hotelCode'),
                 'CHECKIN_DATE' => $request->input('checkInDate'),
                 'CHECKOUT_DATE' => $request->input('checkOutDate'),
@@ -46,12 +52,13 @@ class SalesFolderHotelController extends Controller
 
             return response()->json([
                 'success' => 'Hotel booking created successfully!',
-                'data' => $request,
+                'data' => $request->all(),
             ]);
 
-        } catch(\Exception $e) {
-            Log::error('Error creating SalesFolderHotel:', ['message' => $e->getMessage()]);
+        } catch (\Exception $e) {
+            Log::error('Error creating SalesFolderHotel:', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return response()->json(['error' => 'An error occurred while creating the hotel booking'], 500);
         }
     }
+
 }
