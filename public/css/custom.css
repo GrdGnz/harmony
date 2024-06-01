@@ -86,6 +86,18 @@ h1, h2, h3, h4, h5, h6, p, a, input, div {
     color: #2C3C50 !important;
 }
 
+.txt-gray1 {
+    color: #EEEEEE !important;
+}
+
+.txt-gray2 {
+    color: #DDDDDD !important;
+}
+
+.txt-gray3 {
+    color: #CCCCCC !important;
+}
+
 /* background colors */
 .marsman-bg-color-primary {
     background-color: #002366 !important;
@@ -113,6 +125,22 @@ h1, h2, h3, h4, h5, h6, p, a, input, div {
 
 .marsman-bg-color-darkgray {
     background-color: #3D3D3D !important;
+}
+
+.marsman-bg-color-gray1 {
+    background-color: #EEEEEE !important;
+}
+
+.marsman-bg-color-gray2 {
+    background-color: #DDDDDD !important;
+}
+
+.marsman-bg-color-gray3 {
+    background-color: #CCCCCC !important;
+}
+
+.marsman-bg-color-label {
+    background-color: #37474F !important;
 }
 
 /* text and link colors */
@@ -430,20 +458,20 @@ h1, h2, h3, h4, h5, h6, p, a, input, div {
 
 /* Nav */
 .nav-item .active {
-    background-color: #BDCADA !important;
-    color: #273546 !important;
+    background-color: #002366 !important;
+    color: #fff !important;
     font-weight: 400 !important;
     border-bottom: 5px solid #2C3C50 !important;
 }
 
-.nav-item button {
+.nav-item a {
     color: #273546 !important;
     border-bottom: 5px solid #273546 !important;
 }
 
-.nav-item button:hover{
-    color: #ffffff !important;
-    background-color: #273546 !important;
+.nav-item a:hover{
+    color: #002366 !important;
+    background-color: #BDCADA !important;
     border-bottom: 5px solid #2C3C50 !important;
 }
 

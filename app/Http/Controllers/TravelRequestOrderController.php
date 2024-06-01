@@ -15,6 +15,7 @@ use App\Models\ProductCategory;
 use App\Models\ProductType;
 use App\Models\Route;
 use App\Models\SalesFolder;
+use App\Models\SalesFolderGroup;
 use App\Models\SalesType;
 use App\Models\Vessel;
 use App\Models\RoomCategory;
@@ -176,20 +177,28 @@ class TravelRequestOrderController extends Controller
 
     public function troForm($troNumber)
     {
+        //Get TRO details
         $sf = SalesFolder::where('SF_NO', $troNumber)
             ->first();
 
+        //Get client types
         $clientTypes = ClientType::all();
 
+        //Get client categories
         $clientCategories = ClientCategory::all();
 
+        //Get agents
         $agents = Employee::select('EMP_ID', 'FULL_NAME')
             ->distinct()
             ->where('STATUS', 'Y')
             ->where('ACCESS_STATUS', 'Y')
             ->get();
 
+            //Get sales type
         $salesTypes = SalesType::all();
+
+        //Get existing products
+        $existingProducts = SalesFolderGroup::where('SF_NO', $troNumber)->get();
 
         return view('forms/tro',
             compact(
@@ -198,6 +207,7 @@ class TravelRequestOrderController extends Controller
                 'clientCategories',
                 'agents',
                 'salesTypes',
+                'existingProducts',
             )
         );
     }
