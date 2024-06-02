@@ -78,18 +78,18 @@
                                     <div class="card-body marsman-bg-color-lightgray">
                                         <div class="form-group">
 
-                                            <label for="travelRequestNo" class="form-label my-1 px-1">Travel Request Order No.</label>
+                                            <label for="travelRequestNo" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Travel Request Order No.</label>
 
                                             <input type="text" id="travelRequestNo" name="travelRequestNo" oninput="removeWhitespace(this)" class="form-control txt-1"
                                                 value="@if(isset($sf)){{ trim($sf->SF_NO) }}@else {{ session('iNextID') != null ? trim(session('iNextID')) : old('ebcNumber') }} @endif"
                                                 @if(session('iNextID') == null && !isset($sf)) disabled @else readonly @endif>
                                             <div class="m-2"></div>
-                                            <label for="travelRequestDate" class="form-label my-1 px-1">Date</label>
+                                            <label for="travelRequestDate" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Date</label>
                                             <input type="date" id="travelRequestDate" name="travelRequestDate" class="form-control txt-1"
                                                 value="@if(isset($sf)){{ trim(\Carbon\Carbon::parse($sf->SF_DATE)->format('Y-m-d')) }}@else{{ session('dtPeriod') != null ? trim(session('dtPeriod')) : old('ebcDate') }}@endif"
                                                 @if(session('dtPeriod') == null && !isset($sf)) disabled @else readonly @endif>
                                             <div class="m-2"></div>
-                                            <label for="tripDate" class="form-label my-1 px-1">Trip Date</label>
+                                            <label for="tripDate" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Trip Date</label>
                                             <input type="date" id="tripDate" name="tripDate" class="form-control txt-1"
                                                 value="@if(isset($sf)){{ trim(\Carbon\Carbon::parse($sf->SF_DATE)->format('Y-m-d')) }}@else{{ session('dtPeriod') != null ? trim(session('dtPeriod')) : old('ebcDate') }}@endif"
                                                 @if(session('dtPeriod') == null && !isset($sf)) disabled @endif>
@@ -111,49 +111,48 @@
 
                                             <div class="m-2"></div>
 
-                                            <label for="clientType" class="form-label my-1 px-1">*Type</label>
-                                            <select id="clientType" name="clientType" class="form-control txt-1">
-                                                @foreach($clientTypes as $types)
-                                                    <option value="{{ $types->code }}"
-                                                        @if(isset($client))
-                                                            @if($client->CLT_TYPE == $types->code)
-                                                                selected
-                                                            @endif
-                                                        @elseif(isset($sf))
-                                                            @if($sf->CLT_TYPE == $types->code)
-                                                                selected
-                                                            @endif
-                                                        @endif>{{ $types->name }}</option>
-                                                @endforeach
-                                            </select>
+                                            <label for="clientType" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">*Type</label>
+                                            @if(isset($sf->CLT_TYPE))
+                                                <input type="text" class="form-control txt-1" value="{{ $sf->clientType->name }}">
+                                                <input type="hidden" id="clientType" name="clientType" class="form-control txt-1" value="{{ $sf->CLT_TYPE }}">
+                                            @elseif (isset($client->CLT_TYPE))
+                                                <input type="text" class="form-control txt-1" value="{{ $client->type->name }}">
+                                                <input type="hidden" id="clientType" name="clientType" class="form-control  txt-1" value="{{ $client->CLT_TYPE }}">
+                                            @else
+                                                <select id="clientType" name="clientType" class="form-control form-select txt-1">
+                                                    @foreach($clientTypes as $types)
+                                                        <option value="{{ $types->code }}">{{ $types->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            @endif
 
                                             <div class="m-2"></div>
 
-                                            <label for="clientCode" class="form-label my-1 px-1">Code</label>
+                                            <label for="clientCode" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">Code</label>
                                             <input type="text" id="clientCode" name="clientCode"
                                             value="@if(isset($sf)){{ trim($sf->CLT_CODE) }}@elseif(isset($client)){{ $client->CLT_CODE }}@else{{ old('clientCode') }}@endif"
                                             class="form-control txt-1">
 
                                             <div class="m-2"></div>
 
-                                            <label for="clientName" class="form-label my-1 px-1">*Name</label>
+                                            <label for="clientName" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">*Name</label>
                                             <input type="text" id="clientName" name="clientName"
                                             value="@if(isset($sf)){{ trim($sf->CLT_NAME) }}@elseif(isset($client)){{ $client->FULL_NAME }}@else{{ old('clientName') }}@endif"
                                             class="form-control txt-1">
 
                                             <div class="m-2"></div>
 
-                                            <label for="clientAddress" class="form-label my-1 px-1">Address</label>
+                                            <label for="clientAddress" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">Address</label>
                                             <input type="text" id="clientAddress" name="clientAddress"
                                             value="@if(isset($sf)){{ trim($sf->CLT_ADDRESS) }}@elseif(isset($client)){{ $client->MAIL_ADDRESS }}@else{{ old('clientAddress') }}@endif"
                                             class="form-control txt-1">
 
                                             <div class="m-2"></div>
 
-                                            <label for="category" class="form-label my-1 px-1">*Category</label>
+                                            <label for="category" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">*Category</label>
                                             <select name="category" id="category" class="form-control txt-1">
                                                 @foreach ($clientCategories as $category)
-                                                    <option value="{{ $types->code }}"
+                                                    <option value="{{ $category->code }}"
                                                         @if(isset($client))
                                                             @if($client->CATEGORY == $category->code)
                                                                 selected
@@ -181,30 +180,30 @@
                                 </div>
                                 <div class="card-body marsman-bg-color-lightgray">
                                     <div class="form-group">
-                                        <label for="contactPhoneNo" class="form-label txt-1">Phone No.</label>
+                                        <label for="contactPhoneNo" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">Phone No.</label>
                                         <input type="text" id="contactPhoneNo" name="contactPhoneNo"
-                                        value="@if(isset($sf)){{ trim($sf->CLT_PHONE_NO) }}@elseif(isset($client)){{ $client->contact->PHONE_NO }}@else{{ old('contactPhoneNo') }}@endif"
+                                        value="@if(isset($sf->CLT_PHONE_NO)){{ trim($sf->CLT_PHONE_NO) }}@elseif(isset($client->contact->PHONE_NO)){{ $client->contact->PHONE_NO }}@else{{ old('contactPhoneNo') }}@endif"
                                         class="form-control txt-1">
 
                                         <div class="m-2"></div>
 
-                                        <label for="contactFaxNo" class="form-label txt-1">Fax No.</label>
+                                        <label for="contactFaxNo" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">Fax No.</label>
                                         <input type="text" id="contactFaxNo" name="contactFaxNo"
-                                        value="@if(isset($sf)){{ trim($sf->CLT_FAX_NO) }}@elseif(isset($client)){{ $client->contact->FAX_NO }}@else{{ old('contactFaxNo') }}@endif"
+                                        value="@if(isset($sf->CLT_FAX_NO)){{ trim($sf->CLT_FAX_NO) }}@elseif(isset($client->contact->FAX_NO)){{ $client->contact->FAX_NO }}@else{{ old('contactFaxNo') }}@endif"
                                         class="form-control txt-1">
 
                                         <div class="m-2"></div>
 
-                                        <label for="contactEmail" class="form-label txt-1">Email</label>
+                                        <label for="contactEmail" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">Email</label>
                                         <input type="text" id="contactEmail" name="contactEmail"
-                                        value="@if(isset($sf)){{ trim($sf->EMAIL) }}@elseif(isset($client)){{ $client->contact->EMAIL }}@else{{ old('contactEmail') }}@endif"
+                                        value="@if(isset($sf->EMAIL)){{ trim($sf->EMAIL) }}@elseif(isset($client->contact->EMAIL)){{ $client->contact->EMAIL }}@else{{ old('contactEmail') }}@endif"
                                         class="form-control txt-1">
 
                                         <div class="m-2"></div>
 
-                                        <label for="contactName" class="form-label txt-1">Name</label>
+                                        <label for="contactName" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">Name</label>
                                         <input type="text" id="contactName" name="contactName"
-                                        value="@if(isset($sf->contact->CONTACT_NAME)){{ trim($sf->contact->CONTACT_NAME) }}@elseif(isset($client)){{ $client->contact->CONTACT_NAME }}@else{{ old('contactName') }}@endif"
+                                        value="@if(isset($sf->contact->CONTACT_NAME)){{ trim($sf->contact->CONTACT_NAME) }}@elseif(isset($client->contact->CONTACT_NAME)){{ $client->contact->CONTACT_NAME }}@else{{ old('contactName') }}@endif"
                                         class="form-control txt-1">
 
                                     </div>
@@ -222,14 +221,14 @@
                                 </div>
                                 <div class="card-body marsman-bg-color-lightgray">
                                     <div class="form-group">
-                                        <label for="salesAgentID" class="form-label txt-1">*Sales Agent</label>
+                                        <label for="salesAgentID" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">*Sales Agent</label>
                                         <select id="salesAgentID" name="salesAgentID" class="form-control txt-1">
                                             @foreach ($agents as $agent)
                                                 <option value="{{ $agent->EMP_ID }}">{{ $agent->FULL_NAME }}</option>
                                             @endforeach
                                         </select>
                                         <div class="m-2"></div>
-                                        <label for="salesTypeID" class="form-label txt-1">Sales Type</label>
+                                        <label for="salesTypeID" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">Sales Type</label>
                                         <select id="salesTypeID" name="salesTypeID" class="form-control txt-1">
                                             @foreach ($salesTypes as $salesType)
                                                 <option value="{{ $salesType->SALES_TYPE }}">{{ $salesType->SALES_DESCR }}</option>
@@ -329,29 +328,29 @@
                     <div class="tab-pane fade marsman-bg-color-lightblue p-2" id="reference" role="tabpanel" aria-labelledby="reference-tab">
                         <div class="d-flex col-md-12">
                             <div class="form-group col-md-6 p-2">
-                                <label for="xoNo" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">XO No.</label>
+                                <label for="xoNo" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">XO No.</label>
                                 <input type="text" id="xoNo" name="xoNo" class="form-control txt-1 mb-3">
-                                <label for="xoDate" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">XO Date</label>
+                                <label for="xoDate" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">XO Date</label>
                                 <input type="date" id="xoDate" name="xoDate" class="form-control txt-1 mb-3">
-                                <label for="traNo" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">TRA No.</label>
+                                <label for="traNo" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">TRA No.</label>
                                 <input type="text" id="traNo" name="traNo" class="form-control txt-1 mb-3">
-                                <label for="dueDate" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Due Date</label>
+                                <label for="dueDate" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Due Date</label>
                                 <input type="date" id="dueDate" name="dueDate" class="form-control txt-1">
                             </div>
                             <div class="form-group col-md-6 p-2">
-                                <label for="costCenter" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Cost Center</label>
+                                <label for="costCenter" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Cost Center</label>
                                 <select class="form-select txt-1 mb-3" id="costCenter" name="costCenter">
                                 </select>
-                                <label for="transDept" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Transmittal Department</label>
+                                <label for="transDept" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Transmittal Department</label>
                                 <select class="form-select txt-1 mb-3" id="transDept" name="transDept">
                                 </select>
-                                <label for="contact" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Contact</label>
+                                <label for="contact" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Contact</label>
                                 <input type="text" id="contact" name="contact" class="form-control txt-1 mb-3">
-                                <label for="phoneNo" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Phone No.</label>
+                                <label for="phoneNo" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Phone No.</label>
                                 <input type="text" id="phoneNo" name="phoneNo" class="form-control txt-1 mb-3">
-                                <label for="faxNo" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Fax No.</label>
+                                <label for="faxNo" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Fax No.</label>
                                 <input type="text" id="faxNo" name="faxNo" class="form-control txt-1 mb-3">
-                                <label for="email" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Email</label>
+                                <label for="email" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Email</label>
                                 <input type="text" id="email" name="email" class="form-control txt-1 mb-3">
                             </div>
                         </div>
@@ -360,58 +359,58 @@
                     <div class="tab-pane fade marsman-bg-color-lightblue p-2" id="billing" role="tabpanel" aria-labelledby="billing-tab">
                         <div class="d-flex col-md-12">
                             <div class="form-group col-md-6 p-2">
-                                <label for="creditTerm" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Credit Term</label>
+                                <label for="creditTerm" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Credit Term</label>
                                 <select class="form-select txt-1 mb-3" id="creditTerm" name="creditTerm">
                                 </select>
-                                <label for="daysDue" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Days Due</label>
+                                <label for="daysDue" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Days Due</label>
                                 <input type="text" id="daysDue" name="daysDue" class="form-control txt-1 mb-3">
                                 <div class="row col-md-12">
                                     <div class="col-auto">
-                                        <label for="currency" class="marsman-bg-color-dark text-white p-2 m-0 rounded-top">Currency</label>
+                                        <label for="currency" class="marsman-bg-color-label text-white p-2 m-0 rounded-top">Currency</label>
                                         <input type="text" id="currency" name="currency" class="form-control txt-1 mb-3 col-md-2">
                                     </div>
                                     <div class="col">
-                                        <label for="currencyAmount" class="marsman-bg-color-dark text-white p-2 m-0 rounded-top">Currency Amount</label>
+                                        <label for="currencyAmount" class="marsman-bg-color-label text-white p-2 m-0 rounded-top">Currency Amount</label>
                                         <input type="text" id="currencyAmount" name="currencyAmount" class="form-control txt-1 mb-3 col-md-4">
                                     </div>
                                 </div>
-                                <label for="troAmount" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">TRO Amount</label>
+                                <label for="troAmount" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">TRO Amount</label>
                                 <input type="text" id="troAmount" name="troAmount" class="form-control txt-1 mb-3">
-                                <label for="invoiceoAmount" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Invoice Amount</label>
+                                <label for="invoiceoAmount" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Invoice Amount</label>
                                 <input type="text" id="invoiceoAmount" name="invoiceoAmount" class="form-control txt-1 mb-3">
-                                <label for="orNumber" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">OR No.</label>
+                                <label for="orNumber" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">OR No.</label>
                                 <input type="text" id="orNumber" name="orNumber" class="form-control txt-1 mb-3">
                             </div>
                             <div class="form-group col-md-6 p-2">
-                                <label for="paymentType" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Payment Type</label>
+                                <label for="paymentType" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Payment Type</label>
                                 <select class="form-select txt-1 mb-3" id="paymentType" name="paymentType">
                                 </select>
-                                <label for="cardType" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Card Type</label>
+                                <label for="cardType" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Card Type</label>
                                 <select class="form-select txt-1 mb-3" id="cardType" name="cardType">
                                 </select>
-                                <label for="cardNo" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Card No.</label>
+                                <label for="cardNo" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Card No.</label>
                                 <input type="text" id="cardNo" name="cardNo" class="form-control txt-1 mb-3">
-                                <label for="cardHolder" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Card Holder Name</label>
+                                <label for="cardHolder" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Card Holder Name</label>
                                 <input type="text" id="cardHolder" name="cardHolder" class="form-control txt-1 mb-3">
                                 <div class="row col-md-12">
                                     <div class="col">
-                                        <label for="cardIssueDate" class="marsman-bg-color-dark text-white p-2 m-0 rounded-top">Issue Date</label>
+                                        <label for="cardIssueDate" class="marsman-bg-color-label text-white p-2 m-0 rounded-top">Issue Date</label>
                                         <input type="date" id="cardIssueDate" name="cardIssueDate" class="form-control txt-1 mb-3 col-md-4">
                                     </div>
                                     <div class="col">
-                                        <label for="cardExpiryDate" class="marsman-bg-color-dark text-white p-2 m-0 rounded-top">Expiry Date</label>
+                                        <label for="cardExpiryDate" class="marsman-bg-color-label text-white p-2 m-0 rounded-top">Expiry Date</label>
                                         <input type="date" id="cardExpiryDate" name="cardExpiryDate" class="form-control txt-1 mb-3 col-md-4">
                                     </div>
                                 </div>
-                                <label for="bank" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Bank</label>
+                                <label for="bank" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Bank</label>
                                 <input type="text" id="bank" name="bank" class="form-control txt-1 mb-3">
                                 <div class="row col-md-12">
                                     <div class="col-auto">
-                                        <label for="surcharge" class="marsman-bg-color-dark text-white p-2 m-0 rounded-top">Surcharge</label>
+                                        <label for="surcharge" class="marsman-bg-color-label text-white p-2 m-0 rounded-top">Surcharge</label>
                                         <input type="text" id="surcharge" name="surcharge" class="form-control txt-1 mb-3 col-md-4">
                                     </div>
                                     <div class="col">
-                                        <label for="approvalCode" class="marsman-bg-color-dark text-white p-2 m-0 rounded-top">Approval Code</label>
+                                        <label for="approvalCode" class="marsman-bg-color-label text-white p-2 m-0 rounded-top">Approval Code</label>
                                         <input type="text" id="approvalCode" name="approvalCode" class="form-control txt-1 mb-3 col-md-4">
                                     </div>
                                 </div>
@@ -422,38 +421,38 @@
                     <div class="tab-pane fade marsman-bg-color-lightblue p-2" id="mis" role="tabpanel" aria-labelledby="mis-tab">
                         <div class="d-flex col-md-12">
                             <div class="form-group col-md-6 p-2">
-                                <label for="prefPNR" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Pref. PNR</label>
+                                <label for="prefPNR" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Pref. PNR</label>
                                 <input type="text" id="prefPNR" name="prefPNR" class="form-control txt-1 mb-3">
-                                <label for="prefPax" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Pref. Pax</label>
+                                <label for="prefPax" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Pref. Pax</label>
                                 <input type="text" id="prefPax" name="prefPax" class="form-control txt-1 mb-3">
-                                <label for="department" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Department</label>
+                                <label for="department" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Department</label>
                                 <select class="form-select txt-1 mb-3" id="department" name="department">
                                 </select>
-                                <label for="branch" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Branch</label>
+                                <label for="branch" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Branch</label>
                                 <select class="form-select txt-1 mb-3" id="branch" name="branch">
                                 </select>
-                                <label for="workgroup" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Workgroup</label>
+                                <label for="workgroup" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Workgroup</label>
                                 <select class="form-select txt-1 mb-3" id="workgroup" name="workgroup">
                                 </select>
                                 <div class="row col-md-12">
                                     <div class="col-auto">
-                                        <label for="roeCurrency" class="marsman-bg-color-dark text-white p-2 m-0 rounded-top">ROE Currency</label>
+                                        <label for="roeCurrency" class="marsman-bg-color-label text-white p-2 m-0 rounded-top">ROE Currency</label>
                                         <input type="text" id="roeCurrency" name="roeCurrency" class="form-control txt-1 mb-3 col-md-2">
                                     </div>
                                     <div class="col">
-                                        <label for="roeAmount" class="marsman-bg-color-dark text-white p-2 m-0 rounded-top">ROE Amount</label>
+                                        <label for="roeAmount" class="marsman-bg-color-label text-white p-2 m-0 rounded-top">ROE Amount</label>
                                         <input type="text" id="roeAmount" name="roeAmount" class="form-control txt-1 mb-3 col-md-4">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group col-md-6 p-2">
-                                <label for="bookedBy" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Nooked By</label>
+                                <label for="bookedBy" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Nooked By</label>
                                 <select class="form-select txt-1 mb-3" id="bookedBy" name="bookedBy">
                                 </select>
-                                <label for="issuedBy" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Issued By</label>
+                                <label for="issuedBy" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Issued By</label>
                                 <select class="form-select txt-1 mb-3" id="issuedBy" name="issuedBy">
                                 </select>
-                                <label for="secondaryStatus" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Secondary Status</label>
+                                <label for="secondaryStatus" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Secondary Status</label>
                                 <select class="form-select txt-1 mb-3" id="secondaryStatus" name="secondaryStatus">
                                 </select>
                             </div>
@@ -646,21 +645,21 @@
                         <div class="d-flex col-md-12">
                             <div class="form-group col-md-6 p-2">
                                 <div class="row p-2">
-                                    <label for="troRemarks" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Travel Request Order</label>
+                                    <label for="troRemarks" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Travel Request Order</label>
                                     <textarea id="troRemarks" name="troRemarks" class="form-control"></textarea>
                                 </div>
                                 <div class="row p-2">
-                                    <label for="eoRemarks" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Travel Request Order</label>
+                                    <label for="eoRemarks" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Travel Request Order</label>
                                     <textarea id="eoRemarks" name="eoRemarks" class="form-control"></textarea>
                                 </div>
                             </div>
                             <div class="form-group col-md-6 p-2">
                                 <div class="row p-2">
-                                    <label for="invRemarks" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Travel Request Order</label>
+                                    <label for="invRemarks" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Travel Request Order</label>
                                     <textarea id="invRemarks" name="invRemarks" class="form-control"></textarea>
                                 </div>
                                 <div class="row p-2">
-                                    <label for="caRemarks" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Travel Request Order</label>
+                                    <label for="caRemarks" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Travel Request Order</label>
                                     <textarea id="caRemarks" name="caRemarks" class="form-control"></textarea>
                                 </div>
                             </div>

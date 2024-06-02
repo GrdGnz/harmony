@@ -11,6 +11,8 @@ class SalesFolderGroup extends Model
 
     protected $table = 'SALES_FOLDER_GROUP';
 
+    public $timestamps = false; // Disable timestamps
+
     protected $fillable = [
       'SF_NO',
       'DOC_ID',

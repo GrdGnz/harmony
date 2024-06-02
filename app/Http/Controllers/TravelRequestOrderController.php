@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Airline;
 use App\Models\BookingStatus;
 use App\Models\CarCategory;
 use App\Models\CarType;
+use App\Models\City;
 use App\Models\Client;
 use App\Models\ClientCategory;
 use App\Models\ClientType;
@@ -13,16 +15,19 @@ use App\Models\Hotel;
 use App\Models\MealType;
 use App\Models\ProductCategory;
 use App\Models\ProductType;
+use App\Models\RoomCategory;
+use App\Models\RoomType;
 use App\Models\Route;
 use App\Models\SalesFolder;
 use App\Models\SalesFolderGroup;
 use App\Models\SalesType;
+use App\Models\ServiceClass;
 use App\Models\Vessel;
-use App\Models\RoomCategory;
-use App\Models\RoomType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Log;
 
 
 class TravelRequestOrderController extends Controller
@@ -177,6 +182,19 @@ class TravelRequestOrderController extends Controller
 
     public function troForm($troNumber)
     {
+        //Get current DOC ID
+        $sfGroup = SalesFolderGroup::where('sf_no', $troNumber)
+            ->orderBy('DOC_ID', 'desc')
+            ->first();
+
+        if (!$sfGroup) {
+            // Get Next Doc ID
+            $docId = 1;
+        } else {
+            // Get Next Doc ID
+            $docId = $sfGroup->DOC_ID + 1;
+        }
+
         //Get TRO details
         $sf = SalesFolder::where('SF_NO', $troNumber)
             ->first();
@@ -203,6 +221,7 @@ class TravelRequestOrderController extends Controller
         return view('forms/tro',
             compact(
                     'sf',
+                    'docId',
                 'clientTypes',
                 'clientCategories',
                 'agents',
@@ -214,12 +233,37 @@ class TravelRequestOrderController extends Controller
 
     public function addProductForm($troNumber)
     {
+        //Create temp table for Air Itinerary
+        $this->createTemporaryAirTable();
+
+        //Clear manually created Air itineraries
+        $this->truncateTemporaryAirTable();
+
+        //Get current DOC ID
+        $sfGroup = SalesFolderGroup::where('sf_no', $troNumber)
+            ->orderBy('DOC_ID', 'desc')
+            ->first();
+
+        if (!$sfGroup) {
+            // Get Next Doc ID
+            $docId = 1;
+        } else {
+            // Get Next Doc ID
+            $docId = $sfGroup->DOC_ID + 1;
+        }
+
+        //Products
         $products = ProductType::all();
         $productCategories = ProductCategory::all();
         $routes = Route::all();
 
+        //Air Itinerary
+        $airlines = Airline::orderBy('AL_DESCR', 'asc')->get();
+        $serviceClasses = ServiceClass::all();
+        $cities = City::orderBy('CITY_DESCR','asc')->get();
+
         //Hotel Itinerary
-        $hotels = Hotel::all();
+        $hotels = Hotel::orderBy('HOTEL_DESCR', 'asc')->get();
         $roomTypes = RoomType::all();
         $roomCategories = RoomCategory::all();
         //Meals
@@ -237,7 +281,11 @@ class TravelRequestOrderController extends Controller
 
         return view('forms.tro_add_product', compact(
             'troNumber',
+            'docId',
             'products',
+            'airlines',
+            'serviceClasses',
+            'cities',
             'routes',
             'vessels',
             'hotels',
@@ -251,4 +299,47 @@ class TravelRequestOrderController extends Controller
         ));
     }
 
+    public function createTemporaryAirTable()
+    {
+        try {
+            // Check if the temporary table already exists
+            if (!Schema::hasTable('##temp_sales_folder_air')) {
+                Log::info('Creating temporary table ##temp_sales_folder_air...');
+
+                // Create the temporary table manually with fields
+                Schema::create('##temp_sales_folder_air', function($table) {
+                    $table->string('SF_NO');
+                    $table->integer('DOC_ID');
+                    $table->string('AL_CODE');
+                    $table->string('FLIGHT_NUM')->nullable();
+                    $table->string('SERVICE_CLASS')->nullable();
+                    $table->string('DEPT_CITY')->nullable();
+                    $table->date('DEPT_DATE')->nullable();
+                    $table->time('DEPT_TIME')->nullable();
+                    $table->string('ARVL_CITY')->nullable();
+                    $table->date('ARVL_DATE')->nullable();
+                    $table->time('ARVL_TIME')->nullable();
+                    // Add more columns as needed
+                });
+
+                Log::info('Temporary table ##temp_sales_folder_air created.');
+            } else {
+                Log::info('Temporary table ##temp_sales_folder_air already exists.');
+            }
+        } catch (\Exception $e) {
+            Log::error('Error creating temporary table: ' . $e->getMessage());
+        }
+    }
+
+    public function truncateTemporaryAirTable()
+    {
+        try {
+            DB::table('TEMP_SALES_FOLDER_AIR')->truncate();
+            Log::info('TEMP_SALES_FOLDER_AIR table truncated.');
+            return response()->json(['message' => 'TEMP_SALES_FOLDER_AIR table truncated.'], 200);
+        } catch (\Exception $e) {
+            Log::error('Error truncating TEMP_SALES_FOLDER_AIR table: ' . $e->getMessage());
+            return response()->json(['message' => 'Error truncating TEMP_SALES_FOLDER_AIR table.'], 500);
+        }
+    }
 }

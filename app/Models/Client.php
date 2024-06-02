@@ -30,12 +30,12 @@ class Client extends Model
 
     public function type()
     {
-        return $this->belongsTo(\App\Models\ClientType::class, 'CLT_TYPE');
+        return $this->belongsTo(ClientType::class, 'CLT_TYPE', 'code');
     }
 
     public function salesAgent()
     {
-        return $this->belongsTo(\App\Models\Employee::class, 'AGENT_ASSIGNED', 'EMP_ID');
+        return $this->belongsTo(Employee::class, 'AGENT_ASSIGNED', 'EMP_ID');
     }
 
     public function contact()

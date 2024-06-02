@@ -13,19 +13,12 @@ class SalesFolderHotelController extends Controller
     {
         try {
             $troNumber = $request->input('troNumber');
+            $docId = $request->input('docId');
             Log::info('Received troNumber:', ['troNumber' => $troNumber]);
 
             $sfGroup = SalesFolderGroup::where('sf_no', $troNumber)
                 ->orderBy('DOC_ID', 'desc')
                 ->first();
-
-            if (!$sfGroup) {
-                // Get Next Doc ID
-                $docId = 1;
-            } else {
-                // Get Next Doc ID
-                $docId = $sfGroup->DOC_ID + 1;
-            }
 
             Log::info('Next DOC_ID:', ['nextDocId' => $docId]);
 
@@ -48,6 +41,8 @@ class SalesFolderHotelController extends Controller
                 'MEAL_CODE_3' => $request->input('hotelDinner'),
                 'OTHER_SERVICE' => $request->input('otherServices'),
                 'REMARKS' => $request->input('hotelRemarks'),
+                'ORIGIN' => 'M',
+                'UPDATE_SOURCE' => 'M',
             ]);
 
             return response()->json([
