@@ -120,4 +120,9 @@ class SalesFolder extends Model
     {
         return $this->belongsTo(NameContact::class, 'CLT_ID', 'NAME_ID');
     }
+
+    public function clientType()
+    {
+        return $this->belongsTo(ClientType::class, 'CLT_TYPE', 'code');
+    }
 }

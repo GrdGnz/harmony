@@ -27,7 +27,17 @@ Route::get('/forms/tro/add-product/{troNumber}', [App\Http\Controllers\TravelReq
 Route::get('/sales-folder/data', [App\Http\Controllers\SalesFolderController::class, 'getData'])->name('sales-folder.data');
 
 //Sales Folder Group
-Route::post('/sales-folder-group/store', [App\Http\Controllers\SalesFolderGroupController::class, 'store'])->name('sales-folder-group.store');
+    //Store data
+    Route::post('/sales-folder-group/store', [App\Http\Controllers\SalesFolderGroupController::class, 'store'])->name('sales-folder-group.store');
 
 //Sales Folder Hotel
-Route::post('/sales-folder-hotel/store', [App\Http\Controllers\SalesFolderHotelController::class, 'store'])->name('sales-folder-hotel.store');
+    //Store data
+    Route::post('/sales-folder-hotel/store', [App\Http\Controllers\SalesFolderHotelController::class, 'store'])->name('sales-folder-hotel.store');
+
+//Sales Folder Air
+    //Store data
+    Route::post('/sales-folder-air/tempdata/store', [App\Http\Controllers\SalesFolderAirController::class, 'storeTemporaryData'])->name('sales-folder-air.tempdata.store');
+    //Truncate temporary table of Air itinerary
+    Route::post('/truncate-temp-air-data', [App\Http\Controllers\SalesFolderAirController::class, 'truncateTable'])->name('sales-folder-air.tempdata.truncate');
+    //Transfer temp data to Sales Folder Air
+    Route::post('/transfer-temp-data', [App\Http\Controllers\SalesFolderAirController::class, 'transferData'])->name('sales-folder-air.tempdata.transfer');
