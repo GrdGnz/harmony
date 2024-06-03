@@ -1576,7 +1576,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                    alert('Sales Folder Group saved successfully');
+                    alert('Product group saved successfully');
                     //if Air product is selected
                     if ($('#productCategory').val() === 'A') {
                         transferAirTempData();
@@ -1587,7 +1587,7 @@
                     }
                 },
                 error: function(response) {
-                    alert('Failed to save Sales Folder Group');
+                    alert('Failed to save product group');
                 }
             });
         }

@@ -46,7 +46,7 @@ class SalesFolderHotelController extends Controller
             ]);
 
             return response()->json([
-                'success' => 'Hotel booking created successfully!',
+                'success' => 'Hotel product created successfully!',
                 'data' => $request->all(),
             ]);
 
