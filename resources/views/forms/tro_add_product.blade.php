@@ -581,10 +581,6 @@
                                     </div>
                                 </div>
 
-                                <div class="d-flex justify-content-end mt-2">
-                                    <button class="btn btn-primary txt-1" id="addHotelItinerary">Add</button>
-                                </div>
-
                             </div>
                         </div>
 
@@ -1431,7 +1427,7 @@
         });
 
         //Add Hotel Itinerary
-        $('#addHotelItinerary').on('click', function() {
+        function addHotelProduct() {
             var formData = {
                 troNumber: $('#troNumber').val(),
                 docId: $('#docId').val(),
@@ -1461,6 +1457,12 @@
                 success: function(response) {
                     console.log(response.data);
                     alert(response.success);
+
+                    // Redirect to the specified route
+                    var troNumber = $('#troNumber').val();
+                    var redirectUrl = '{{ route("forms.tro.sf", ":troNumber") }}';
+                    redirectUrl = redirectUrl.replace(':troNumber', troNumber);
+                    window.location.href = redirectUrl;
                 },
                 error: function(response) {
                     var errors = response.responseJSON.errors;
@@ -1470,7 +1472,7 @@
                     });
                 }
             });
-        });
+        }
 
         // Add Air Itinerary segment
         $('#addAirItinerary').click(function() {
@@ -1575,7 +1577,14 @@
                 },
                 success: function(response) {
                     alert('Sales Folder Group saved successfully');
-                    transferTempData();
+                    //if Air product is selected
+                    if ($('#productCategory').val() === 'A') {
+                        transferAirTempData();
+                    }
+
+                    if ($('#productCategory').val() === 'H') {
+                        addHotelProduct();
+                    }
                 },
                 error: function(response) {
                     alert('Failed to save Sales Folder Group');
@@ -1583,7 +1592,7 @@
             });
         }
 
-        function transferTempData() {
+        function transferAirTempData() {
             $.ajax({
                 url: '{{ route('sales-folder-air.tempdata.transfer') }}',
                 type: 'POST',
