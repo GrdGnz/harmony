@@ -39,7 +39,7 @@ class SalesFolderAirController extends Controller
             Log::info('Retrieved data from TEMP_SALES_FOLDER_AIR table: ' . json_encode($tempData));
 
             // Return a response
-            return response()->json(['message' => 'Added Air Segment Manually', 'data' => $tempData]);
+            return response()->json(['message' => 'Air product created successfully!', 'data' => $tempData]);
         } catch (\Exception $e) {
             Log::error('Error inserting data into TEMP_SALES_FOLDER_AIR table: ' . $e->getMessage());
             return response()->json(['message' => 'Error adding Air Segment'], 500);
