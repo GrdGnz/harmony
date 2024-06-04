@@ -208,7 +208,7 @@
                                                 <div class="form-group mt-2">
                                                     <label for="salesTax" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Taxes</label>
                                                     <input type="number" class="form-control txt-1 p-2" id="salesTax" name="salesTax" value="0">
-                                      0          </div>
+                                                </div>
                                             </div>
                                             <div class="col-md-12 mt-2">
                                                 <div class="form-group">
@@ -597,7 +597,12 @@
                                             <div class="form-group">
                                                 <label for="miscType" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">*Type</label>
                                                 <select class="form-control form-select txt-1" id="miscType" name="miscType">
-                                                    <option></option>
+                                                    <option value="" selected>-- Select Type --</option>
+                                                    @if(isset($miscRates))
+                                                        @foreach ($miscRates as $type)
+                                                            <option value="{{ $type->MISC_CODE }}">{{ $type->MISC_DESCR }}</option>
+                                                        @endforeach
+                                                    @endif
                                                 </select>
                                             </div>
                                             <div class="form-group mt-2">
@@ -607,13 +612,23 @@
                                             <div class="form-group mt-2">
                                                 <label for="miscServiceClass" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Service Class</label>
                                                 <select class="form-control form-select txt-1" id="miscServiceClass" name="miscServiceClass">
-                                                    <option></option>
+                                                    <option value="" selected>-- Select Service Class --</option>
+                                                    @if(isset($serviceClasses))
+                                                        @foreach ($serviceClasses as $service)
+                                                            <option value="{{ $service->SRVC_CLASS }}">{{ $service->SRVC_DESCR }}</option>
+                                                        @endforeach
+                                                    @endif
                                                 </select>
                                             </div>
                                             <div class="form-group mt-2">
                                                 <label for="miscStatus" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Status</label>
                                                 <select class="form-control form-select txt-1" id="miscStatus" name="miscStatus">
-                                                    <option></option>
+                                                    <option value="" selected>-- Select Status --</option>
+                                                    @if(isset($bookStatus))
+                                                        @foreach ($bookStatus as $status)
+                                                            <option value="{{ $status->BK_CODE }}">{{ $status->BK_DESCR }}</option>
+                                                        @endforeach
+                                                    @endif
                                                 </select>
                                             </div>
                                             <div class="form-group mt-2">
@@ -641,7 +656,12 @@
                                             <div class="form-group mx-2">
                                                 <label for="procCenter" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Proc. Center</label>
                                                 <select class="form-control form-select txt-1" id="procCenter" name="procCenter">
-                                                    <option></option>
+                                                    <option value="" selected>-- Select Processing Center --</option>
+                                                    @if(isset($processingCenters))
+                                                        @foreach ($processingCenters as $proc)
+                                                            <option value="{{ $proc->PROC_CODE }}">{{ $proc->PROC_DESCR }}</option>
+                                                        @endforeach
+                                                    @endif
                                                 </select>
                                             </div>
                                             <div class="form-group mx-2 mt-2">
@@ -658,11 +678,11 @@
                                             </div>
                                             <div class="form-group mx-2 mt-2">
                                                 <label for="miscConfNo" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Confirmation Number</label>
-                                                <input type="text" class="form-control form-select txt-1" id="miscConfNo" name="miscConfNo">
+                                                <input type="text" class="form-control txt-1" id="miscConfNo" name="miscConfNo">
                                             </div>
                                             <div class="form-group mx-2 mt-2">
                                                 <label for="miscPaxRefNo" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Passenger Reference Number</label>
-                                                <input type="text" class="form-control form-select txt-1" id="miscPaxRefNo" name="miscPaxRefNo">
+                                                <input type="text" class="form-control txt-1" id="miscPaxRefNo" name="miscPaxRefNo">
                                             </div>
                                         </div>
                                     </div>
@@ -683,65 +703,101 @@
                                         <div class="col-md-6 p-1">
 
                                             <div class="card">
-                                                <div class="card-header m-0 p-0">
+                                                <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
                                                     <p class="mx-2 my-2">{{ __('CAR DETAILS') }}</p>
                                                 </div>
-                                                <div class="card-body">
+                                                <div class="card-body marsman-bg-color-gray1">
                                                     <div class="form-group">
-                                                        <label for="carProvider" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Provider</label>
+                                                        <label for="carProvider" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Provider</label>
                                                         <select class="form-control form-select txt-1" id="carProvider" name="carProvider">
-                                                            <option></option>
+                                                            <option value="" selected>-- Choose Provider --</option>
+                                                            @if (isset($carSupplier))
+                                                                @foreach ($carSupplier as $supplier)
+                                                                    <option value="{{ $supplier->SUPP_ID }}">{{ $supplier->SUPP_NAME }}</option>
+                                                                @endforeach
+                                                            @endif
                                                         </select>
                                                     </div>
                                                     <div class="form-group mt-2">
-                                                        <label for="carType" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">*Type</label>
+                                                        <label for="carType" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Type</label>
                                                         <select class="form-control form-select txt-1" id="carType" name="carType">
-                                                            <option></option>
+                                                            <option value="" selected>-- Select Type --</option>
+                                                            @if(isset($carTypes))
+                                                                @foreach ($carTypes as $type)
+                                                                    <option value="{{ $type->CAR_CODE }}">{{ $type->CAR_DESCR }}</option>
+                                                                @endforeach
+                                                            @endif
                                                         </select>
                                                     </div>
                                                     <div class="form-group mt-2">
-                                                        <label for="carCategory" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Category</label>
+                                                        <label for="carCategory" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Category</label>
                                                         <select class="form-control form-select txt-1" id="carCategory" name="carCategory">
-                                                            <option></option>
+                                                            <option value="" selected>-- Select Category --</option>
+                                                            @if(isset($carCategories))
+                                                                @foreach ($carCategories as $category)
+                                                                    <option value="{{ $category->CAR_CAT }}">{{ $category->CAR_DESCR }}</option>
+                                                                @endforeach
+                                                            @endif
                                                         </select>
                                                     </div>
                                                     <div class="form-group mt-2">
-                                                        <label for="carStatus" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">*Status</label>
+                                                        <label for="carStatus" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Status</label>
                                                         <select class="form-control form-select txt-1" id="carStatus" name="carStatus">
-                                                            <option></option>
+                                                            <option value="" selected>-- Select Status --</option>
+                                                            @if(isset($bookStatus))
+                                                                @foreach ($bookStatus as $status)
+                                                                    <option value="{{ $status->BK_CODE }}">{{ $status->BK_DESCR }}</option>
+                                                                @endforeach
+                                                            @endif
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="card mt-2">
-                                                <div class="card-header m-0 p-0">
+                                                <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
                                                     <p class="mx-2 my-2">{{ __('*PICK-UP') }}</p>
                                                 </div>
-                                                <div class="card-body">
-                                                    <div class="form-group">
-                                                        <label for="pickUpDate" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Date</label>
-                                                        <input type="date" class="form-control form-select txt-1" id="pickUpDate" name="pickUpDate">
+                                                <div class="card-body marsman-bg-color-gray1">
+                                                    <div class="col-md-12 d-flex">
+                                                        <div class="form-group col-md-6 p-1">
+                                                            <label for="pickUpDate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Date</label>
+                                                            <input type="date" class="form-control txt-1" id="pickUpDate" name="pickUpDate">
+                                                        </div>
+                                                        <div class="form-group col-md-6 p-1">
+                                                            <label for="pickUpTime" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Time</label>
+                                                            <input type="text" class="form-control txt-1" id="pickUpTime" name="pickUpTime" placeholder="1200">
+                                                        </div>
                                                     </div>
-                                                    <div class="form-group mt-2">
-                                                        <label for="pickUpLocation" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Location</label>
-                                                        <input type="text" class="form-control txt-1" id="pickUpLocation" name="pickUpLocation">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group mt-2 p-2">
+                                                            <label for="pickUpLocation" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Location</label>
+                                                            <input type="text" class="form-control txt-1" id="pickUpLocation" name="pickUpLocation">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="card mt-2">
-                                                <div class="card-header m-0 p-0">
+                                                <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
                                                     <p class="mx-2 my-2">{{ __('*DROP-OFF') }}</p>
                                                 </div>
-                                                <div class="card-body">
-                                                    <div class="form-group">
-                                                        <label for="dropoffDate" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Date</label>
-                                                        <input type="date" class="form-control form-select txt-1" id="dropoffDate" name="dropoffDate">
+                                                <div class="card-body marsman-bg-color-gray1">
+                                                    <div class="col-md-12 d-flex">
+                                                        <div class="form-group col-md-6 p-1">
+                                                            <label for="dropoffDate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Date</label>
+                                                            <input type="date" class="form-control txt-1" id="dropoffDate" name="dropoffDate">
+                                                        </div>
+                                                        <div class="form-group col-md-6 p-1">
+                                                            <label for="dropoffTime" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Time</label>
+                                                            <input type="text" class="form-control txt-1" id="dropoffTime" name="dropoffTime" placeholder="1200">
+                                                        </div>
                                                     </div>
-                                                    <div class="form-group mt-2">
-                                                        <label for="dropoffLocation" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Location</label>
-                                                        <input type="text" class="form-control txt-1" id="dropoffLocation" name="dropoffLocation">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group mt-2 p-2">
+                                                            <label for="dropoffLocation" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Location</label>
+                                                            <input type="text" class="form-control txt-1" id="dropoffLocation" name="dropoffLocation">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -751,37 +807,37 @@
                                         <div class="col-md-6 p-1">
 
                                             <div class="card">
-                                                <div class="card-header m-0 p-0">
+                                                <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
                                                     <p class="mx-2 my-2">{{ __('PICK-UP REFERENCE') }}</p>
                                                 </div>
-                                                <div class="card-body">
+                                                <div class="card-body marsman-bg-color-gray1">
                                                     <div class="row col-md-12">
                                                         <div class="form-group col-md-6">
-                                                            <label for="carCity" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Location</label>
+                                                            <label for="carCity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Location</label>
                                                             <input type="text" class="form-control txt-1" id="carCity" name="carCity">
                                                         </div>
                                                         <div class="form-group col-md-4">
-                                                            <label for="carArrival" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Arrival</label>
+                                                            <label for="carArrival" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Arrival</label>
                                                             <input type="text" class="form-control txt-1" id="carArrival" name="carArrival">
                                                         </div>
                                                         <div class="form-group mt-2">
-                                                            <label for="carFlightNumber" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Flight Number</label>
+                                                            <label for="carFlightNumber" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Flight Number</label>
                                                             <input type="text" class="form-control txt-1" id="carFlightNumber" name="carFlightNumber">
                                                         </div>
                                                         <div class="form-group mt-2">
-                                                            <label for="specialRequest" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Special Request</label>
-                                                            <input type="text" class="form-control txt-1" id="specialRequest" name="specialRequest">
+                                                            <label for="carSpecialRequest" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Special Request</label>
+                                                            <input type="text" class="form-control txt-1" id="carSpecialRequest" name="carSpecialRequest">
                                                         </div>
                                                         <div class="form-group mt-2">
-                                                            <label for="pickupPhoneNumber" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Phone Number</label>
+                                                            <label for="pickupPhoneNumber" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Phone Number</label>
                                                             <input type="text" class="form-control txt-1" id="pickupPhoneNumber" name="pickupPhoneNumber">
                                                         </div>
                                                         <div class="form-group mt-2">
-                                                            <label for="pickupPaxRefNumber" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Passenger Reference Number</label>
+                                                            <label for="pickupPaxRefNumber" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Passenger Reference Number</label>
                                                             <input type="text" class="form-control txt-1" id="pickupPaxRefNumber" name="pickupPaxRefNumber">
                                                         </div>
                                                         <div class="form-group mt-2">
-                                                            <label for="pickupConfirmationNumber" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Confirmation Number</label>
+                                                            <label for="pickupConfirmationNumber" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Confirmation Number</label>
                                                             <input type="text" class="form-control txt-1" id="pickupConfirmationNumber" name="pickupConfirmationNumber">
                                                         </div>
                                                     </div>
@@ -789,20 +845,20 @@
                                             </div>
 
                                             <div class="card mt-2">
-                                                <div class="card-header m-0 p-0">
+                                                <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
                                                     <p class="mx-2 my-2">{{ __('STOP OVER') }}</p>
                                                 </div>
-                                                <div class="card-body">
+                                                <div class="card-body marsman-bg-color-gray1">
                                                     <div class="form-group">
-                                                        <label for="stopoverFirst" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">First</label>
-                                                        <input type="text" class="form-control txt-1" id="pickupConfirmationNumber" name="pickupConfirmationNumber">
+                                                        <label for="stopoverFirst" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">First</label>
+                                                        <input type="text" class="form-control txt-1" id="stopoverFirst" name="stopoverFirst">
                                                     </div>
                                                     <div class="form-group mt-2">
-                                                        <label for="stopoverSecond" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Second</label>
+                                                        <label for="stopoverSecond" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Second</label>
                                                         <input type="text" class="form-control txt-1" id="stopoverSecond" name="stopoverSecond">
                                                     </div>
                                                     <div class="form-group mt-2">
-                                                        <label for="stopoverThird" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Third</label>
+                                                        <label for="stopoverThird" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Third</label>
                                                         <input type="text" class="form-control txt-1" id="stopoverThird" name="stopoverThird">
                                                     </div>
                                                 </div>
@@ -939,7 +995,7 @@
                                             </div>
                                             <div class="form-group mb-2">
                                                 <label for="departureTime" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Time</label>
-                                                <input type="time" class="form-control txt-1" id="departureTime" name="departureTime" value="12:00">
+                                                <input type="text" class="form-control txt-1" id="departureTime" name="departureTime" value="1200">
                                             </div>
                                         </div>
                                     </div>
@@ -965,7 +1021,7 @@
                                             </div>
                                             <div class="form-group mb-2">
                                                 <label for="arrivalTime" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Time</label>
-                                                <input type="time" class="form-control txt-1" id="arrivalTime" name="arrivalTime" value="12:00">
+                                                <input type="text" class="form-control txt-1" id="arrivalTime" name="arrivalTime" value="1200">
                                             </div>
                                         </div>
                                     </div>
@@ -1328,6 +1384,8 @@
                     if (routeFilter) {
                         showOption = showOption && productDescription.includes(routeFilter);
                     }
+                } else if (selectedCategoryName === 'MISCELLANEOUS') {
+                    showOption = productDescription.startsWith('MISCELLANEOUS');
                 } else {
                     showOption = option.dataset.category === selectedCategoryName;
                 }
@@ -1458,6 +1516,108 @@
                     console.log(response.data);
                     alert(response.success);
 
+                    //Save Sales Folder Group
+                    saveSalesFolderGroup();
+
+                    // Redirect to the specified route
+                    var troNumber = $('#troNumber').val();
+                    var redirectUrl = '{{ route("forms.tro.sf", ":troNumber") }}';
+                    redirectUrl = redirectUrl.replace(':troNumber', troNumber);
+                    window.location.href = redirectUrl;
+                },
+                error: function(response) {
+                    var errors = response.responseJSON.errors;
+                    $.each(errors, function(key, value) {
+                        console.log(response.data);
+                        alert(value);
+                    });
+                }
+            });
+        }
+
+        //Add Car/Transfer Itinerary
+        function addCarTransferProduct() {
+            var formData = {
+                troNumber: $('#troNumber').val(),
+                docId: $('#docId').val(),
+                carProvider: $('#carProvider').val(),
+                carType: $('#carType').val(),
+                carCategory: $('#carCategory').val(),
+                carFlightNumber: $('#carFlightNumber').val(),
+                pickUpDate: $('#pickUpDate').val(),
+                pickUpTime: $('#pickUpTime').val(),
+                pickUpLocation: $('#pickUpLocation').val(),
+                dropoffDate: $('#dropoffDate').val(),
+                dropoffTime: $('#dropoffTime').val(),
+                dropoffLocation: $('#dropoffLocation').val(),
+                stopoverFirst: $('#stopoverFirst').val(),
+                stopoverSecond: $('#stopoverSecond').val(),
+                stopoverThird: $('#stopoverThird').val(),
+                pickupPhoneNumber: $('#pickupPhoneNumber').val(),
+                carSpecialRequest: $('#carSpecialRequest').val(),
+                carStatus: $('#carStatus').val(),
+            };
+
+            $.ajax({
+                url: '{{ route('sales-folder-transfer.store') }}',
+                type: 'POST',
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    console.log(response.data);
+                    alert(response.success);
+
+                    //Save Sales Folder Group
+                    saveSalesFolderGroup();
+
+                    // Redirect to the specified route
+                    var troNumber = $('#troNumber').val();
+                    var redirectUrl = '{{ route("forms.tro.sf", ":troNumber") }}';
+                    redirectUrl = redirectUrl.replace(':troNumber', troNumber);
+                    window.location.href = redirectUrl;
+                },
+                error: function(response) {
+                    var errors = response.responseJSON.errors;
+                    $.each(errors, function(key, value) {
+                        console.log(response.data);
+                        alert(value);
+                    });
+                }
+            });
+        }
+
+        //Add Miscellaneous Itinerary
+        function addMiscProduct() {
+            var formData = {
+                troNumber: $('#troNumber').val(),
+                docId: $('#docId').val(),
+                miscType: $('#miscType').val(),
+                procCenter: $('#procCenter').val(),
+                miscStartDate: $('#miscStartDate').val(),
+                miscStartLoc: $('#miscStartLoc').val(),
+                miscEndDate: $('#miscEndDate').val(),
+                miscEndLoc: $('#miscEndLoc').val(),
+                miscServiceClass: $('#miscServiceClass').val(),
+                miscStatus: $('#miscStatus').val(),
+                miscRemarks: $('#miscRemarks').val(),
+            };
+
+            $.ajax({
+                url: '{{ route('sales-folder-misc.store') }}',
+                type: 'POST',
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    console.log(response.data);
+                    alert(response.success);
+
+                    //Save Sales Folder Group
+                    saveSalesFolderGroup();
+
                     // Redirect to the specified route
                     var troNumber = $('#troNumber').val();
                     var redirectUrl = '{{ route("forms.tro.sf", ":troNumber") }}';
@@ -1531,7 +1691,6 @@
         // Save data from temp table to permanent table
         $('#createProduct').on('click', function() {
             saveSalesFolderGroup();
-
         });
 
         function saveSalesFolderGroup() {
@@ -1577,17 +1736,22 @@
                 },
                 success: function(response) {
                     alert('Product group saved successfully');
-                    //if Air product is selected
-                    if ($('#productCategory').val() === 'A') {
-                        transferAirTempData();
-                    }
 
-                    if ($('#productCategory').val() === 'H') {
-                        addHotelProduct();
+                    // Check the selected product category and call the corresponding function
+                    var productCategory = $('#productCategory').val();
+
+                    if (productCategory === 'A') {
+                        var productAdded = transferAirTempData();
+                    } else if (productCategory === 'H') {
+                        var productAdded = addHotelProduct();
+                    } else if (productCategory === 'C') {
+                        var productAdded = addCarTransferProduct();
+                    } else if (productCategory === 'M') {
+                        var productAdded = addMiscProduct();
                     }
                 },
                 error: function(response) {
-                    alert('Failed to save product group');
+                    //alert('Failed to save product group');
                 }
             });
         }
@@ -1603,6 +1767,9 @@
                     $('#successText').text(response.message);
                     $('#successMessage').show();
                     $('#errorMessage').hide();
+
+                    //Save Sales Folder Group
+                    saveSalesFolderGroup();
 
                     // Clear the temporary table data display
                     const tableBody = $('#itineraryAir tbody');

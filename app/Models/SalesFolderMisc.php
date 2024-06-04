@@ -32,4 +32,6 @@ class SalesFolderMisc extends Model
         'ORIGIN',
         'UPDATE_SOURCE] ',
     ];
+
+    public $timestamps = false;
 }
