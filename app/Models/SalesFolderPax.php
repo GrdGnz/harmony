@@ -45,4 +45,6 @@ class SalesFolderPax extends Model
       'GDS_PROVIDER',
       'DUE_DATE',
     ];
+
+    public $timestamps = false;
 }

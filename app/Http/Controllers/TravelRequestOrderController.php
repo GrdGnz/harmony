@@ -13,6 +13,8 @@ use App\Models\ClientType;
 use App\Models\Employee;
 use App\Models\Hotel;
 use App\Models\MealType;
+use App\Models\MiscellaneousRates;
+use App\Models\ProcessingCenter;
 use App\Models\ProductCategory;
 use App\Models\ProductType;
 use App\Models\RoomCategory;
@@ -22,6 +24,7 @@ use App\Models\SalesFolder;
 use App\Models\SalesFolderGroup;
 use App\Models\SalesType;
 use App\Models\ServiceClass;
+use App\Models\Supplier;
 use App\Models\Vessel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -272,6 +275,17 @@ class TravelRequestOrderController extends Controller
         //Car / Transfer
         $carTypes = CarType::all();
         $carCategories = CarCategory::all();
+        $carSupplier = Supplier::where('STATUS', 'AC')
+            ->orderBy('SUPP_NAME', 'asc')
+            ->get();
+
+        //Miscellaneous
+        $processingCenters = ProcessingCenter::where('STATUS', 'Y')
+            ->orderBy('PROC_DESCR', 'asc')
+            ->get();
+        $miscRates = MiscellaneousRates::where('STATUS', 'y')
+            ->orderBy('MISC_DESCR', 'asc')
+            ->get();
 
         //booking status
         $bookStatus = BookingStatus::all();
@@ -291,10 +305,13 @@ class TravelRequestOrderController extends Controller
             'hotels',
             'roomCategories',
             'roomTypes',
+            'miscRates',
+            'processingCenters',
             'bookStatus',
             'meals',
             'carTypes',
             'carCategories',
+            'carSupplier',
             'productCategories',
         ));
     }

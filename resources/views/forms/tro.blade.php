@@ -30,7 +30,7 @@
             <div class="card" id="troForm">
 
                 <div class="card-header marsman-bg-color-secondary">
-                    <p class="h6 my-1">{{ __('Travel Request Order') }}</p>
+                    <p class="h6 my-1">{{ __('Travel Request Order') }} @if(isset($sf)){{ ' - #'.trim($sf->SF_NO) }}@else {{ session('iNextID') != null ? ' - #'.trim(session('iNextID')) : '' }} @endif</p>
                 </div>
                 <div class="card-body">
 

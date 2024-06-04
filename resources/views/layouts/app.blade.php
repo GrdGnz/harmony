@@ -29,6 +29,10 @@
     <link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-1.13.8/af-2.6.0/b-2.4.2/b-html5-2.4.2/cr-1.7.0/date-1.5.1/kt-2.11.0/r-2.5.0/sc-2.3.0/sb-1.6.0/sp-2.2.0/datatables.min.css" rel="stylesheet">
     <!-- DataTables Buttons CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+
+    <!-- Timepicker CSS -->
+    <link href="https://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.css" rel="stylesheet"/>
+
     <!-- Custom Scripts -->
     <script src="{{ asset('js/scripts.js') }}" defer></script>
 
@@ -49,6 +53,9 @@
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script>
+
+    <!-- Timepicker -->
+    <script src="https://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.js"></script>
 
 </head>
 <body class="sb-nav-fixed txt-1 marsman-bg-color-lightblue">

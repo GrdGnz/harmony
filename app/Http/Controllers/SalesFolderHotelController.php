@@ -14,11 +14,8 @@ class SalesFolderHotelController extends Controller
         try {
             $troNumber = $request->input('troNumber');
             $docId = $request->input('docId');
-            Log::info('Received troNumber:', ['troNumber' => $troNumber]);
 
-            $sfGroup = SalesFolderGroup::where('sf_no', $troNumber)
-                ->orderBy('DOC_ID', 'desc')
-                ->first();
+            Log::info('Received troNumber:', ['troNumber' => $troNumber]);
 
             Log::info('Next DOC_ID:', ['nextDocId' => $docId]);
 

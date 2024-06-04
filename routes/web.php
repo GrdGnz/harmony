@@ -34,6 +34,14 @@ Route::get('/sales-folder/data', [App\Http\Controllers\SalesFolderController::cl
     //Store data
     Route::post('/sales-folder-hotel/store', [App\Http\Controllers\SalesFolderHotelController::class, 'store'])->name('sales-folder-hotel.store');
 
+//Sales Folder Car/Transfer
+    //Store data
+    Route::post('/sales-folder-transfer/store', [App\Http\Controllers\SalesFolderTransferController::class, 'store'])->name('sales-folder-transfer.store');
+
+//Sales Folder Car/Transfer
+    //Store data
+    Route::post('/sales-folder-misc/store', [App\Http\Controllers\SalesFolderMiscController::class, 'store'])->name('sales-folder-misc.store');
+
 //Sales Folder Air
     //Store data
     Route::post('/sales-folder-air/tempdata/store', [App\Http\Controllers\SalesFolderAirController::class, 'storeTemporaryData'])->name('sales-folder-air.tempdata.store');
