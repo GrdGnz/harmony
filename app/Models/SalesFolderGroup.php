@@ -171,4 +171,9 @@ class SalesFolderGroup extends Model
     {
         return $this->belongsTo(ProductCategory::class, 'PROD_CAT', 'PROD_CAT');
     }
+
+    public function route()
+    {
+        return $this->belongsTo(Route::class, 'ROUTE', 'ROUTE_CODE');
+    }
 }

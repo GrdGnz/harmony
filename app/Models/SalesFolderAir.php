@@ -9,6 +9,12 @@ class SalesFolderAir extends Model
 {
     use HasFactory;
 
+    public $timestamps = false; // Disable timestamps
+
+    protected $primaryKey = ['SF_NO', 'DOC_ID', 'ITEM_NO']; // Specify composite primary key
+
+    public $incrementing = false; // Disable auto-incrementing for composite key
+
     protected $table = 'SALES_FOLDER_AIR';
 
     protected $fillable = [
@@ -43,4 +49,12 @@ class SalesFolderAir extends Model
       'FARE_BASIS',
       'UPDATE_SOURCE',
     ];
+
+    /**
+     * Override the method to get the primary key value
+     */
+    public function getKeyName()
+    {
+        return ['SF_NO', 'DOC_ID', 'ITEM_NO'];
+    }
 }
