@@ -37,5 +37,10 @@ class SalesFolderHotel extends Model
       'ROOM_QTY',
     ];
 
+    public function hotel()
+    {
+        $this->belongsTo(Hotel::class, 'HOTEL_CODE', 'HOTEL_CODE');
+    }
+
     public $timestamps = false;
 }

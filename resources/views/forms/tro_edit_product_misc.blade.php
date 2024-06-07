@@ -33,42 +33,6 @@
                 </div>
                 <div class="card-body bg-white">
 
-                    <div class="form-group col-md-12 mx-1 my-1 d-flex justify-content-end">
-                        <button type="button" id="createProduct" class="btn btn-primary txt-1">Save</button>
-                        <a href="{{ route('searchTicket.tro', ['troNumber' => $troNumber, 'docId' => $docId]) }}" id="findTicket" class="btn btn-success txt-1 mx-1">Find Ticket</a>
-                    </div>
-
-                    <hr class="w-100">
-
-                    <div class="row col-md-12 d-flex">
-                        <div class="form-group col-md-3 mb-2">
-                            <label for="productCategory" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Category</label>
-                            <select id="productCategory" name="productCategory" class="form-control form-select txt-1">
-                                <option value="" selected="selected">-- Choose Category --</option>
-                                @foreach ($productCategories as $category)
-                                    <option value="{{ $category->PROD_CAT }}">{{ $category->PROD_CAT_DESCR }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3 mb-2">
-                            <label for="route" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Route</label>
-                            <select id="route" name="route" class="form-control form-select txt-1">
-                                <option value="">-- Choose Route --</option>
-                                @foreach ($routes as $route)
-                                    <option value="{{ $route->ROUTE_CODE }}">{{ $route->ROUTE_DESCR }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6 mb-2">
-                            <label for="productType" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">Product Name</label>
-                            <select id="productType" name="productType" class="form-control form-select txt-1" readonly>
-                                <option value="">-- Choose Product --</option>
-                                @foreach ($products as $product)
-                                    <option value="{{ $product->PROD_TYPE }}" data-category="{{ $product->PROD_CAT }}">{{ $product->PROD_DESCR }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
 
                     <!-- Tabs -->
                     <ul class="nav nav-tabs mb-3 bg-white" id="myTabs" role="tablist">
@@ -947,14 +911,14 @@
                                         <div class="card-body marsman-bg-color-gray1">
                                             <div class="form-group mb-2">
                                                 <label for="airline" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Airline</label>
-                                                <input type="text" list="listAirlines" id="airline" name="airline" class="form-control txt-1">
-                                                <datalist id="listAirlines">
+                                                <select class="form-control form-select txt-1" id="airline" name="airline">
+                                                    <option value="" selected>-- Choose Airline --</option>
                                                     @if (isset($airlines))
                                                         @foreach ($airlines as $airline)
                                                             <option value="{{ $airline->AL_CODE }}">{{ $airline->AL_DESCR }}</option>
                                                         @endforeach
                                                     @endif
-                                                </datalist>
+                                                </select>
                                             </div>
                                             <div class="form-group mb-2">
                                                 <label for="flightNumber" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Flight Number</label>
@@ -962,14 +926,14 @@
                                             </div>
                                             <div class="form-group mb-2">
                                                 <label for="serviceClass" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Service Class</label>
-                                                <input type="text" list="listServiceClass" id="serviceClass" name="serviceClass" class="form-control txt-1">
-                                                <datalist id="listServiceClass">
+                                                <select class="form-control form-select txt-1" id="serviceClass" name="serviceClass">
+                                                    <option value="" selected>-- Choose Service Class --</option>
                                                     @if (isset($serviceClasses))
                                                         @foreach ($serviceClasses as $serviceClass)
                                                             <option value="{{ $serviceClass->SRVC_CLASS }}">{{ $serviceClass->SRVC_DESCR }}</option>
                                                         @endforeach
                                                     @endif
-                                                </datalist>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -983,14 +947,14 @@
                                         <div class="card-body marsman-bg-color-gray1">
                                             <div class="form-group mb-2">
                                                 <label for="departureCity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">City</label>
-                                                <input type="text" list="listCities" id="departureCity" name="departureCity" class="form-control txt-1">
-                                                <datalist id="listCities">
+                                                <select class="form-control form-select txt-1" id="departureCity" name="departureCity">
+                                                    <option value="" selected>-- Choose City --</option>
                                                     @if (isset($cities))
                                                         @foreach ($cities as $city)
                                                             <option value="{{ $city->CITY_CODE }}">{{ $city->CITY_DESCR }}</option>
                                                         @endforeach
                                                     @endif
-                                                </datalist>
+                                                </select>
                                             </div>
                                             <div class="form-group mb-2">
                                                 <label for="departureDate" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Date</label>
@@ -1009,7 +973,14 @@
                                         <div class="card-body marsman-bg-color-gray1">
                                             <div class="form-group mb-2">
                                                 <label for="arrivalCity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">City</label>
-                                                <input type="text" list="listCities" id="arrivalCity" name="arrivalCity" class="form-control txt-1">
+                                                <select class="form-control form-select txt-1" id="arrivalCity" name="arrivalCity">
+                                                    <option value="" selected>-- Choose City --</option>
+                                                    @if (isset($cities))
+                                                        @foreach ($cities as $city)
+                                                            <option value="{{ $city->CITY_CODE }}">{{ $city->CITY_DESCR }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
                                             </div>
                                             <div class="form-group mb-2">
                                                 <label for="arrivalDate" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Date</label>
@@ -1302,15 +1273,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if (isset($tempPaxData))
-                                            @foreach ($tempPaxData as $data)
-                                                <tr>
-                                                    <td>{{ $data->PAX_NAME }}</td>
-                                                    <td>{{ $data->TICKET_NO }}</td>
-                                                    <td>{{ $data->PNR }}</td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
+
                                     </tbody>
                                 </table>
                             </div>
@@ -1856,7 +1819,6 @@
         }
 
         function transferAirTempData() {
-
             $.ajax({
                 url: '{{ route('sales-folder-air.tempdata.transfer') }}',
                 type: 'POST',
@@ -1891,14 +1853,11 @@
         }
 
         function transferPaxTempData() {
-            var productCategory = $('#productCategory').val();
-
             $.ajax({
                 url: '{{ route('sales-folder-pax.tempdata.transfer') }}',
                 type: 'POST',
                 data: {
-                    _token: '{{ csrf_token() }}',
-                    productCategory: productCategory
+                    _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
                     $('#successText').text(response.message);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Log;
 
 use Illuminate\Database\Schema\Blueprint;
@@ -102,6 +103,41 @@ class SalesFolderAirController extends Controller
         } catch (\Exception $e) {
             Log::error('Error truncating TEMP_SALES_FOLDER_AIR table: ' . $e->getMessage());
             return response()->json(['message' => 'Error truncating TEMP_SALES_FOLDER_AIR table.'], 500);
+        }
+    }
+
+    public function update(Request $request, $sfNo, $docId, $itemNo)
+    {
+        $primaryKeyValues = [
+            'SF_NO' => (string) $sfNo,
+            'DOC_ID' => (string) $docId,
+            'ITEM_NO' => (string) $itemNo,
+        ];
+
+        try {
+            // Find the record by composite primary key
+            $record = SalesFolderAir::where('SF_NO', $primaryKeyValues['SF_NO'])
+                                    ->where('DOC_ID', $primaryKeyValues['DOC_ID'])
+                                    ->where('ITEM_NO', $primaryKeyValues['ITEM_NO'])
+                                    ->firstOrFail();
+
+            // Update the record with the provided data from the request
+            $record->update([
+                'AL_CODE' => $request->input('airline'),
+                'FLIGHT_NUM' => $request->input('flightNumber'),
+                'DEPT_CITY' => $request->input('departureCity'),
+                'DEPT_DATE' => $request->input('departureDate'),
+                'DEPT_TIME' => $request->input('departureTime'),
+                'ARVL_CITY' => $request->input('arrivalCity'),
+                'ARVL_DATE' => $request->input('arrivalDate'),
+                'ARVL_TIME' => $request->input('arrivalTime'),
+            ]);
+
+            return redirect()->back()->with('success', 'Record updated successfully.');
+        } catch (ModelNotFoundException $e) {
+            return redirect()->back()->with('error', 'Record not found.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while updating the record.');
         }
     }
 }

@@ -286,6 +286,7 @@
                 </ul>
 
                 <!-- TAB CONTENTS -->
+                 <!-- TAB 1 : Products -->
                 <div class="tab-content marsman-bg-color-lightgray p-3">
                     <div class="tab-pane fade show active p-3" id="products" role="tabpanel" aria-labelledby="products-tab">
                         <div class="row marsman-bg-color-lightgray">
@@ -301,7 +302,11 @@
                                     @if (isset($existingProducts))
                                         @foreach ($existingProducts as $existing)
                                             <tr>
-                                                <td>{{ $existing->product->PROD_DESCR }}</td>
+                                                <td>
+                                                    <a href="{{ route('details.product', ['troNumber' => $existing->SF_NO, 'docId' => $existing->DOC_ID]) }}">
+                                                        {{ $existing->product->PROD_DESCR }}
+                                                    </a>
+                                                </td>
                                                 <td>{{ $existing->productCategory->PROD_CAT_DESCR }}</td>
                                                 <td>{{ $existing->PNR }}</td>
                                             </tr>

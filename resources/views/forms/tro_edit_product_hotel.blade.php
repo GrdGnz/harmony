@@ -33,42 +33,6 @@
                 </div>
                 <div class="card-body bg-white">
 
-                    <div class="form-group col-md-12 mx-1 my-1 d-flex justify-content-end">
-                        <button type="button" id="createProduct" class="btn btn-primary txt-1">Save</button>
-                        <a href="{{ route('searchTicket.tro', ['troNumber' => $troNumber, 'docId' => $docId]) }}" id="findTicket" class="btn btn-success txt-1 mx-1">Find Ticket</a>
-                    </div>
-
-                    <hr class="w-100">
-
-                    <div class="row col-md-12 d-flex">
-                        <div class="form-group col-md-3 mb-2">
-                            <label for="productCategory" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Category</label>
-                            <select id="productCategory" name="productCategory" class="form-control form-select txt-1">
-                                <option value="" selected="selected">-- Choose Category --</option>
-                                @foreach ($productCategories as $category)
-                                    <option value="{{ $category->PROD_CAT }}">{{ $category->PROD_CAT_DESCR }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3 mb-2">
-                            <label for="route" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Route</label>
-                            <select id="route" name="route" class="form-control form-select txt-1">
-                                <option value="">-- Choose Route --</option>
-                                @foreach ($routes as $route)
-                                    <option value="{{ $route->ROUTE_CODE }}">{{ $route->ROUTE_DESCR }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6 mb-2">
-                            <label for="productType" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">Product Name</label>
-                            <select id="productType" name="productType" class="form-control form-select txt-1" readonly>
-                                <option value="">-- Choose Product --</option>
-                                @foreach ($products as $product)
-                                    <option value="{{ $product->PROD_TYPE }}" data-category="{{ $product->PROD_CAT }}">{{ $product->PROD_DESCR }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
 
                     <!-- Tabs -->
                     <ul class="nav nav-tabs mb-3 bg-white" id="myTabs" role="tablist">
@@ -77,15 +41,6 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link itinerary" id="itineraryHotel-tab" data-bs-toggle="tab" data-bs-target="#itineraryHotel" role="tab" aria-controls="itineraryHotel" aria-selected="false">Itinerary</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link itinerary" id="itineraryMisc-tab" data-bs-toggle="tab" data-bs-target="#itineraryMisc" role="tab" aria-controls="itineraryMisc" aria-selected="false">Itinerary</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link itinerary" id="itineraryCar-tab" data-bs-toggle="tab" data-bs-target="#itineraryCar" role="tab" aria-controls="itineraryCar" aria-selected="false">Itinerary</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link itinerary" id="itineraryAir-tab" data-bs-toggle="tab" data-bs-target="#itineraryAir" role="tab" aria-controls="itineraryAir" aria-selected="false">Itinerary</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="addtaxes-tab" data-bs-toggle="tab" data-bs-target="#addtaxes" role="tab" aria-controls="addtaxes" aria-selected="false">Taxes</a>
@@ -448,62 +403,65 @@
                                             <div class="col-md-12">
                                                 <div class="form-group mb-2">
                                                     <label for="hotelCode" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Hotel</label>
-                                                    <select class="form-control form-select txt-1" id="hotelCode" name="hotelCode">
-                                                        <option value="" selected="selected">-- Choose Hotel --</option>
+                                                    <input list="listHotels" class="form-control txt-1" name="hoteCode" id="hotelCode" value="{{ $sfHotel->HOTEL_CODE }}">
+                                                    <datalist id="listHotels">
                                                         @foreach ($hotels as $hotel)
                                                             <option value="{{ $hotel->HOTEL_CODE }}">{{ $hotel->HOTEL_DESCR }}</option>
                                                         @endforeach
-                                                    </select>
+                                                    </datalist>
                                                 </div>
                                                 <div class="col-md-12 d-flex">
                                                     <div class="form-group col-md-6 mx-1 my-1">
                                                         <label for="checkInDate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Check-in Date</label>
-                                                        <input type="date" class="form-control txt-1" id="checkInDate" name="checkInDate">
+                                                        <input type="text" class="form-control txt-1" id="checkInDate" name="checkInDate" value="{{ \Carbon\Carbon::parse($sfHotel->CHECKIN_DATE)->format('Y-m-d') }}">
                                                     </div>
                                                     <div class="form-group col-md-4 mx-1 my-1">
                                                         <label for="hotelNights" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Number of Nights</label>
-                                                        <input type="number" class="form-control txt-1" id="hotelNights" name="hotelNights" value="0" readonly>
+                                                        <input type="number" class="form-control txt-1" id="hotelNights" name="hotelNights" value="{{ $sfHotel->NIGHT_NO }}" readonly>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 d-flex">
                                                     <div class="form-group col-md-6 mx-1 my-1">
-                                                        <label for="checkOutDate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Check-in Date</label>
-                                                        <input type="date" class="form-control txt-1" id="checkOutDate" name="checkOutDate">
+                                                        <label for="checkOutDate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Check-out Date</label>
+                                                        <input type="date" class="form-control txt-1" id="checkOutDate" name="checkOutDate" value="{{ \Carbon\Carbon::parse($sfHotel->CHECKOUT_DATE)->format('Y-m-d') }}">
                                                     </div>
                                                     <div class="form-group col-md-4 mx-1 my-1">
                                                         <label for="roomQuantity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Room Quantity</label>
-                                                        <input type="number" class="form-control txt-1" id="roomQuantity" name="roomQuantity" value="0">
+                                                        <input type="number" class="form-control txt-1" id="roomQuantity" name="roomQuantity" value="{{ $sfHotel->ROOM_QTY }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 d-flex">
                                                     <div class="form-group col-md-8 mx-1 my-1">
                                                         <label for="roomType" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Room Type</label>
                                                         <input type="checkbox" class="mx-1" value="isVip"> VIP
-                                                        <select class="form-control form-select txt-1" id="roomType" name="roomType">
+                                                        <input type="text" list="listRoomTypes" class="form-control txt-1" value="{{ $sfHotel->ROOM_TYPE }}">
+                                                        <datalist id="listRoomTypes">
                                                             @foreach ($roomTypes as $roomType)
                                                                 <option value="{{ $roomType->ROOM_CODE }}">{{ $roomType->ROOM_DESCR }}</option>
                                                             @endforeach
-                                                        </select>
+                                                        </datalist>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 d-flex">
                                                     <div class="form-group col-md-8 mx-1 my-1">
                                                         <label for="roomCategory" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Room Category</label>
-                                                        <select class="form-control form-select txt-1" id="roomCategory" name="roomCategory">
+                                                        <input type="text" list="listRoomCategories" class="form-control txt-1" id="roomCategory" name="roomCategory" value="{{ $sfHotel->ROOM_CAT }}">
+                                                        <datalist id="listRoomCategories">
                                                             @foreach ($roomCategories as $roomCategory)
                                                                 <option value="{{ $roomCategory->ROOM_CAT }}">{{ $roomCategory->ROOM_DESCR }}</option>
                                                             @endforeach
-                                                        </select>
+                                                        </datalist>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 d-flex">
                                                     <div class="form-group col-md-8 mx-1 my-1">
                                                         <label for="hotelBookingStatus" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Status</label>
-                                                        <select class="form-control form-select txt-1" id="hotelBookingStatus" name="hotelBookingStatus">
+                                                        <input type="text" list="listBookingStatus" id="hotelBookingStatus" name="hotelBookingStatus" class="form-control txt-1" value="{{ $sfHotel->STATUS }}">
+                                                        <datalist id="listBookingStatus">
                                                             @foreach ($bookStatus as $status)
                                                                 <option value="{{ $status->BK_CODE }}">{{  $status->BK_DESCR }}</option>
                                                             @endforeach
-                                                        </select>
+                                                        </datalist>
                                                     </div>
                                                 </div>
                                             </div>
@@ -520,30 +478,20 @@
                                         <div class="card-body marsman-bg-color-gray1">
                                             <div class="form-group col-md-12 mx-1 my-1">
                                                 <label for="hotelBreakfast" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Breakfast</label>
-                                                <select class="form-control form-select txt-1" id="hotelBreakfast" name="hotelBreakfast">
-                                                    <option value="" selected="selected">-- Choose Breakfast--</option>
+                                                <input type="text" list="listMeals" id="hotelBreakfast" name="hotelBreakfast" class="form-control txt-1" value="{{ $sfHotel->MEAL_CODE_1 }}">
+                                                <datalist id="listMeals">
                                                     @foreach ($meals as $meal)
                                                         <option value="{{ $meal->MEAL_CODE }}">{{ $meal->MEAL_DESCR }}</option>
                                                     @endforeach
-                                                </select>
+                                                </datalist>
                                             </div>
                                             <div class="form-group col-md-12 mx-1 my-1">
                                                 <label for="hotelLunch" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Lunch</label>
-                                                <select class="form-control form-select txt-1" id="hotelLunch" name="hotelLunch">
-                                                    <option value="" selected="selected">-- Choose Lunch --</option>
-                                                    @foreach ($meals as $meal)
-                                                        <option value="{{ $meal->MEAL_CODE }}">{{ $meal->MEAL_DESCR }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <input type="text" list="listMeals" id="hotelLunch" name="hotelLunch" class="form-control txt-1" value="{{ $sfHotel->MEAL_CODE_2 }}">
                                             </div>
                                             <div class="form-group col-md-12 mx-1 my-1">
                                                 <label for="hotelDinner" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Dinner</label>
-                                                <select class="form-control form-select txt-1" id="hotelDinner" name="hotelDinner">
-                                                    <option value="" selected="selected">-- Choose Dinner --</option>
-                                                    @foreach ($meals as $meal)
-                                                        <option value="{{ $meal->MEAL_CODE }}">{{ $meal->MEAL_DESCR }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <input type="text" list="listMeals" id="hotelDinner" name="hotelDinner" class="form-control txt-1" value="{{ $sfHotel->MEAL_CODE_3 }}">
                                             </div>
                                         </div>
                                     </div>
@@ -567,7 +515,7 @@
                                                 </div>
                                                 <div class="form-group col-md-2 mt-2">
                                                     <label for="hotelGuests" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Number of Guest</label>
-                                                    <input type="number" class="form-control txt-1" id="hotelGuests" name="hotelGuests" value="0">
+                                                    <input type="number" class="form-control txt-1" id="hotelGuests" name="hotelGuests" value="{{ $sfHotel->GUEST_QTY }}">
                                                 </div>
                                             </div>
                                             <div class="col-md-6 mx-2">
@@ -585,448 +533,6 @@
                                 </div>
 
                             </div>
-                        </div>
-
-
-                        <!-- Tab 3 :: Itinerary MISC -->
-                        <div class="tab-pane fade show" id="itineraryMisc" role="tabpanel" aria-labelledby="itineraryMisc-tab">
-                            <p class="h3">MISC</p>
-                            <div class="card">
-                                <div class="card-header m-0 p-0">
-                                </div>
-                                <div class="card-body">
-                                    <div class="col-md-12 d-flex">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="miscType" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">*Type</label>
-                                                <select class="form-control form-select txt-1" id="miscType" name="miscType">
-                                                    <option value="" selected>-- Select Type --</option>
-                                                    @if(isset($miscRates))
-                                                        @foreach ($miscRates as $type)
-                                                            <option value="{{ $type->MISC_CODE }}">{{ $type->MISC_DESCR }}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            </div>
-                                            <div class="form-group mt-2">
-                                                <label for="additionalDescription" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Additional Description</label>
-                                                <input type="text" id="additionalDescription" name="additionalDescription" class="form-control txt-1">
-                                            </div>
-                                            <div class="form-group mt-2">
-                                                <label for="miscServiceClass" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Service Class</label>
-                                                <select class="form-control form-select txt-1" id="miscServiceClass" name="miscServiceClass">
-                                                    <option value="" selected>-- Select Service Class --</option>
-                                                    @if(isset($serviceClasses))
-                                                        @foreach ($serviceClasses as $service)
-                                                            <option value="{{ $service->SRVC_CLASS }}">{{ $service->SRVC_DESCR }}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            </div>
-                                            <div class="form-group mt-2">
-                                                <label for="miscStatus" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Status</label>
-                                                <select class="form-control form-select txt-1" id="miscStatus" name="miscStatus">
-                                                    <option value="" selected>-- Select Status --</option>
-                                                    @if(isset($bookStatus))
-                                                        @foreach ($bookStatus as $status)
-                                                            <option value="{{ $status->BK_CODE }}">{{ $status->BK_DESCR }}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            </div>
-                                            <div class="form-group mt-2">
-                                                <label for="miscStartDate" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">*Start Date</label>
-                                                <input type="date" id="miscStartDate" name="miscStartDate" class="form-control txt-1">
-                                            </div>
-                                            <div class="form-group mt-2">
-                                                <label for="miscStartLoc" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Start Location</label>
-                                                <input type="text" id="miscStartLoc" name="miscStartLoc" class="form-control txt-1">
-                                            </div>
-                                            <div class="form-group mt-2">
-                                                <label for="miscEndDate" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">*End Date</label>
-                                                <input type="date" id="miscEndDate" name="miscEndDate" class="form-control txt-1">
-                                            </div>
-                                            <div class="form-group mt-2">
-                                                <label for="miscEndLoc" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">End Location</label>
-                                                <input type="text" id="miscEndLoc" name="miscEndLoc" class="form-control txt-1">
-                                            </div>
-                                            <div class="form-group mt-2">
-                                                <label for="miscRemarks" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Remarks</label>
-                                                <textarea id="miscRemarks" name="miscRemarks" rows="4" class="form-control txt-1"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group mx-2">
-                                                <label for="procCenter" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Proc. Center</label>
-                                                <select class="form-control form-select txt-1" id="procCenter" name="procCenter">
-                                                    <option value="" selected>-- Select Processing Center --</option>
-                                                    @if(isset($processingCenters))
-                                                        @foreach ($processingCenters as $proc)
-                                                            <option value="{{ $proc->PROC_CODE }}">{{ $proc->PROC_DESCR }}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            </div>
-                                            <div class="form-group mx-2 mt-2">
-                                                <label for="docOfficer" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Doc Officer</label>
-                                                <select class="form-control form-select txt-1" id="docOfficer" name="docOfficer">
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group mx-2 mt-2">
-                                                <label for="miscCategory" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Category</label>
-                                                <select class="form-control form-select txt-1" id="miscCategory" name="miscCategory">
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group mx-2 mt-2">
-                                                <label for="miscConfNo" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Confirmation Number</label>
-                                                <input type="text" class="form-control txt-1" id="miscConfNo" name="miscConfNo">
-                                            </div>
-                                            <div class="form-group mx-2 mt-2">
-                                                <label for="miscPaxRefNo" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Passenger Reference Number</label>
-                                                <input type="text" class="form-control txt-1" id="miscPaxRefNo" name="miscPaxRefNo">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tab 3 :: Itinerary CAR / TRANSFER -->
-                        <div class="tab-pane fade show" id="itineraryCar" role="tabpanel" aria-labelledby="itineraryCar-tab">
-                            <p class="h3">CAR / TRANSFER</p>
-
-                            <div class="card">
-                                <div class="card-header m-0 p-0">
-                                </div>
-                                <div class="card-body">
-                                    <div class="col-md-12 d-flex">
-                                        <!-- Column 1 -->
-                                        <div class="col-md-6 p-1">
-
-                                            <div class="card">
-                                                <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                                    <p class="mx-2 my-2">{{ __('CAR DETAILS') }}</p>
-                                                </div>
-                                                <div class="card-body marsman-bg-color-gray1">
-                                                    <div class="form-group">
-                                                        <label for="carProvider" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Provider</label>
-                                                        <select class="form-control form-select txt-1" id="carProvider" name="carProvider">
-                                                            <option value="" selected>-- Choose Provider --</option>
-                                                            @if (isset($carSupplier))
-                                                                @foreach ($carSupplier as $supplier)
-                                                                    <option value="{{ $supplier->SUPP_ID }}">{{ $supplier->SUPP_NAME }}</option>
-                                                                @endforeach
-                                                            @endif
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group mt-2">
-                                                        <label for="carType" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Type</label>
-                                                        <select class="form-control form-select txt-1" id="carType" name="carType">
-                                                            <option value="" selected>-- Select Type --</option>
-                                                            @if(isset($carTypes))
-                                                                @foreach ($carTypes as $type)
-                                                                    <option value="{{ $type->CAR_CODE }}">{{ $type->CAR_DESCR }}</option>
-                                                                @endforeach
-                                                            @endif
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group mt-2">
-                                                        <label for="carCategory" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Category</label>
-                                                        <select class="form-control form-select txt-1" id="carCategory" name="carCategory">
-                                                            <option value="" selected>-- Select Category --</option>
-                                                            @if(isset($carCategories))
-                                                                @foreach ($carCategories as $category)
-                                                                    <option value="{{ $category->CAR_CAT }}">{{ $category->CAR_DESCR }}</option>
-                                                                @endforeach
-                                                            @endif
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group mt-2">
-                                                        <label for="carStatus" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Status</label>
-                                                        <select class="form-control form-select txt-1" id="carStatus" name="carStatus">
-                                                            <option value="" selected>-- Select Status --</option>
-                                                            @if(isset($bookStatus))
-                                                                @foreach ($bookStatus as $status)
-                                                                    <option value="{{ $status->BK_CODE }}">{{ $status->BK_DESCR }}</option>
-                                                                @endforeach
-                                                            @endif
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="card mt-2">
-                                                <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                                    <p class="mx-2 my-2">{{ __('*PICK-UP') }}</p>
-                                                </div>
-                                                <div class="card-body marsman-bg-color-gray1">
-                                                    <div class="col-md-12 d-flex">
-                                                        <div class="form-group col-md-6 p-1">
-                                                            <label for="pickUpDate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Date</label>
-                                                            <input type="date" class="form-control txt-1" id="pickUpDate" name="pickUpDate">
-                                                        </div>
-                                                        <div class="form-group col-md-6 p-1">
-                                                            <label for="pickUpTime" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Time</label>
-                                                            <input type="text" class="form-control txt-1" id="pickUpTime" name="pickUpTime" placeholder="1200">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="form-group mt-2 p-2">
-                                                            <label for="pickUpLocation" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Location</label>
-                                                            <input type="text" class="form-control txt-1" id="pickUpLocation" name="pickUpLocation">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="card mt-2">
-                                                <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                                    <p class="mx-2 my-2">{{ __('*DROP-OFF') }}</p>
-                                                </div>
-                                                <div class="card-body marsman-bg-color-gray1">
-                                                    <div class="col-md-12 d-flex">
-                                                        <div class="form-group col-md-6 p-1">
-                                                            <label for="dropoffDate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Date</label>
-                                                            <input type="date" class="form-control txt-1" id="dropoffDate" name="dropoffDate">
-                                                        </div>
-                                                        <div class="form-group col-md-6 p-1">
-                                                            <label for="dropoffTime" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Time</label>
-                                                            <input type="text" class="form-control txt-1" id="dropoffTime" name="dropoffTime" placeholder="1200">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="form-group mt-2 p-2">
-                                                            <label for="dropoffLocation" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Location</label>
-                                                            <input type="text" class="form-control txt-1" id="dropoffLocation" name="dropoffLocation">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <!-- Column 2 -->
-                                        <div class="col-md-6 p-1">
-
-                                            <div class="card">
-                                                <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                                    <p class="mx-2 my-2">{{ __('PICK-UP REFERENCE') }}</p>
-                                                </div>
-                                                <div class="card-body marsman-bg-color-gray1">
-                                                    <div class="row col-md-12">
-                                                        <div class="form-group col-md-6">
-                                                            <label for="carCity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Location</label>
-                                                            <input type="text" class="form-control txt-1" id="carCity" name="carCity">
-                                                        </div>
-                                                        <div class="form-group col-md-4">
-                                                            <label for="carArrival" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Arrival</label>
-                                                            <input type="text" class="form-control txt-1" id="carArrival" name="carArrival">
-                                                        </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="carFlightNumber" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Flight Number</label>
-                                                            <input type="text" class="form-control txt-1" id="carFlightNumber" name="carFlightNumber">
-                                                        </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="carSpecialRequest" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Special Request</label>
-                                                            <input type="text" class="form-control txt-1" id="carSpecialRequest" name="carSpecialRequest">
-                                                        </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="pickupPhoneNumber" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Phone Number</label>
-                                                            <input type="text" class="form-control txt-1" id="pickupPhoneNumber" name="pickupPhoneNumber">
-                                                        </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="pickupPaxRefNumber" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Passenger Reference Number</label>
-                                                            <input type="text" class="form-control txt-1" id="pickupPaxRefNumber" name="pickupPaxRefNumber">
-                                                        </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="pickupConfirmationNumber" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Confirmation Number</label>
-                                                            <input type="text" class="form-control txt-1" id="pickupConfirmationNumber" name="pickupConfirmationNumber">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="card mt-2">
-                                                <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                                    <p class="mx-2 my-2">{{ __('STOP OVER') }}</p>
-                                                </div>
-                                                <div class="card-body marsman-bg-color-gray1">
-                                                    <div class="form-group">
-                                                        <label for="stopoverFirst" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">First</label>
-                                                        <input type="text" class="form-control txt-1" id="stopoverFirst" name="stopoverFirst">
-                                                    </div>
-                                                    <div class="form-group mt-2">
-                                                        <label for="stopoverSecond" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Second</label>
-                                                        <input type="text" class="form-control txt-1" id="stopoverSecond" name="stopoverSecond">
-                                                    </div>
-                                                    <div class="form-group mt-2">
-                                                        <label for="stopoverThird" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Third</label>
-                                                        <input type="text" class="form-control txt-1" id="stopoverThird" name="stopoverThird">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tab 3 :: Itinerary AIR -->
-                        <div class="tab-pane fade show" id="itineraryAir" role="tabpanel" aria-labelledby="itineraryAir-tab">
-                            <p class="h3">AIR</p>
-
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    {{ session('success') }}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
-
-                            @if (session('error'))
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    {{ session('error') }}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
-
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead class="marsman-bg-color-darkgray text-white">
-                                        <tr>
-                                            <th colspan="3"></th>
-                                            <th colspan="3" class="text-center">Departure</th>
-                                            <th colspan="3" class="text-center">Arrival</th>
-                                        </tr>
-                                        <tr>
-                                            <th>Airline</th>
-                                            <th>Flight No.</th>
-                                            <th>Service Class</th>
-                                            <th>*City</th>
-                                            <th>Date</th>
-                                            <th>Time</th>
-                                            <th>*City</th>
-                                            <th>Date</th>
-                                            <th>Time</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if (isset($airTempData))
-                                            @foreach ($airTempData as $temp)
-                                                <tr>
-                                                    <td>{{ $temp->AL_CODE }}</td>
-                                                    <td>{{ $temp->FLIGHT_NUM }}</td>
-                                                    <td>{{ $temp->SERVICE_CLASS }}</td>
-                                                    <td>{{ $temp->DEPT_CITY }}</td>
-                                                    <td>{{ $temp->DEPT_DATE }}</td>
-                                                    <td>{{ $temp->DEPT_TIME }}</td>
-                                                    <td>{{ $temp->ARVL_CITY }}</td>
-                                                    <td>{{ $temp->ARVL_DATE }}</td>
-                                                    <td>{{ $temp->ARVL_TIME }}</td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <hr class="w-100">
-
-                            <div class="col-md-12 d-flex">
-                                <!-- Column 1 -->
-                                <div class="col-md-6 p-1">
-                                    <div class="card mt-2">
-                                        <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                            <p class="mx-2 my-2">{{ __('FLIGHT DETAILS') }}</p>
-                                        </div>
-                                        <div class="card-body marsman-bg-color-gray1">
-                                            <div class="form-group mb-2">
-                                                <label for="airline" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Airline</label>
-                                                <input type="text" list="listAirlines" id="airline" name="airline" class="form-control txt-1">
-                                                <datalist id="listAirlines">
-                                                    @if (isset($airlines))
-                                                        @foreach ($airlines as $airline)
-                                                            <option value="{{ $airline->AL_CODE }}">{{ $airline->AL_DESCR }}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </datalist>
-                                            </div>
-                                            <div class="form-group mb-2">
-                                                <label for="flightNumber" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Flight Number</label>
-                                                <input type="text" class="form-control txt-1" id="flightNumber" name="flightNumber">
-                                            </div>
-                                            <div class="form-group mb-2">
-                                                <label for="serviceClass" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Service Class</label>
-                                                <input type="text" list="listServiceClass" id="serviceClass" name="serviceClass" class="form-control txt-1">
-                                                <datalist id="listServiceClass">
-                                                    @if (isset($serviceClasses))
-                                                        @foreach ($serviceClasses as $serviceClass)
-                                                            <option value="{{ $serviceClass->SRVC_CLASS }}">{{ $serviceClass->SRVC_DESCR }}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </datalist>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Column 2 -->
-                                <div class="col-md-6 p-1">
-                                    <div class="card mt-2">
-                                        <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                            <p class="mx-2 my-2">{{ __('DEPARTURE') }}</p>
-                                        </div>
-                                        <div class="card-body marsman-bg-color-gray1">
-                                            <div class="form-group mb-2">
-                                                <label for="departureCity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">City</label>
-                                                <input type="text" list="listCities" id="departureCity" name="departureCity" class="form-control txt-1">
-                                                <datalist id="listCities">
-                                                    @if (isset($cities))
-                                                        @foreach ($cities as $city)
-                                                            <option value="{{ $city->CITY_CODE }}">{{ $city->CITY_DESCR }}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </datalist>
-                                            </div>
-                                            <div class="form-group mb-2">
-                                                <label for="departureDate" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Date</label>
-                                                <input type="date" class="form-control txt-1" id="departureDate" name="departureDate">
-                                            </div>
-                                            <div class="form-group mb-2">
-                                                <label for="departureTime" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Time</label>
-                                                <input type="text" class="form-control txt-1" id="departureTime" name="departureTime" value="1200">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card mt-2">
-                                        <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                            <p class="mx-2 my-2">{{ __('ARRIVAL') }}</p>
-                                        </div>
-                                        <div class="card-body marsman-bg-color-gray1">
-                                            <div class="form-group mb-2">
-                                                <label for="arrivalCity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">City</label>
-                                                <input type="text" list="listCities" id="arrivalCity" name="arrivalCity" class="form-control txt-1">
-                                            </div>
-                                            <div class="form-group mb-2">
-                                                <label for="arrivalDate" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Date</label>
-                                                <input type="date" class="form-control txt-1" id="arrivalDate" name="arrivalDate">
-                                            </div>
-                                            <div class="form-group mb-2">
-                                                <label for="arrivalTime" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Time</label>
-                                                <input type="text" class="form-control txt-1" id="arrivalTime" name="arrivalTime" value="1200">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex justify-content-end mt-2">
-                                        <button class="btn btn-primary txt-1" id="addAirItinerary">Add</button>
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
 
                         <!-- Tab 4 :: Taxes -->
@@ -1302,15 +808,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if (isset($tempPaxData))
-                                            @foreach ($tempPaxData as $data)
-                                                <tr>
-                                                    <td>{{ $data->PAX_NAME }}</td>
-                                                    <td>{{ $data->TICKET_NO }}</td>
-                                                    <td>{{ $data->PNR }}</td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
+
                                     </tbody>
                                 </table>
                             </div>
@@ -1856,7 +1354,6 @@
         }
 
         function transferAirTempData() {
-
             $.ajax({
                 url: '{{ route('sales-folder-air.tempdata.transfer') }}',
                 type: 'POST',
@@ -1891,14 +1388,11 @@
         }
 
         function transferPaxTempData() {
-            var productCategory = $('#productCategory').val();
-
             $.ajax({
                 url: '{{ route('sales-folder-pax.tempdata.transfer') }}',
                 type: 'POST',
                 data: {
-                    _token: '{{ csrf_token() }}',
-                    productCategory: productCategory
+                    _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
                     $('#successText').text(response.message);
