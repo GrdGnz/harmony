@@ -148,37 +148,39 @@
                                         </div>
                                     </div>
                                     <!-- Discount -->
-                                    <div class="card mt-2">
-                                        <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                            <p class="mx-2 my-2">{{ __('DISCOUNT') }}</p>
-                                        </div>
-                                        <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12 d-flex">
-                                                <div class="form-group col-md-6 mx-2">
-                                                    <label for="salesDiscountRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
-                                                    <input type="number" class="form-control txt-1" id="salesDiscountRate" name="salesDiscountRate" value="0">
-                                                </div>
-                                                <div class="form-group col-md-4 mx-2">
-                                                    <label for="salesDiscountAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
-                                                    <input type="number" class="form-control txt-1" id="salesDiscountAmount" name="salesDiscountAmount" value="0">
+                                    <div class="d-flex">
+                                        <div class="card mt-2 col-md-6">
+                                            <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
+                                                <p class="mx-2 my-2">{{ __('DISCOUNT') }}</p>
+                                            </div>
+                                            <div class="card-body marsman-bg-color-gray1">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="form-group col-md-6 mx-2">
+                                                        <label for="salesDiscountRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
+                                                        <input type="text" class="form-control txt-1" id="salesDiscountRate" name="salesDiscountRate" value="0">
+                                                    </div>
+                                                    <div class="form-group col-md-4 mx-2">
+                                                        <label for="salesDiscountAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
+                                                        <input type="text" class="form-control txt-1" id="salesDiscountAmount" name="salesDiscountAmount" value="0">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- Commission -->
-                                    <div class="card mt-2">
-                                        <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                            <p class="mx-2 my-2">{{ __('COMMISSION') }}</p>
-                                        </div>
-                                        <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12 d-flex">
-                                                <div class="form-group col-md-6 mx-2">
-                                                    <label for="salesCommissionRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
-                                                    <input type="number" class="form-control txt-1" id="salesCommissionRate" name="salesCommissionRate" value="0">
-                                                </div>
-                                                <div class="form-group col-md-4 mx-2">
-                                                    <label for="salesCommissionAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
-                                                    <input type="number" class="form-control txt-1" id="salesCommissionAmount" name="salesCommissionAmount" value="0">
+                                        <!-- Commission -->
+                                        <div class="card mt-2 col-md-6">
+                                            <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
+                                                <p class="mx-2 my-2">{{ __('COMMISSION') }}</p>
+                                            </div>
+                                            <div class="card-body marsman-bg-color-gray1">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="form-group col-md-6 mx-2">
+                                                        <label for="salesCommissionRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
+                                                        <input type="text" class="form-control txt-1" id="salesCommissionRate" name="salesCommissionRate" value="0">
+                                                    </div>
+                                                    <div class="form-group col-md-4 mx-2">
+                                                        <label for="salesCommissionAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
+                                                        <input type="text" class="form-control txt-1" id="salesCommissionAmount" name="salesCommissionAmount" value="0">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -208,13 +210,13 @@
                                                         <option></option>
                                                     </select>
                                                 </div>
-                                                <div class="form-group mt-2">
+                                            </div>
+                                            <div class="col-md-12 d-flex">
+                                                <div class="form-group col-md-6 p-1">
                                                     <label for="salesTax" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Taxes</label>
                                                     <input type="number" class="form-control txt-1 p-2" id="salesTax" name="salesTax" value="0">
                                                 </div>
-                                            </div>
-                                            <div class="col-md-12 mt-2">
-                                                <div class="form-group">
+                                                <div class="form-group col-md-6 p-1">
                                                     <label for="salesSurcharge" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Surcharge</label>
                                                     <input type="text" class="form-control txt-1 p-2" id="salesSurcharge" name="salesSurcharge" value="0">
                                                 </div>
@@ -271,16 +273,16 @@
                                         </div>
                                         <!-- Fare Code -->
                                         <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12">
-                                                <div class="form-group mb-2">
+                                            <div class="col-md-12 d-flex">
+                                                <div class="col-md-4 p-1">
                                                     <label for="splFareCode" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Special Fare Code</label>
                                                     <input type="text" class="form-control txt-1" id="splFareCode" name="splFareCode">
                                                 </div>
-                                                <div class="form-group mb-2">
+                                                <div class="col-md-4 p-1">
                                                     <label for="costPublishedRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Published Rate</label>
                                                     <input type="text" class="form-control txt-1" id="costPublishedRate" name="costPublishedRate">
                                                 </div>
-                                                <div class="form-group mb-2">
+                                                <div class="col-md-4 p-1">
                                                     <label for="costNetRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Net Rate</label>
                                                     <input type="text" class="form-control txt-1" id="costNetRate" name="costNetRate">
                                                 </div>
@@ -330,70 +332,70 @@
                                         </div>
                                     </div>
 
-                                    <div class="card mt-2">
-                                        <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                            <p class="mx-2 my-2">{{ __('DISCOUNT') }}</p>
-                                        </div>
-                                        <!-- Discount -->
-                                        <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12 d-flex">
-                                                <div class="form-group col-md-6 mb-2">
-                                                    <label for="costDiscountRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
-                                                    <input type="text" class="form-control txt-1" id="costDiscountRate" name="costDiscountRate" value="0">
+                                    <div class="d-flex">
+                                        <div class="card mt-2 col-md-6">
+                                            <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
+                                                <p class="mx-2 my-2">{{ __('DISCOUNT') }}</p>
+                                            </div>
+                                            <!-- Discount -->
+                                            <div class="card-body marsman-bg-color-gray1">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="form-group col-md-6 mb-2">
+                                                        <label for="costDiscountRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
+                                                        <input type="text" class="form-control txt-1" id="costDiscountRate" name="costDiscountRate" value="0">
+                                                    </div>
+                                                    <div class="form-group col-md-6 mb-2 mx-2">
+                                                        <label for="costDiscountAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
+                                                        <input type="text" class="form-control txt-1" id="costDiscountAmount" name="costDiscountAmount" value="0">
+                                                    </div>
                                                 </div>
-                                                <div class="form-group col-md-6 mb-2 mx-2">
-                                                    <label for="costDiscountAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
-                                                    <input type="text" class="form-control txt-1" id="costDiscountAmount" name="costDiscountAmount" value="0">
+                                            </div>
+                                        </div>
+                                        <div class="card mt-2 col-md-6">
+                                            <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
+                                                <p class="mx-2 my-2">{{ __('COMMISSION') }}</p>
+                                            </div>
+                                            <!-- Commission -->
+                                            <div class="card-body marsman-bg-color-gray1">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="form-group col-md-6 mb-2">
+                                                        <label for="costCommissionRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
+                                                        <input type="text" class="form-control txt-1" id="costCommissionRate" name="costCommissionRate" value="0">
+                                                    </div>
+                                                    <div class="form-group col-md-6 mb-2 mx-2">
+                                                        <label for="costCommissionAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
+                                                        <input type="text" class="form-control txt-1" id="costCommissionAmount" name="costCommissionAmount" value="0">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card mt-2">
-                                        <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                            <p class="mx-2 my-2">{{ __('COMMISSION') }}</p>
-                                        </div>
-                                        <!-- Commission -->
-                                        <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12 d-flex">
-                                                <div class="form-group col-md-6 mb-2">
-                                                    <label for="costCommissionRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
-                                                    <input type="text" class="form-control txt-1" id="costCommissionRate" name="costCommissionRate" value="0">
-                                                </div>
-                                                <div class="form-group col-md-6 mb-2 mx-2">
-                                                    <label for="costCommissionAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
-                                                    <input type="text" class="form-control txt-1" id="costCommissionAmount" name="costCommissionAmount" value="0">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                </div>
+                                <div class="col-md-12">
                                     <!-- Insurance -->
                                     <div class="card mt-2">
                                         <div class="card-header m-0 p-0">
                                         </div>
                                         <!-- Insurance -->
                                         <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12">
-                                                <div class="form-group mb-2">
+                                            <div class="row col-md-12 d-flex">
+                                                <div class="col-md-4 mb-2 p-1">
                                                     <label for="costInsurance" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Insurance</label>
                                                     <input type="text" class="form-control txt-1" id="costInsurance" name="costInsurance">
                                                 </div>
-                                                <div class="form-group mb-2">
+                                                <div class="col-md-2 mb-2 p-1">
                                                     <label for="costTax" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Taxes</label>
                                                     <input type="text" class="form-control txt-1" id="costTax" name="costTax" value="0">
                                                 </div>
-                                            </div>
-                                            <div class="form-group d-flex mb-2">
-                                                <div class="form-group col-md-6 mb-2">
+                                                <div class="col-md-2 mb-2 p-1">
                                                     <label for="costTotalUnitCost" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Total Unit Cost</label>
                                                     <input type="text" class="form-control txt-1" id="costTotalUnitCost" name="costTotalUnitCost" value="0">
                                                 </div>
-                                                <div class="form-group col-md-4 mb-2 mx-2">
+                                                <div class="col-md-2 mb-2 p-1">
                                                     <label for="costUnitQuantity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Quantity.</label>
                                                     <input type="number" class="form-control txt-1" id="costUnitQuantity" name="costUnitQuantity" value="0">
                                                 </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group">
+                                                <div class="col-md-2 mb-2 p-1">
                                                     <label for="costGrandTotal" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Grand Total</label>
                                                     <input type="text" class="form-control txt-1" id="costGrandTotal" name="costGrandTotal" value="0">
                                                 </div>
@@ -406,20 +408,16 @@
                                         </div>
                                         <!-- Tour Code -->
                                         <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12">
-                                                <div class="form-group mb-2">
+                                            <div class="col-md-12 d-flex">
+                                                <div class="col-md-4 mb-2 p-1">
                                                     <label for="tourCode" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Tour Code</label>
                                                     <input type="text" class="form-control txt-1" id="tourCode" name="tourCode">
                                                 </div>
-                                            </div>
-                                            <div class="col-md-12 mb-2">
-                                                <div class="form-group mb-2">
+                                                <div class="col-md-4 mb-2 p-1">
                                                     <label for="mpdMco" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">MPD / MCO</label>
                                                     <input type="text" class="form-control txt-1" id="mpdMco" name="mpdMco">
                                                 </div>
-                                            </div>
-                                            <div class="col-md-12 mb-2">
-                                                <div class="form-group">
+                                                <div class="col-md-4 mb-2 p-1">
                                                     <label for="voucherNumber" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Voucher Number</label>
                                                     <input type="text" class="form-control txt-1" id="voucherNumber" name="voucherNumber">
                                                 </div>
@@ -448,12 +446,12 @@
                                             <div class="col-md-12">
                                                 <div class="form-group mb-2">
                                                     <label for="hotelCode" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Hotel</label>
-                                                    <select class="form-control form-select txt-1" id="hotelCode" name="hotelCode">
-                                                        <option value="" selected="selected">-- Choose Hotel --</option>
+                                                    <input type="text" list="listHotels" id="hotelCode" name="hotelCode" class="form-control txt-1">
+                                                    <datalist id="listHotels">
                                                         @foreach ($hotels as $hotel)
                                                             <option value="{{ $hotel->HOTEL_CODE }}">{{ $hotel->HOTEL_DESCR }}</option>
                                                         @endforeach
-                                                    </select>
+                                                    </datalist>
                                                 </div>
                                                 <div class="col-md-12 d-flex">
                                                     <div class="form-group col-md-6 mx-1 my-1">
@@ -479,31 +477,34 @@
                                                     <div class="form-group col-md-8 mx-1 my-1">
                                                         <label for="roomType" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Room Type</label>
                                                         <input type="checkbox" class="mx-1" value="isVip"> VIP
-                                                        <select class="form-control form-select txt-1" id="roomType" name="roomType">
+                                                        <input type="text" list="listRoomTypes" id="roomType" name="roomType" class="form-control txt-1">
+                                                        <datalist id="listRoomTypes">
                                                             @foreach ($roomTypes as $roomType)
                                                                 <option value="{{ $roomType->ROOM_CODE }}">{{ $roomType->ROOM_DESCR }}</option>
                                                             @endforeach
-                                                        </select>
+                                                        </datalist>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 d-flex">
                                                     <div class="form-group col-md-8 mx-1 my-1">
                                                         <label for="roomCategory" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Room Category</label>
-                                                        <select class="form-control form-select txt-1" id="roomCategory" name="roomCategory">
+                                                        <input type="text" list="listRoomCategories" id="roomCategory" name="roomCategory" class="form-control txt-1">
+                                                        <datalist id="listRoomCategories">
                                                             @foreach ($roomCategories as $roomCategory)
                                                                 <option value="{{ $roomCategory->ROOM_CAT }}">{{ $roomCategory->ROOM_DESCR }}</option>
                                                             @endforeach
-                                                        </select>
+                                                        </datalist>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 d-flex">
                                                     <div class="form-group col-md-8 mx-1 my-1">
                                                         <label for="hotelBookingStatus" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Status</label>
-                                                        <select class="form-control form-select txt-1" id="hotelBookingStatus" name="hotelBookingStatus">
+                                                        <input type="text" list="listBookingStatus" id="hotelBookingStatus" name="hotelBookingStatus" class="form-control txt-1">
+                                                        <datalist id="listBookingStatus">
                                                             @foreach ($bookStatus as $status)
                                                                 <option value="{{ $status->BK_CODE }}">{{  $status->BK_DESCR }}</option>
                                                             @endforeach
-                                                        </select>
+                                                        </datalist>
                                                     </div>
                                                 </div>
                                             </div>
@@ -520,30 +521,20 @@
                                         <div class="card-body marsman-bg-color-gray1">
                                             <div class="form-group col-md-12 mx-1 my-1">
                                                 <label for="hotelBreakfast" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Breakfast</label>
-                                                <select class="form-control form-select txt-1" id="hotelBreakfast" name="hotelBreakfast">
-                                                    <option value="" selected="selected">-- Choose Breakfast--</option>
+                                                <input type="text" list="listMeals" id="hotelBreakfast" name="hotelBreakfast" class="form-control txt-1">
+                                                <datalist id="listMeals">
                                                     @foreach ($meals as $meal)
                                                         <option value="{{ $meal->MEAL_CODE }}">{{ $meal->MEAL_DESCR }}</option>
                                                     @endforeach
-                                                </select>
+                                                </datalist>
                                             </div>
                                             <div class="form-group col-md-12 mx-1 my-1">
                                                 <label for="hotelLunch" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Lunch</label>
-                                                <select class="form-control form-select txt-1" id="hotelLunch" name="hotelLunch">
-                                                    <option value="" selected="selected">-- Choose Lunch --</option>
-                                                    @foreach ($meals as $meal)
-                                                        <option value="{{ $meal->MEAL_CODE }}">{{ $meal->MEAL_DESCR }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <input type="text" list="listMeals" id="hotelLunch" name="hotelLunch" class="form-control txt-1">
                                             </div>
                                             <div class="form-group col-md-12 mx-1 my-1">
                                                 <label for="hotelDinner" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Dinner</label>
-                                                <select class="form-control form-select txt-1" id="hotelDinner" name="hotelDinner">
-                                                    <option value="" selected="selected">-- Choose Dinner --</option>
-                                                    @foreach ($meals as $meal)
-                                                        <option value="{{ $meal->MEAL_CODE }}">{{ $meal->MEAL_DESCR }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <input type="text" list="listMeals" id="hotelDinner" name="hotelDinner" class="form-control txt-1">
                                             </div>
                                         </div>
                                     </div>
@@ -712,47 +703,41 @@
                                                 <div class="card-body marsman-bg-color-gray1">
                                                     <div class="form-group">
                                                         <label for="carProvider" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Provider</label>
-                                                        <select class="form-control form-select txt-1" id="carProvider" name="carProvider">
-                                                            <option value="" selected>-- Choose Provider --</option>
+                                                        <input type="text" list="listProviders" id="carProvider" name="carProvider" class="form-control txt-1">
+                                                        <datalist id="listProviders">
                                                             @if (isset($carSupplier))
                                                                 @foreach ($carSupplier as $supplier)
                                                                     <option value="{{ $supplier->SUPP_ID }}">{{ $supplier->SUPP_NAME }}</option>
                                                                 @endforeach
                                                             @endif
-                                                        </select>
+                                                        </datalist>
                                                     </div>
                                                     <div class="form-group mt-2">
                                                         <label for="carType" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Type</label>
-                                                        <select class="form-control form-select txt-1" id="carType" name="carType">
+                                                        <input type="text" list="listCarTypes" id="carType" name="carType" class="form-control txt-1">
+                                                        <datalist id="listCarTypes">
                                                             <option value="" selected>-- Select Type --</option>
                                                             @if(isset($carTypes))
                                                                 @foreach ($carTypes as $type)
                                                                     <option value="{{ $type->CAR_CODE }}">{{ $type->CAR_DESCR }}</option>
                                                                 @endforeach
                                                             @endif
-                                                        </select>
+                                                        </datalist>
                                                     </div>
                                                     <div class="form-group mt-2">
                                                         <label for="carCategory" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Category</label>
-                                                        <select class="form-control form-select txt-1" id="carCategory" name="carCategory">
-                                                            <option value="" selected>-- Select Category --</option>
+                                                        <input type="text" list="listCarCategories" id="carCategory" name="carCategory" class="form-control txt-1">
+                                                        <datalist id="listCarCategories">
                                                             @if(isset($carCategories))
                                                                 @foreach ($carCategories as $category)
                                                                     <option value="{{ $category->CAR_CAT }}">{{ $category->CAR_DESCR }}</option>
                                                                 @endforeach
                                                             @endif
-                                                        </select>
+                                                        </datalist>
                                                     </div>
                                                     <div class="form-group mt-2">
                                                         <label for="carStatus" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Status</label>
-                                                        <select class="form-control form-select txt-1" id="carStatus" name="carStatus">
-                                                            <option value="" selected>-- Select Status --</option>
-                                                            @if(isset($bookStatus))
-                                                                @foreach ($bookStatus as $status)
-                                                                    <option value="{{ $status->BK_CODE }}">{{ $status->BK_DESCR }}</option>
-                                                                @endforeach
-                                                            @endif
-                                                        </select>
+                                                        <input type="text" list="bookingStatus" id="carStatus" name="carStatus" class="form-control txt-1">
                                                     </div>
                                                 </div>
                                             </div>
@@ -975,8 +960,9 @@
                                     </div>
                                 </div>
                                 <!-- Column 2 -->
-                                <div class="col-md-6 p-1">
-                                    <div class="card mt-2">
+                                <div class="col-md-6 p-1 d-flex">
+
+                                    <div class="card mt-2 col-md-6 m-1">
                                         <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
                                             <p class="mx-2 my-2">{{ __('DEPARTURE') }}</p>
                                         </div>
@@ -993,16 +979,16 @@
                                                 </datalist>
                                             </div>
                                             <div class="form-group mb-2">
-                                                <label for="departureDate" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Date</label>
+                                                <label for="departureDate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Date</label>
                                                 <input type="date" class="form-control txt-1" id="departureDate" name="departureDate">
                                             </div>
                                             <div class="form-group mb-2">
-                                                <label for="departureTime" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Time</label>
+                                                <label for="departureTime" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Time</label>
                                                 <input type="text" class="form-control txt-1" id="departureTime" name="departureTime" value="1200">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card mt-2">
+                                    <div class="card mt-2 col-md-6 m-1">
                                         <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
                                             <p class="mx-2 my-2">{{ __('ARRIVAL') }}</p>
                                         </div>
@@ -1012,21 +998,20 @@
                                                 <input type="text" list="listCities" id="arrivalCity" name="arrivalCity" class="form-control txt-1">
                                             </div>
                                             <div class="form-group mb-2">
-                                                <label for="arrivalDate" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Date</label>
+                                                <label for="arrivalDate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Date</label>
                                                 <input type="date" class="form-control txt-1" id="arrivalDate" name="arrivalDate">
                                             </div>
                                             <div class="form-group mb-2">
-                                                <label for="arrivalTime" class="form-label marsman-bg-color-dark text-white txt-1 p-2 m-0 rounded-top">Time</label>
+                                                <label for="arrivalTime" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Time</label>
                                                 <input type="text" class="form-control txt-1" id="arrivalTime" name="arrivalTime" value="1200">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex justify-content-end mt-2">
-                                        <button class="btn btn-primary txt-1" id="addAirItinerary">Add</button>
-                                    </div>
                                 </div>
                             </div>
-
+                            <div class="d-flex justify-content-end mt-2">
+                                <button class="btn btn-primary txt-1" id="addAirItinerary">Add</button>
+                            </div>
                         </div>
 
                         <!-- Tab 4 :: Taxes -->
@@ -1293,7 +1278,7 @@
                             <p class="h3">Passenger</p>
 
                             <div class="table-responsive">
-                                <table id="passengerList" class="table table-bordered">
+                                <table id="passengerList" class="table table-bordered table-striped">
                                     <thead class="marsman-bg-color-darkgray text-white">
                                         <tr>
                                             <th>Passenger Name</th>
@@ -1301,7 +1286,7 @@
                                             <th>PNR</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody class="marsman-bg-color-gray2">
                                         @if (isset($tempPaxData))
                                             @foreach ($tempPaxData as $data)
                                                 <tr>
