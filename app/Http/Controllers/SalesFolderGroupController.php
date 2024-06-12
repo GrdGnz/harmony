@@ -12,105 +12,119 @@ class SalesFolderGroupController extends Controller
     public function store(Request $request)
     {
         try {
+            // Log the entire request
             Log::info('SalesFolderGroup store method called', ['request' => $request->all()]);
 
             $salesFolderGroup = new SalesFolderGroup();
-            $salesFolderGroup->SF_NO = $request->input('troNumber');
-            $salesFolderGroup->DOC_ID = $request->input('docId');
-            $salesFolderGroup->PROD_TYPE = $request->input('productType');
-            $salesFolderGroup->PROD_CAT = $request->input('productCategory');
-            $salesFolderGroup->PNR = null;
-            $salesFolderGroup->AL_PNR = $request->input('productType') == 'Air' ? $request->input('airline') : null;
-            $salesFolderGroup->ROUTE = $request->input('route');
-            $salesFolderGroup->QTY = $request->input('salesUnitQuantity');
-            $salesFolderGroup->TAX_TYPE = 'N';
-            $salesFolderGroup->TAX_AMT = $request->input('salesTax');
-            $salesFolderGroup->TAX_RATE = 0;
-            $salesFolderGroup->CHARGE_AMT = 0;
-            $salesFolderGroup->SELL_CURR_CODE = $request->input('salesCurrencyCode');
-            $salesFolderGroup->SELL_CURR_RATE = $request->input('salesCurrencyAmount');
-            $salesFolderGroup->SELL_AMT = $request->input('salesUnitAmount');
-            $salesFolderGroup->SELL_TTAX_AMT = 0;
-            $salesFolderGroup->SELL_DISC_AMT = $request->input('salesDiscountAmount');
-            $salesFolderGroup->SELL_DISC_PERC = $request->input('salesDiscountRate');
-            $salesFolderGroup->SELL_COMM_AMT = $request->input('salesCommissionAmount');
-            $salesFolderGroup->SELL_COMM_PERC = $request->input('salesCommissionRate');
-            $salesFolderGroup->SELL_INS_AMT = 0;
-            $salesFolderGroup->SELL_SURCHARGE = $request->input('salesSurcharge');
-            $salesFolderGroup->TTL_SELL_AMT = $request->input('salesTotalUnitAmount');
-            $salesFolderGroup->SELL_GRAND_TOTAL = $request->input('salesGrandTotal');
-            $salesFolderGroup->PUBLISH_AMT = 0;
-            $salesFolderGroup->SPL_FARE_CODE = 0;
-            $salesFolderGroup->NETT_AMT = 0;
-            $salesFolderGroup->NET_FARE_FLAG = 'N';
-            $salesFolderGroup->NAIR_NETT_AMT = 0;
-            $salesFolderGroup->COST_COMM_AMT = $request->input('costCommissionAmount');
-            $salesFolderGroup->COST_COMM_PERC = $request->input('costCommissionRate');
-            $salesFolderGroup->COST_DISC_AMT = $request->input('costDiscountAmount');
-            $salesFolderGroup->COST_DISC_PERC = $request->input('costDiscountRate');
-            $salesFolderGroup->COST_TTAX_AMT = $request->input('costTax');
-            $salesFolderGroup->COST_INS_AMT = 0;
-            $salesFolderGroup->COST_CURR_CODE = $request->input('costCurrencyCode');
-            $salesFolderGroup->COST_CURR_RATE = $request->input('costCurrencyAmount');
-            $salesFolderGroup->TTL_COST_AMT = $request->input('costTotalUnitCost');
-            $salesFolderGroup->COST_GRAND_TOTAL = $request->input('costGrandTotal');
-            $salesFolderGroup->INCOME = 0;
-            $salesFolderGroup->SELL_AMT_1 = 0;
-            $salesFolderGroup->SELL_AMT_2 = 0;
-            $salesFolderGroup->SELL_AMT_3 = 0;
-            $salesFolderGroup->SELL_AMT_4 = 0;
-            $salesFolderGroup->SELL_AMT_5 = 0;
-            $salesFolderGroup->CURR_CODE_1 = 'PHP';
-            $salesFolderGroup->CURR_CODE_2 = 'PHP';
-            $salesFolderGroup->CURR_CODE_3 = 'PHP';
-            $salesFolderGroup->CURR_CODE_4 = 'PHP';
-            $salesFolderGroup->CURR_CODE_5 = 'PHP';
-            $salesFolderGroup->CURR_RATE_1 = 1.00;
-            $salesFolderGroup->CURR_RATE_2 = 1.00;
-            $salesFolderGroup->CURR_RATE_3 = 1.00;
-            $salesFolderGroup->CURR_RATE_4 = 1.00;
-            $salesFolderGroup->CURR_RATE_5 = 1.00;
-            $salesFolderGroup->SUPP_ID = null;
-            $salesFolderGroup->ACCT_CODE = null;
-            $salesFolderGroup->XO_NO = null;
-            $salesFolderGroup->VOUCHER_NO = null;
-            $salesFolderGroup->MPD_TICKET_NO = null;
-            $salesFolderGroup->TOUR_CODE = null;
-            $salesFolderGroup->BULK_FLAG = 'N';
-            $salesFolderGroup->ETICKET_FLAG = 'N';
-            $salesFolderGroup->GDS_PROVIDER = null;
-            $salesFolderGroup->SHORT_DESCR = null;
-            $salesFolderGroup->LONG_DESCR = $request->input('longItineraryDesc');
-            $salesFolderGroup->REMARKS = $request->input('generalRemarks');
-            $salesFolderGroup->AIRLINE_REMARKS = $request->input('airlineReference');
-            $salesFolderGroup->PRINT_LONG_DESCR = 'N';
-            $salesFolderGroup->CASH_INV_CNT = 0;
-            $salesFolderGroup->CREDIT_INV_CNT = 1;
-            $salesFolderGroup->CHARGE_INV_CNT = 0;
-            $salesFolderGroup->UATP_INV_CNT = 0;
-            $salesFolderGroup->MIX_INV_CNT = 0;
-            $salesFolderGroup->CAV_CNT = 0;
-            $salesFolderGroup->BYPASS_FLAG = 'N';
-            $salesFolderGroup->SUPRESS_PRINT = 'N';
-            $salesFolderGroup->PAX_DESCR = null;
-            $salesFolderGroup->PRINT_PAX_DESCR = 'N';
-            $salesFolderGroup->FIRST_PAX_NAME = null;
-            $salesFolderGroup->SECOND_PAX_NAME = null;
-            $salesFolderGroup->PKG_FLAG = 'N';
-            $salesFolderGroup->GROUP_FLAG = 'N';
-            $salesFolderGroup->XO_AMT = 0;
-            $salesFolderGroup->INV_AMT = 0;
-            $salesFolderGroup->CAV_AMT = 0;
-            $salesFolderGroup->SELL_BAL_AMT = 0;
-            $salesFolderGroup->COST_BAL_AMT = 0;
-            $salesFolderGroup->SHOW_CONV = 'N';
-            $salesFolderGroup->FARE_SAVE_AMT = 0;
-            $salesFolderGroup->STAFF_DISC_PERC = 0;
-            $salesFolderGroup->STAFF_DISC_AMT = 0;
-            $salesFolderGroup->PROMO_ALLOC = 0;
-            $salesFolderGroup->ADM_ALLOC = 0;
-            $salesFolderGroup->LOWEST_FARE = 0;
-            $salesFolderGroup->IATA_FARE = 0;
+
+            // Define attributes and their types
+            $attributes = [
+                'SF_NO' => ['value' => $request->input('troNumber'), 'type' => 'string'],
+                'DOC_ID' => ['value' => (int) $request->input('docId'), 'type' => 'integer'],
+                'PROD_TYPE' => ['value' => $request->input('productType'), 'type' => 'string'],
+                'PROD_CAT' => ['value' => $request->input('productCategory'), 'type' => 'string'],
+                'PNR' => ['value' => null, 'type' => 'NULL'],
+                'AL_PNR' => ['value' => $request->input('productType') == 'Air' ? $request->input('airline') : null, 'type' => 'string'],
+                'ROUTE' => ['value' => $request->input('route'), 'type' => 'string'],
+                'QTY' => ['value' => (int) $request->input('salesUnitQuantity'), 'type' => 'integer'],
+                'TAX_TYPE' => ['value' => 'N', 'type' => 'string'],
+                'TAX_AMT' => ['value' => (float) $request->input('salesTax'), 'type' => 'decimal'],
+                'TAX_RATE' => ['value' => 0, 'type' => 'integer'],
+                'CHARGE_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'SELL_CURR_CODE' => ['value' => $request->input('salesCurrencyCode'), 'type' => 'string'],
+                'SELL_CURR_RATE' => ['value' => (float) $request->input('salesCurrencyAmount'), 'type' => 'decimal'],
+                'SELL_AMT' => ['value' => (float) $request->input('salesUnitAmount'), 'type' => 'decimal'],
+                'SELL_TTAX_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'SELL_DISC_AMT' => ['value' => (float) $request->input('salesDiscountAmount'), 'type' => 'decimal'],
+                'SELL_DISC_PERC' => ['value' => (float) $request->input('salesDiscountRate'), 'type' => 'decimal'],
+                'SELL_COMM_AMT' => ['value' => (float) $request->input('salesCommissionAmount'), 'type' => 'decimal'],
+                'SELL_COMM_PERC' => ['value' => (float) $request->input('salesCommissionRate'), 'type' => 'decimal'],
+                'SELL_INS_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'SELL_SURCHARGE' => ['value' => (float) $request->input('salesSurcharge'), 'type' => 'decimal'],
+                'TTL_SELL_AMT' => ['value' => (float) $request->input('salesTotalUnitAmount'), 'type' => 'decimal'],
+                'SELL_GRAND_TOTAL' => ['value' => (float) $request->input('salesGrandTotal'), 'type' => 'decimal'],
+                'PUBLISH_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'SPL_FARE_CODE' => ['value' => 0, 'type' => 'integer'],
+                'NETT_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'NET_FARE_FLAG' => ['value' => 'N', 'type' => 'string'],
+                'NAIR_NETT_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'COST_COMM_AMT' => ['value' => (float) $request->input('costCommissionAmount'), 'type' => 'decimal'],
+                'COST_COMM_PERC' => ['value' => (float) $request->input('costCommissionRate'), 'type' => 'decimal'],
+                'COST_DISC_AMT' => ['value' => (float) $request->input('costDiscountAmount'), 'type' => 'decimal'],
+                'COST_DISC_PERC' => ['value' => (float) $request->input('costDiscountRate'), 'type' => 'decimal'],
+                'COST_TTAX_AMT' => ['value' => (float) $request->input('costTax'), 'type' => 'decimal'],
+                'COST_INS_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'COST_CURR_CODE' => ['value' => $request->input('costCurrencyCode'), 'type' => 'string'],
+                'COST_CURR_RATE' => ['value' => (float) $request->input('costCurrencyAmount'), 'type' => 'decimal'],
+                'TTL_COST_AMT' => ['value' => (float) $request->input('costTotalUnitCost'), 'type' => 'decimal'],
+                'COST_GRAND_TOTAL' => ['value' => (float) $request->input('costGrandTotal'), 'type' => 'decimal'],
+                'INCOME' => ['value' => 0, 'type' => 'decimal'],
+                'SELL_AMT_1' => ['value' => 0, 'type' => 'decimal'],
+                'SELL_AMT_2' => ['value' => 0, 'type' => 'decimal'],
+                'SELL_AMT_3' => ['value' => 0, 'type' => 'decimal'],
+                'SELL_AMT_4' => ['value' => 0, 'type' => 'decimal'],
+                'SELL_AMT_5' => ['value' => 0, 'type' => 'decimal'],
+                'CURR_CODE_1' => ['value' => 'PHP', 'type' => 'string'],
+                'CURR_CODE_2' => ['value' => 'PHP', 'type' => 'string'],
+                'CURR_CODE_3' => ['value' => 'PHP', 'type' => 'string'],
+                'CURR_CODE_4' => ['value' => 'PHP', 'type' => 'string'],
+                'CURR_CODE_5' => ['value' => 'PHP', 'type' => 'string'],
+                'CURR_RATE_1' => ['value' => 1.00, 'type' => 'decimal'],
+                'CURR_RATE_2' => ['value' => 1.00, 'type' => 'decimal'],
+                'CURR_RATE_3' => ['value' => 1.00, 'type' => 'decimal'],
+                'CURR_RATE_4' => ['value' => 1.00, 'type' => 'decimal'],
+                'CURR_RATE_5' => ['value' => 1.00, 'type' => 'decimal'],
+                'SUPP_ID' => ['value' => null, 'type' => 'NULL'],
+                'ACCT_CODE' => ['value' => null, 'type' => 'NULL'],
+                'XO_NO' => ['value' => null, 'type' => 'NULL'],
+                'VOUCHER_NO' => ['value' => null, 'type' => 'NULL'],
+                'MPD_TICKET_NO' => ['value' => null, 'type' => 'NULL'],
+                'TOUR_CODE' => ['value' => null, 'type' => 'NULL'],
+                'BULK_FLAG' => ['value' => 'N', 'type' => 'string'],
+                'ETICKET_FLAG' => ['value' => 'N', 'type' => 'string'],
+                'GDS_PROVIDER' => ['value' => null, 'type' => 'NULL'],
+                'SHORT_DESCR' => ['value' => null, 'type' => 'NULL'],
+                'LONG_DESCR' => ['value' => $request->input('longItineraryDesc'), 'type' => 'string'],
+                'REMARKS' => ['value' => $request->input('generalRemarks'), 'type' => 'string'],
+                'AIRLINE_REMARKS' => ['value' => $request->input('airlineReference'), 'type' => 'string'],
+                'PRINT_LONG_DESCR' => ['value' => 'N', 'type' => 'string'],
+                'CASH_INV_CNT' => ['value' => 0, 'type' => 'integer'],
+                'CREDIT_INV_CNT' => ['value' => 1, 'type' => 'integer'],
+                'CHARGE_INV_CNT' => ['value' => 0, 'type' => 'integer'],
+                'UATP_INV_CNT' => ['value' => 0, 'type' => 'integer'],
+                'MIX_INV_CNT' => ['value' => 0, 'type' => 'integer'],
+                'CAV_CNT' => ['value' => 0, 'type' => 'integer'],
+                'BYPASS_FLAG' => ['value' => 'N', 'type' => 'string'],
+                'SUPRESS_PRINT' => ['value' => 'N', 'type' => 'string'],
+                'PAX_DESCR' => ['value' => null, 'type' => 'NULL'],
+                'PRINT_PAX_DESCR' => ['value' => 'N', 'type' => 'string'],
+                'FIRST_PAX_NAME' => ['value' => null, 'type' => 'NULL'],
+                'SECOND_PAX_NAME' => ['value' => null, 'type' => 'NULL'],
+                'PKG_FLAG' => ['value' => 'N', 'type' => 'string'],
+                'GROUP_FLAG' => ['value' => 'N', 'type' => 'string'],
+                'XO_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'INV_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'CAV_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'SELL_BAL_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'COST_BAL_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'SHOW_CONV' => ['value' => 'N', 'type' => 'string'],
+                'FARE_SAVE_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'STAFF_DISC_PERC' => ['value' => (float) 0, 'type' => 'decimal'],
+                'STAFF_DISC_AMT' => ['value' => (float) 0, 'type' => 'decimal'],
+                'PROMO_ALLOC' => ['value' => (float) 0, 'type' => 'decimal'],
+                'ADM_ALLOC' => ['value' => (float) 0, 'type' => 'decimal'],
+                'LOWEST_FARE' => ['value' => (float) 0, 'type' => 'decimal'],
+                'IATA_FARE' => ['value' => (float) 0, 'type' => 'decimal'],
+            ];
+
+            foreach ($attributes as $attribute => $data) {
+                Log::info('Setting SalesFolderGroup attribute', [
+                    'attribute' => $attribute,
+                    'value' => $data['value'],
+                    'type' => $data['type']
+                ]);
+                $salesFolderGroup->$attribute = $data['value'];
+            }
 
             $salesFolderGroup->save();
 
@@ -118,9 +132,13 @@ class SalesFolderGroupController extends Controller
 
             return response()->json(['message' => 'Sales Folder Group saved successfully'], 201);
         } catch (\Exception $e) {
-            Log::error('Failed to save SalesFolderGroup', ['error' => $e->getMessage()]);
+            Log::error('Failed to save SalesFolderGroup', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
 
             return response()->json(['message' => 'Failed to save Sales Folder Group', 'error' => $e->getMessage()], 500);
         }
     }
+
 }

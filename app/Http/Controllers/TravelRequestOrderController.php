@@ -17,6 +17,7 @@ use App\Models\InventoryAir;
 use App\Models\InventoryAirSegment;
 use App\Models\InventoryHotel;
 use App\Models\InventoryMisc;
+use App\Models\InventoryTax;
 use App\Models\InventoryTransfer;
 use App\Models\MealType;
 use App\Models\MiscellaneousRates;
@@ -36,7 +37,9 @@ use App\Models\SalesFolderTransfer;
 use App\Models\SalesType;
 use App\Models\ServiceClass;
 use App\Models\Supplier;
+use App\Models\TempSalesFolderAir;
 use App\Models\TempSalesFolderPax;
+use App\Models\TempSalesFolderTax;
 use App\Models\Vessel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -212,6 +215,10 @@ class TravelRequestOrderController extends Controller
 
     public function troForm($troNumber)
     {
+        //Clear temporary data
+        $this->truncateTemporaryPaxTable();
+        $this->truncateTemporaryAirTable();
+
         //Get current DOC ID
         $sfGroup = SalesFolderGroup::where('sf_no', $troNumber)
             ->orderBy('DOC_ID', 'desc')
@@ -265,7 +272,7 @@ class TravelRequestOrderController extends Controller
     {
 
         //Clear tables with temporary data
-        $this->truncateTemporaryAirTable();
+        //$this->truncateTemporaryAirTable();
         //$this->truncateTemporaryPaxTable();
 
         //Get current DOC ID
@@ -321,6 +328,30 @@ class TravelRequestOrderController extends Controller
 
         //Temporary Pax data
         $tempPaxData = TempSalesFolderPax::all();
+        $paxTicketNumber = TempSalesFolderPax::select('TICKET_NO')->first();
+        if($paxTicketNumber != null) {
+            $ticketInventory = Inventory::where('TICKET_NO', $paxTicketNumber->TICKET_NO)->first();
+            $paxCount = TempSalesFolderPax::count();
+
+            //clear temporary data
+            $clearTempTable = $this->truncateTemporaryAirTable();
+            if($clearTempTable) {
+                $this->saveTemporaryAirTableWithTicket($troNumber, $docId, $paxTicketNumber->TICKET_NO);
+            }
+
+            $clearTax = $this->truncateTemporaryTaxTable();
+            if($clearTax) {
+                $this->saveTemporaryTaxTable($paxTicketNumber->TICKET_NO);
+            }
+
+            $airTempData = TempSalesFolderAir::all();
+            $taxTempData = TempSalesFolderTax::all();
+        } else {
+            $ticketInventory = [];
+            $paxCount = 0;
+            $airTempData = [];
+            $taxTempData = [];
+        }
 
         return view('forms.tro_add_product', compact(
             'troNumber',
@@ -343,7 +374,78 @@ class TravelRequestOrderController extends Controller
             'carSupplier',
             'productCategories',
             'tempPaxData',
+            'paxTicketNumber',
+            'ticketInventory',
+            'paxCount',
+            'airTempData',
+            'taxTempData',
         ));
+    }
+
+    public function saveTemporaryAirTableWithTicket($troNumber, $docId, $ticket)
+    {
+        try {
+            Log::info('Ticket number selected: '.$ticket);
+
+            // Get ticket info from Inventory Air Segment table
+            $inventoryAirSegments = InventoryAirSegment::where('TICKET_NO', trim($ticket))->get();
+
+            Log::info('Inventory Air Segment data: '. $inventoryAirSegments);
+
+            // Insert data into the TEMP_SALES_FOLDER_AIR table
+            foreach($inventoryAirSegments as $segment) {
+                DB::table('TEMP_SALES_FOLDER_AIR')->insert([
+                    'SF_NO' => $troNumber,
+                    'DOC_ID' => $docId,
+                    'AL_CODE' => $segment->AL_CODE,
+                    'FLIGHT_NUM' => $segment->FLIGHT_NUM,
+                    'SERVICE_CLASS' => $segment->SERVICE_CLASS,
+                    'DEPT_CITY' => $segment->ORIG_CITY,
+                    'DEPT_DATE' => $segment->ORIG_DATE,
+                    'DEPT_TIME' => $segment->ORIG_TIME,
+                    'ARVL_CITY' => $segment->DEST_CITY,
+                    'ARVL_DATE' => $segment->DEST_DATE,
+                    'ARVL_TIME' => $segment->DEST_TIME,
+                ]);
+            }
+
+            Log::info('Data inserted into TEMP_SALES_FOLDER_AIR table successfully.');
+
+            // Retrieve all data from the TEMP_SALES_FOLDER_AIR table
+            $tempData = DB::table('TEMP_SALES_FOLDER_AIR')->get();
+
+            Log::info('Retrieved data from TEMP_SALES_FOLDER_AIR table: ' . $tempData);
+
+        } catch (\Exception $e) {
+            Log::error('Error inserting data into TEMP_SALES_FOLDER_AIR table: ' . $e->getMessage());
+        }
+    }
+
+    public function saveTemporaryTaxTable($ticket)
+    {
+        try {
+            $inventoryTax = InventoryTax::where('TICKET_NO', $ticket)->get();
+
+            foreach($inventoryTax as $tax) {
+                TempSalesFolderTax::create([
+                    'TAX_CODE' => $tax->TAX_CODE,
+                    'TAX_NUM' => $tax->TAX_NUM,
+                    'COST_CURR_CODE' => $tax->COST_CURR_CODE,
+                    'COST_CURR_RATE' => $tax->COST_CURR_RATE,
+                    'COST_AMOUNT' => $tax->COST_AMOUNT,
+                    'SELL_CURR_CODE' => $tax->SELL_CURR_CODE,
+                    'SELL_CURR_RATE' => $tax->SELL_CURR_RATE,
+                    'SELL_AMOUNT' => $tax->SELL_AMOUNT,
+                    'BILL_FLAG' => $tax->BILL_FLAG,
+                    'INCL_FLAG' => $tax->INCL_FLAG,
+                ]);
+            }
+
+            Log::info('Data saved: ' . $inventoryTax);
+
+        } catch(\Exception $e) {
+            Log::error('Error inserting data into TEMP_SALES_FOLDER_TAX table: ' . $e->getMessage());
+        }
     }
 
     public function truncateTemporaryAirTable()
@@ -370,6 +472,18 @@ class TravelRequestOrderController extends Controller
         }
     }
 
+    public function truncateTemporaryTaxTable()
+    {
+        try {
+            DB::table('TEMP_SALES_FOLDER_TAX')->truncate();
+            Log::info('TEMP_SALES_FOLDER_TAX table truncated.');
+            return response()->json(['message' => 'TEMP_SALES_FOLDER_TAX table truncated.'], 200);
+        } catch (\Exception $e) {
+            Log::error('Error truncating TEMP_SALES_FOLDER_TAX table: ' . $e->getMessage());
+            return response()->json(['message' => 'Error truncating TEMP_SALES_FOLDER_TAX table.'], 500);
+        }
+    }
+
     public function productDetails($troNumber, $docId) {
 
         $sfGroup = SalesFolderGroup::where('SF_NO', $troNumber)
@@ -389,6 +503,21 @@ class TravelRequestOrderController extends Controller
         $roomCategories = RoomCategory::all();
         //Meals
         $meals = MealType::all();
+
+        //Car / Transfer
+        $carTypes = CarType::all();
+        $carCategories = CarCategory::all();
+        $carSupplier = Supplier::where('STATUS', 'AC')
+            ->orderBy('SUPP_NAME', 'asc')
+            ->get();
+
+        //Miscellaneous
+        $processingCenters = ProcessingCenter::where('STATUS', 'Y')
+            ->orderBy('PROC_DESCR', 'asc')
+            ->get();
+        $miscRates = MiscellaneousRates::where('STATUS', 'y')
+            ->orderBy('MISC_DESCR', 'asc')
+            ->get();
 
         //booking status
         $bookStatus = BookingStatus::all();
@@ -426,11 +555,11 @@ class TravelRequestOrderController extends Controller
 
             $infoTransfer = SalesFolderTransfer::where('SF_NO', $troNumber)
                 ->where('DOC_ID', $docId)
-                ->get();
+                ->first();
 
             $infoMisc = SalesFolderMisc::where('SF_NO', $troNumber)
                 ->where('DOC_ID', $docId)
-                ->get();
+                ->first();
 
         if($productCategory == 'A') {
             return view('forms.tro_edit_product_air', compact([
@@ -445,6 +574,7 @@ class TravelRequestOrderController extends Controller
                 'sfGroup',
                 'sfAir',
                 'sfAirPax',
+                'bookStatus',
             ]));
         } elseif ($productCategory == 'M') {
             return view('forms.tro_edit_product_misc', compact([
@@ -453,6 +583,10 @@ class TravelRequestOrderController extends Controller
                 'details',
                 'infoMisc',
                 'vessels',
+                'processingCenters',
+                'miscRates',
+                'bookStatus',
+                'serviceClasses',
             ]));
         } elseif ($productCategory == 'H') {
             return view('forms.tro_edit_product_hotel', compact([
@@ -475,6 +609,10 @@ class TravelRequestOrderController extends Controller
                 'details',
                 'infoTransfer',
                 'vessels',
+                'carTypes',
+                'carCategories',
+                'carSupplier',
+                'bookStatus',
             ]));
         }
 

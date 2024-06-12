@@ -59,6 +59,7 @@
                     </div>
                     <div class="col-md-12 justify-content-start d-flex">
                         <button type="button" class="btn btn-primary my-3 txt-1" id="getTickets">Get Tickets</button>
+                        <button type="button" class="btn btn-danger my-3 mx-1 txt-1" id="cancelFindTicket">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -152,6 +153,27 @@ $(document).ready(function() {
                 troNumber: troNumber,
                 docId: docId,
                 tickets: selectedTickets
+            },
+            success: function(response) {
+                window.location.href = response.redirect_url;
+            },
+            error: function(xhr) {
+                const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred';
+                alert(errorMessage);
+            }
+        });
+    });
+
+    $('#clearTickets').click(function() {
+
+        var troNumber = $('#troNumber').val();
+
+        $.ajax({
+            url: '{{ route("sales-folder-pax.tempdata.clear") }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                troNumber: troNumber,
             },
             success: function(response) {
                 window.location.href = response.redirect_url;

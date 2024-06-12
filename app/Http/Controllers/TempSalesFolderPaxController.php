@@ -12,7 +12,7 @@ class TempSalesFolderPaxController extends Controller
     public function saveTickets(Request $request)
     {
         try {
-            $this->truncateTemporaryPaxTable();
+            $this->truncateTemporaryPaxTable($request);
 
             $troNumber = $request->input('troNumber');
             $docId = $request->input('docId');
@@ -40,12 +40,17 @@ class TempSalesFolderPaxController extends Controller
         }
     }
 
-    public function truncateTemporaryPaxTable()
+    public function truncateTemporaryPaxTable(Request $request)
     {
         try {
+            $troNumber = $request->input('troNumber');
+
             DB::table('TEMP_SALES_FOLDER_PAX')->truncate();
             Log::info('TEMP_SALES_FOLDER_PAX table truncated.');
-            return response()->json(['message' => 'TEMP_SALES_FOLDER_PAX table truncated.'], 200);
+            return response()->json([
+                'message' => 'TEMP_SALES_FOLDER_PAX table truncated.',
+                'redirect_url' => route('forms.tro.add_product', ['troNumber' => $troNumber]),
+            ], 200);
         } catch (\Exception $e) {
             Log::error('Error truncating TEMP_SALES_FOLDER_PAX table: ' . $e->getMessage());
             return response()->json(['message' => 'Error truncating TEMP_SALES_FOLDER_PAX table.'], 500);

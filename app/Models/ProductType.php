@@ -48,4 +48,14 @@ class ProductType extends Model
         'REQ_XO_INV',
         'HOTEL_QTY_FACTOR',
     ];
+
+    public function category()
+    {
+        $this->belongsTo(ProductCategory::class, 'PROD_CAT', 'PROD_CAT');
+    }
+
+    public function route()
+    {
+        $this->belongsTo(Route::class, 'ROUTE', 'ROUTE_CODE');
+    }
 }
