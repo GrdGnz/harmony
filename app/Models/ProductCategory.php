@@ -12,8 +12,8 @@ class ProductCategory extends Model
     protected $table = "PRODUCT_CATEGORY";
 
     protected $fillable = [
-        'prod_cat',
-        'prod_name',
-        'status',
+        'PROD_CAT',
+        'PROD_CAT_DESCR',
+        'STATUS',
     ];
 }

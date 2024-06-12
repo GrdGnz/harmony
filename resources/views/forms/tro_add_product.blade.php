@@ -15,6 +15,8 @@
         <!-- Main content area -->
         <main class="col-lg-12 px-md-4 p-3">
 
+            {{ $paxTicketNumber }}
+
             <!-- TRO Number and DOC ID of this product -->
             @if(isset($troNumber))
                 <input type="hidden" name="troNumber" id="troNumber" value="{{ $troNumber }}">
@@ -41,33 +43,50 @@
                     <hr class="w-100">
 
                     <div class="row col-md-12 d-flex">
-                        <div class="form-group col-md-3 mb-2">
-                            <label for="productCategory" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Category</label>
-                            <select id="productCategory" name="productCategory" class="form-control form-select txt-1">
-                                <option value="" selected="selected">-- Choose Category --</option>
-                                @foreach ($productCategories as $category)
-                                    <option value="{{ $category->PROD_CAT }}">{{ $category->PROD_CAT_DESCR }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3 mb-2">
-                            <label for="route" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Route</label>
-                            <select id="route" name="route" class="form-control form-select txt-1">
-                                <option value="">-- Choose Route --</option>
-                                @foreach ($routes as $route)
-                                    <option value="{{ $route->ROUTE_CODE }}">{{ $route->ROUTE_DESCR }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+
                         <div class="form-group col-md-6 mb-2">
                             <label for="productType" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">Product Name</label>
-                            <select id="productType" name="productType" class="form-control form-select txt-1" readonly>
-                                <option value="">-- Choose Product --</option>
-                                @foreach ($products as $product)
-                                    <option value="{{ $product->PROD_TYPE }}" data-category="{{ $product->PROD_CAT }}">{{ $product->PROD_DESCR }}</option>
-                                @endforeach
-                            </select>
+                            @if (isset($ticketInventory->type->PROD_DESCR))
+                                <input type="text" id="showProduct" name="showProduct" class="form-control form-select txt-1" value="{{ $ticketInventory->type->PROD_DESCR }}" readonly>
+                                <input type="hidden" id="productType" name="productType" value="{{ $ticketInventory->PROD_TYPE }}">
+                            @else
+                                <select id="productType" name="productType" class="form-control form-select txt-1" readonly>
+                                    <option value="">-- Choose Product --</option>
+                                    @foreach ($products as $product)
+                                        <option value="{{ $product->PROD_TYPE }}" data-category="{{ $product->PROD_CAT }}" data-route="{{ $product->ROUTE }}">{{ $product->PROD_DESCR }}</option>
+                                    @endforeach
+                                </select>
+                            @endif
                         </div>
+                        <div class="form-group col-md-3 mb-2">
+                            <label for="productCategory" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">Product Category</label>
+
+                            @if (isset($ticketInventory->category->PROD_CAT_DESCR))
+                                <input type="text" id="showCategory" name="showCategory" class="form-control form-select txt-1" value="{{ $ticketInventory->category->PROD_CAT_DESCR }}" readonly>
+                                <input type="hidden" id="productCategory" name="productCategory" value="{{ $ticketInventory->PROD_CAT }}">
+
+                            @else
+
+                                <input type="text" class="form-control txt-1" id="showCategory" value="" readonly>
+                                <input type="hidden" id="productCategory" name="productCategory" value="">
+
+                            @endif
+                        </div>
+                        <div class="form-group col-md-3 mb-2">
+                            <label for="route" class="form-label txt-1 marsman-bg-color-label text-white p-2 m-0 rounded-top">Route</label>
+                            @if (isset($ticketInventory->route->ROUTE_DESCR))
+                                <input type="text" id="showRoute" name="showRoute" class="form-control form-select txt-1" value="{{ $ticketInventory->route->ROUTE_DESCR }}" readonly>
+                                <input type="hidden" id="route" name="route" value="{{ $ticketInventory->ROUTE_TYPE }}">
+
+                            @else
+
+                                <input type="text" class="form-control txt-1" id="showRoute" value="" readonly>
+                                <input type="hidden" id="route" name="route" value="">
+
+                            @endif
+
+                        </div>
+
                     </div>
 
                     <!-- Tabs -->
@@ -257,11 +276,46 @@
                                             <div class="col-md-12 d-flex">
                                                 <div class="form-group">
                                                     <label for="costCurrencyCode" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Code</label>
-                                                    <input type="text" class="form-control txt-1" id="costCurrencyCode" name="costCurrencyCode" value="PHP">
+                                                    @if (isset($ticketInventory->COST_CURR_CODE))
+                                                        <input type="text" class="form-control txt-1" id="costCurrencyCode" name="costCurrencyCode" value="{{ $ticketInventory->COST_CURR_CODE }}">
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="costCurrencyCode" name="costCurrencyCode" value="PHP">
+                                                    @endif
+
                                                 </div>
                                                 <div class="form-group col-md-8 mx-2">
                                                     <label for="costCurrencyAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Amount</label>
-                                                    <input type="text" class="form-control txt-1" id="costCurrencyAmount" name="costCurrencyAmount" value="0">
+                                                    @if (isset($ticketInventory->COST_CURR_RATE))
+                                                        <input type="text" class="form-control txt-1" id="costCurrencyAmount" name="costCurrencyAmount" value="{{ $ticketInventory->COST_CURR_RATE }}">
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="costCurrencyAmount" name="costCurrencyAmount" value="0">
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--- Unit -->
+                                        <div class="card mt-2">
+                                            <div class="card-header m-0 p-0">
+
+                                            </div>
+                                            <div class="card-body marsman-bg-color-gray1">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="form-group col-md-6 mx-2">
+                                                        <label for="costUnitAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Unit Amount</label>
+                                                        @if (isset($ticketInventory->PUBLISH_AMOUNT))
+                                                            <input type="text" class="form-control txt-1" id="costUnitAmount" name="costUnitAmount" value="{{ number_format($ticketInventory->PUBLISH_AMOUNT, 2, '.', ',') }}">
+                                                        @else
+                                                            <input type="text" class="form-control txt-1" id="costUnitAmount" name="costUnitAmount" value="0">
+                                                        @endif
+                                                    </div>
+                                                    <div class="form-group col-md-4 mx-2">
+                                                        <label for="costUnitQuantity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Quantity</label>
+                                                        @if (isset($paxCount))
+                                                            <input type="text" class="form-control txt-1" id="costUnitQuantity" name="costUnitQuantity" value="{{ $paxCount }}">
+                                                        @else
+                                                            <input type="number" class="form-control txt-1" id="costUnitQuantity" name="costUnitQuantity" value="0">
+                                                        @endif
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -280,7 +334,12 @@
                                                 </div>
                                                 <div class="col-md-4 p-1">
                                                     <label for="costPublishedRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Published Rate</label>
-                                                    <input type="text" class="form-control txt-1" id="costPublishedRate" name="costPublishedRate">
+                                                    @if (isset($ticketInventory->ANET_AMOUNT))
+                                                        <input type="text" class="form-control txt-1" id="costPublishedRate" name="costPublishedRate" value="{{ number_format($ticketInventory->ANET_AMOUNT, 2, '.', ',') }}">
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="costPublishedRate" name="costPublishedRate">
+                                                    @endif
+
                                                 </div>
                                                 <div class="col-md-4 p-1">
                                                     <label for="costNetRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Net Rate</label>
@@ -296,8 +355,16 @@
                                         </div>
                                         <!-- Net Rate -->
                                         <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
+                                            <div class="col-md-12 d-flex">
+                                                <div class="form-group col-md-6 p-1">
+                                                    <label for="nonAirPublishedRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Published Rate</label>
+                                                    @if (isset($ticketInventory->ONET_AMOUNT))
+                                                        <input type="text" class="form-control txt-1" id="nonAirPublishedRate" name="nonAirPublishedRate" value="{{ number_format($ticketInventory->ONET_AMOUNT, 2, '.', ',') }}">
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="nonAirPublishedRate" name="nonAirPublishedRate">
+                                                    @endif
+                                                </div>
+                                                <div class="form-group col-md-6 p-1">
                                                     <label for="nonAirNetRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Net Rate</label>
                                                     <input type="text" class="form-control txt-1" id="nonAirNetRate" name="nonAirNetRate">
                                                 </div>
@@ -342,11 +409,19 @@
                                                 <div class="col-md-12 d-flex">
                                                     <div class="form-group col-md-6 mb-2">
                                                         <label for="costDiscountRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
-                                                        <input type="text" class="form-control txt-1" id="costDiscountRate" name="costDiscountRate" value="0">
+                                                        @if (isset($ticketInventory->COST_DISC_PERC))
+                                                            <input type="text" class="form-control txt-1" id="costDiscountRate" name="costDiscountRate" value="{{ $ticketInventory->COST_DISC_PERC }}">
+                                                        @else
+                                                            <input type="text" class="form-control txt-1" id="costDiscountRate" name="costDiscountRate" value="0">
+                                                        @endif
                                                     </div>
                                                     <div class="form-group col-md-6 mb-2 mx-2">
                                                         <label for="costDiscountAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
-                                                        <input type="text" class="form-control txt-1" id="costDiscountAmount" name="costDiscountAmount" value="0">
+                                                        @if (isset($ticketInventory->COST_DISC_AMOUNT))
+                                                            <input type="text" class="form-control txt-1" id="costDiscountAmount" name="costDiscountAmount" value="{{ number_format($ticketInventory->COST_DISC_AMOUNT, 2, '.', ',') }}">
+                                                        @else
+                                                            <input type="text" class="form-control txt-1" id="costDiscountAmount" name="costDiscountAmount" value="0">
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -360,11 +435,19 @@
                                                 <div class="col-md-12 d-flex">
                                                     <div class="form-group col-md-6 mb-2">
                                                         <label for="costCommissionRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
-                                                        <input type="text" class="form-control txt-1" id="costCommissionRate" name="costCommissionRate" value="0">
+                                                        @if (isset($ticketInventory->COST_COMM_PERC))
+                                                            <input type="text" class="form-control txt-1" id="costCommissionRate" name="costCommissionRate" value="{{ $ticketInventory->COST_COMM_PERC }}">
+                                                        @else
+                                                            <input type="text" class="form-control txt-1" id="costCommissionRate" name="costCommissionRate" value="0">
+                                                        @endif
                                                     </div>
                                                     <div class="form-group col-md-6 mb-2 mx-2">
                                                         <label for="costCommissionAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
-                                                        <input type="text" class="form-control txt-1" id="costCommissionAmount" name="costCommissionAmount" value="0">
+                                                        @if (isset($ticketInventory->COST_COMM_AMOUNT))
+                                                            <input type="text" class="form-control txt-1" id="costCommissionAmount" name="costCommissionAmount" value="{{ number_format($ticketInventory->COST_COMM_AMOUNT, 2, '.', ',') }}">
+                                                        @else
+                                                            <input type="text" class="form-control txt-1" id="costCommissionAmount" name="costCommissionAmount" value="0">
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -381,23 +464,43 @@
                                             <div class="row col-md-12 d-flex">
                                                 <div class="col-md-4 mb-2 p-1">
                                                     <label for="costInsurance" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Insurance</label>
-                                                    <input type="text" class="form-control txt-1" id="costInsurance" name="costInsurance">
+                                                    @if (isset($ticketInventory->COST_INS_AMOUNT))
+                                                        <input type="text" class="form-control txt-1" id="costInsurance" name="costInsurance" value="{{ number_format($ticketInventory->COST_INS_AMOUNT, 2, '.', ',') }}">
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="costInsurance" name="costInsurance" value="0">
+                                                    @endif
                                                 </div>
                                                 <div class="col-md-2 mb-2 p-1">
                                                     <label for="costTax" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Taxes</label>
-                                                    <input type="text" class="form-control txt-1" id="costTax" name="costTax" value="0">
+                                                    @if (isset($ticketInventory->COST_TAX_AMOUNT))
+                                                        <input type="text" class="form-control txt-1" id="costTax" name="costTax" value="{{ number_format($ticketInventory->COST_TAX_AMOUNT, 2, '.', ',') }}">
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="costTax" name="costTax" value="0">
+                                                    @endif
                                                 </div>
                                                 <div class="col-md-2 mb-2 p-1">
                                                     <label for="costTotalUnitCost" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Total Unit Cost</label>
-                                                    <input type="text" class="form-control txt-1" id="costTotalUnitCost" name="costTotalUnitCost" value="0">
+                                                    @if (isset($ticketInventory->PUBLISH_AMOUNT))
+                                                        <input type="text" class="form-control txt-1" id="costTotalUnitCost" name="costTotalUnitCost" value="{{ number_format($ticketInventory->PUBLISH_AMOUNT, 2, '.', ',') }}">
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="costTotalUnitCost" name="costTotalUnitCost" value="0">
+                                                    @endif
                                                 </div>
                                                 <div class="col-md-2 mb-2 p-1">
-                                                    <label for="costUnitQuantity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Quantity.</label>
-                                                    <input type="number" class="form-control txt-1" id="costUnitQuantity" name="costUnitQuantity" value="0">
+                                                    <label for="costUnitQuantity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Quantity</label>
+                                                    @if (isset($paxCount))
+                                                        <input type="text" class="form-control txt-1" id="costUnitQuantity" name="costUnitQuantity" value="{{ $paxCount }}">
+                                                    @else
+                                                        <input type="number" class="form-control txt-1" id="costUnitQuantity" name="costUnitQuantity" value="0">
+                                                    @endif
                                                 </div>
                                                 <div class="col-md-2 mb-2 p-1">
                                                     <label for="costGrandTotal" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Grand Total</label>
-                                                    <input type="text" class="form-control txt-1" id="costGrandTotal" name="costGrandTotal" value="0">
+                                                    @if (isset($ticketInventory->PUBLISH_AMOUNT) && isset($paxCount))
+                                                        <input type="text" class="form-control txt-1" id="costGrandTotal" name="costGrandTotal" value="{{ number_format(($ticketInventory->PUBLISH_AMOUNT + $ticketInventory->COST_TAX_AMOUNT + $ticketInventory->COST_INS_AMOUNT) * $paxCount, 2, '.', ',') }}">
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="costGrandTotal" name="costGrandTotal" value="0">
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -908,10 +1011,10 @@
                                                     <td>{{ $temp->FLIGHT_NUM }}</td>
                                                     <td>{{ $temp->SERVICE_CLASS }}</td>
                                                     <td>{{ $temp->DEPT_CITY }}</td>
-                                                    <td>{{ $temp->DEPT_DATE }}</td>
+                                                    <td>{{ \Carbon\Carbon::parse($temp->DEPT_DATE)->format('Y-m-d') }}</td>
                                                     <td>{{ $temp->DEPT_TIME }}</td>
                                                     <td>{{ $temp->ARVL_CITY }}</td>
-                                                    <td>{{ $temp->ARVL_DATE }}</td>
+                                                    <td>{{ \Carbon\Carbon::parse($temp->ARVL_DATE)->format('Y-m-d') }}</td>
                                                     <td>{{ $temp->ARVL_TIME }}</td>
                                                 </tr>
                                             @endforeach
@@ -1024,7 +1127,6 @@
                                             <th></th>
                                             <th colspan="3" class="text-center">Cost</th>
                                             <th colspan="5" class="text-center">Sales</th>
-                                            <th></th>
                                         </tr>
                                         <tr>
                                             <th>Code</th>
@@ -1036,13 +1138,24 @@
                                             <th>Currency</th>
                                             <th>Rate</th>
                                             <th>Amount</th>
-                                            <th>Code</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td></td>
-                                        </tr>
+                                        @if (isset($taxTempData))
+                                            @foreach ($taxTempData as $tax)
+                                                <tr>
+                                                    <td>{{ $tax->TAX_CODE }}</td>
+                                                    <td>{{ $tax->COST_CURR_CODE }}</td>
+                                                    <td>{{ $tax->COST_CURR_RATE }}</td>
+                                                    <td>{{ $tax->COST_AMOUNT }}</td>
+                                                    <td>{{ $tax->BILL_FLAG }}</td>
+                                                    <td>{{ $tax->INCL_FLAG }}</td>
+                                                    <td>{{ $tax->SELL_CURR_CODE }}</td>
+                                                    <td>{{ $tax->SELL_CURR_RATE }}</td>
+                                                    <td>{{ $tax->SELL_AMOUNT }}</td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -1356,31 +1469,52 @@
         const checkOutDate = document.getElementById('checkOutDate');
         const hotelNights = document.getElementById('hotelNights');
         const productNameSelect = document.getElementById('productType');
-        const categorySelect = document.getElementById('productCategory');
+        const categorySelect = document.getElementById('showCategory');
         const routeSelect = document.getElementById('route');
         const itineraryTabs = document.querySelectorAll('.nav-link.itinerary');
-        const salesTab = document.getElementById('sales-tab');  // Make sure this ID matches your HTML
+        const salesTab = document.getElementById('sales-tab');
+        const airTab = document.getElementById('itineraryAir-tab');
+        const miscTab = document.getElementById('itineraryMisc-tab');
+        var products = @json($products);
+        var categories = @json($productCategories);
+        var routes = @json($routes);
 
-        // Initially make the product and route select boxes disabled
-        productNameSelect.disabled = true;
-        routeSelect.disabled = true;
+        document.getElementById('productType').addEventListener('change', function() {
+            var selectedOption = this.options[this.selectedIndex];
 
-        // Hide all itinerary tabs initially
+            // Get category and route information from the selected option
+            var categoryCode = selectedOption.getAttribute('data-category');
+            var routeCode = selectedOption.getAttribute('data-route');
+
+            // Find descriptions for the selected category and route
+            var categoryDescription = categories.find(c => c.PROD_CAT === categoryCode)?.PROD_CAT_DESCR || '';
+            var routeDescription = routes.find(r => r.ROUTE_CODE === routeCode)?.ROUTE_DESCR || '';
+
+            // Update the hidden input fields
+            document.getElementById('productCategory').value = categoryCode;
+            document.getElementById('route').value = routeCode;
+
+            // Update the display fields
+            document.getElementById('showCategory').value = categoryDescription;
+            document.getElementById('showRoute').value = routeDescription;
+        });
+
+         // Hide all itinerary tabs initially
         itineraryTabs.forEach(tab => tab.style.display = 'none');
 
-        categorySelect.addEventListener('change', function() {
+        // Make #itineraryAir-tab the active when ticket with AIR product is present
+        @if (isset($paxTicketNumber))
+            if (categorySelect.value === 'AIR') {
+                new bootstrap.Tab(airTab).show();
+                airTab.style.display = 'block';
+            } else if(categorySelect.value === 'MISCELLANEOUS') {
+                new bootstrap.Tab(miscTab).show();
+                miscTab.style.display = 'block';
+            }
+        @endif
+
+        productNameSelect.addEventListener('change', function() {
             const selectedCategory = this.value;
-
-            // Enable the product and route select boxes if a category is selected
-            productNameSelect.disabled = !selectedCategory;
-            routeSelect.disabled = !selectedCategory;
-
-            // Filter products based on the selected category
-            filterProducts();
-
-            // Reset the product select box to its default option
-            productNameSelect.value = '';
-            routeSelect.value = '';
 
             // Show/hide the appropriate itinerary tab
             showItineraryTab();
@@ -1391,48 +1525,8 @@
             }
         });
 
-        routeSelect.addEventListener('change', function() {
-            // Filter products based on the selected category and route
-            filterProducts();
-        });
-
-        function filterProducts() {
-            const selectedCategoryName = categorySelect.options[categorySelect.selectedIndex].text.trim();
-            const selectedRoute = routeSelect.options[routeSelect.selectedIndex].text.trim();
-            const routeFilter = selectedRoute === 'Domestic' ? 'DOM' : selectedRoute === 'International' ? 'INTL' : '';
-
-            const options = productNameSelect.querySelectorAll('option');
-            options.forEach(option => {
-                const productDescription = option.text.trim();
-                let showOption = false;
-
-                if (selectedCategoryName === 'HOTEL') {
-                    showOption = productDescription.startsWith('HOTEL');
-                    if (routeFilter) {
-                        showOption = showOption && productDescription.includes(routeFilter);
-                    }
-                } else if (selectedCategoryName === 'AIR') {
-                    showOption = productDescription.startsWith('AIR ');
-                    if (routeFilter) {
-                        showOption = showOption && productDescription.includes(routeFilter);
-                    }
-                } else if (selectedCategoryName === 'CAR / TRANSFER') {
-                    showOption = productDescription.startsWith('CARS') || productDescription.startsWith('TRANSFERS');
-                    if (routeFilter) {
-                        showOption = showOption && productDescription.includes(routeFilter);
-                    }
-                } else if (selectedCategoryName === 'MISCELLANEOUS') {
-                    showOption = productDescription.startsWith('MISCELLANEOUS');
-                } else {
-                    showOption = option.dataset.category === selectedCategoryName;
-                }
-
-                option.style.display = showOption ? '' : 'none';
-            });
-        }
-
         function showItineraryTab() {
-            const selectedCategoryName = categorySelect.options[categorySelect.selectedIndex].text.trim();
+            const selectedCategoryName = categorySelect.value;
             const hotelTab = document.getElementById('itineraryHotel-tab');
             const miscTab = document.getElementById('itineraryMisc-tab');
             const airTab = document.getElementById('itineraryAir-tab');

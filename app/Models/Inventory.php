@@ -9,6 +9,8 @@ class Inventory extends Model
 {
     use HasFactory;
 
+    public $timestamps = false; // Disable timestamps
+
     protected $table = 'INVENTORY';
 
     protected $fillable = [
@@ -141,4 +143,19 @@ class Inventory extends Model
       'INV_NO',
       'INV_TYPE',
     ];
+
+    public function type()
+    {
+        return $this->belongsTo(ProductType::class, 'PROD_TYPE', 'PROD_TYPE');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(ProductCategory::class, 'PROD_CAT', 'PROD_CAT');
+    }
+
+    public function route()
+    {
+        return $this->belongsTo(Route::class, 'ROUTE_TYPE', 'ROUTE_CODE');
+    }
 }

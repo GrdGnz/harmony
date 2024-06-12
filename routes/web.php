@@ -24,6 +24,7 @@ Route::post('/add/stock', [App\Http\Controllers\TravelRequestOrderController::cl
 
 //TRO - Add product
 Route::get('/forms/tro/add-product/{troNumber}', [App\Http\Controllers\TravelRequestOrderController::class, 'addProductForm'])->name('forms.tro.add_product');
+Route::get('/forms/tro/add-product-with-ticket/{troNumber}', [App\Http\Controllers\TravelRequestOrderController::class, 'addProductWithTicket'])->name('forms.tro.add_product_with_ticket');
 
 //TRO - Search ticket
 Route::get('/forms/tro/search-ticket/{troNumber}/{docId}', [App\Http\Controllers\TravelRequestOrderController::class, 'searchTicket'])->name('searchTicket.tro');
@@ -62,5 +63,7 @@ Route::get('/sales-folder/data', [App\Http\Controllers\SalesFolderController::cl
 //Transfer Pax Data
     //Store data
     Route::post('/sales-folder-pax/tempdata/store', [App\Http\Controllers\TempSalesFolderPaxController::class, 'saveTickets'])->name('sales-folder-pax.tempdata.store');
+    //Clear data
+    Route::post('/sales-folder-pax/tempdata/clear', [App\Http\Controllers\TempSalesFolderPaxController::class, 'truncateTemporaryPaxTable'])->name('sales-folder-pax.tempdata.clear');
     //Transfer temp data to Sales Folder Air
     Route::post('/transfer-temp-pax-data', [App\Http\Controllers\SalesFolderPaxController::class, 'transferPaxData'])->name('sales-folder-pax.tempdata.transfer');
