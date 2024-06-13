@@ -15,8 +15,6 @@
         <!-- Main content area -->
         <main class="col-lg-12 px-md-4 p-3">
 
-            {{ $paxTicketNumber }}
-
             <!-- TRO Number and DOC ID of this product -->
             @if(isset($troNumber))
                 <input type="hidden" name="troNumber" id="troNumber" value="{{ $troNumber }}">
