@@ -55,9 +55,10 @@
                                 <tr>
                                     <th>TRO No.</th>
                                     <th>Client Name</th>
-                                    <th>Client Type</th>
-                                    <th>Client Category</th>
+                                    <th>Bill Curr Code</th>
+                                    <th>Bill Curr Rate</th>
                                     <th>Date Created</th>
+                                    <th>Trip Date</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -114,8 +115,9 @@
                         return '<a href="' + url + '">' + data + '</a>';
                     }
                 },
-                { "data": "CLT_TYPE" },
-                { "data": "CLT_CAT" },
+                { "data": "BILL_CURR_CODE" },
+                { "data": "BILL_CURR_RATE" },
+                { "data": "TRIP_DATE" },
                 { "data": "SF_DATE" },
                 { "data": "STATUS" }
             ]
