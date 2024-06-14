@@ -57,6 +57,8 @@
     <!-- Timepicker -->
     <script src="https://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.js"></script>
 
+    <!-- Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 </head>
 <body class="sb-nav-fixed txt-1 marsman-bg-color-lightblue">
     <div id="app">

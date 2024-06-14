@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\SalesFolder;
 use App\Models\SalesFolderGroup;
-use Log;
+use App\Models\SalesFolderAir;
+use App\Models\SalesFolderPax;
+use App\Models\SalesFolderHotel;
+use App\Models\SalesFolderTransfer;
+use App\Models\Inventory;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class SalesFolderGroupController extends Controller
 {
@@ -138,6 +143,61 @@ class SalesFolderGroupController extends Controller
             ]);
 
             return response()->json(['message' => 'Failed to save Sales Folder Group', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function delete($troNumber, $docId)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Delete the record from SalesFolderGroup using SF_NO and DOC_ID
+            $affected = SalesFolderGroup::where('SF_NO', $troNumber)
+                                        ->where('DOC_ID', $docId)
+                                        ->delete();
+
+            if ($affected > 0) {
+                Log::info("Record deleted from SalesFolderGroup.", ['troNumber' => $troNumber, 'docId' => $docId]);
+            } else {
+                Log::warning("Record not found in SalesFolderGroup.", ['troNumber' => $troNumber, 'docId' => $docId]);
+                throw new \Exception('Record not found in SalesFolderGroup.');
+            }
+
+            // Fetch TICKET_NO from SalesFolderPax records to be deleted
+            $ticketNumbers = SalesFolderPax::where('SF_NO', $troNumber)
+                                            ->where('DOC_ID', $docId)
+                                            ->pluck('TICKET_NO');
+
+            // Update Inventory records where TICKET_NO matches and set SF_NO to NULL
+            if ($ticketNumbers->isNotEmpty()) {
+                Inventory::whereIn('TICKET_NO', $ticketNumbers)->update(['SF_NO' => null]);
+                Log::info("Inventory records updated to set SF_NO to NULL.", ['troNumber' => $troNumber, 'ticketNumbers' => $ticketNumbers]);
+            }
+
+            // Delete related records in other models
+            SalesFolderAir::where('SF_NO', $troNumber)->where('DOC_ID', $docId)->delete();
+            SalesFolderPax::where('SF_NO', $troNumber)->where('DOC_ID', $docId)->delete();
+            SalesFolderHotel::where('SF_NO', $troNumber)->where('DOC_ID', $docId)->delete();
+            SalesFolderTransfer::where('SF_NO', $troNumber)->where('DOC_ID', $docId)->delete();
+
+            Log::info("Related records deleted from SalesFolderAir, SalesFolderPax, SalesFolderHotel, and SalesFolderTransfer.", ['troNumber' => $troNumber, 'docId' => $docId]);
+
+            DB::commit();
+
+            // Redirect with success message
+            return redirect()->back()->with('success', 'Record and related data deleted successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Log the exception
+            Log::error("Error deleting record and related data.", [
+                'troNumber' => $troNumber,
+                'docId' => $docId,
+                'error' => $e->getMessage()
+            ]);
+
+            // Redirect with error message if there is an exception
+            return redirect()->back()->with('error', 'An error occurred while deleting the record.');
         }
     }
 

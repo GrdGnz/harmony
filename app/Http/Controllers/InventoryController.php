@@ -24,8 +24,7 @@ class InventoryController extends Controller
         }
 
         // Filter out records where SF_NO is not empty or null
-        $query->whereNull('SF_NO')
-        ->orWhere('SF_NO', '=', '');
+        $query->whereNull('SF_NO');
 
         return DataTables::of($query)->make(true);
     }
