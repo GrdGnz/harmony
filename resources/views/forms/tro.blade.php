@@ -290,12 +290,24 @@
                 <div class="tab-content marsman-bg-color-lightgray p-3">
                     <div class="tab-pane fade show active p-3" id="products" role="tabpanel" aria-labelledby="products-tab">
                         <div class="row marsman-bg-color-lightgray">
+                            @if(session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if(session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
                             <table class="table table-bordered table-striped">
                                 <thead class="marsman-bg-color-dark text-white">
                                     <tr>
                                         <th>PRODUCT NAME</th>
                                         <th>CATEGORY</th>
                                         <th>PNR</th>
+                                        <th width="10%" class="text-center"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -309,6 +321,7 @@
                                                 </td>
                                                 <td>{{ $existing->productCategory->PROD_CAT_DESCR }}</td>
                                                 <td>{{ $existing->PNR }}</td>
+                                                <td class="text-center"><a class="btn btn-danger txt-1" onclick="showDeleteModal('{{ $existing->SF_NO }}', {{ $existing->DOC_ID }})">Delete</a></td>
                                             </tr>
                                         @endforeach
                                     @endif
@@ -690,6 +703,29 @@
     </div>
 </div>
 
+<!-- Modals :: start -->
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this record?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Yes, delete it</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modals :: end -->
+
 <script>
 function removeWhitespace(input) {
     // Get the value of the input and remove leading and trailing whitespace
@@ -697,6 +733,18 @@ function removeWhitespace(input) {
     // Set the trimmed value back to the input
     input.value = trimmedValue;
 }
+
+//Confirm delete
+let deleteUrl = '';
+
+function showDeleteModal(troNumber, docId) {
+    deleteUrl = '{{ url('/sales-folder-group/delete') }}/' + troNumber + '/' + docId;
+    $('#deleteModal').modal('show');
+}
+
+document.getElementById('confirmDelete').addEventListener('click', function() {
+    window.location.href = deleteUrl;
+});
 </script>
 
 <style>

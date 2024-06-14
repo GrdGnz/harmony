@@ -59,7 +59,7 @@
                     </div>
                     <div class="col-md-12 justify-content-start d-flex">
                         <button type="button" class="btn btn-primary my-3 txt-1" id="getTickets">Get Tickets</button>
-                        <button type="button" class="btn btn-danger my-3 mx-1 txt-1" id="cancelFindTicket">Cancel</button>
+                        <button type="button" class="btn btn-danger my-3 mx-1 txt-1" id="cancelFindTicket" onclick="history.back()">Cancel</button>
                     </div>
                 </div>
             </div>

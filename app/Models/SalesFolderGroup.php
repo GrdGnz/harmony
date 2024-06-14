@@ -11,7 +11,13 @@ class SalesFolderGroup extends Model
 
     protected $table = 'SALES_FOLDER_GROUP';
 
-    public $timestamps = false; // Disable timestamps
+    protected $primaryKey = 'SF_NO';
+
+    public $timestamps = false;
+
+    protected $keyType = 'string';
+
+    public $incrementing = false;
 
     protected $fillable = [
       'SF_NO',

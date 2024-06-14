@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Inventory;
 use Log;
 
 class SalesFolderPaxController extends Controller
@@ -41,23 +42,25 @@ class SalesFolderPaxController extends Controller
 
     public function transferPaxData(Request $request)
     {
+        DB::beginTransaction();
+
         try {
-            // Get all data from TEMP_SALES_FOLDER_AIR
+            // Get all data from TEMP_SALES_FOLDER_PAX
             $tempData = DB::table('TEMP_SALES_FOLDER_PAX')->get();
 
-            //Get product category
+            // Get product category
             $productCategory = $request->input('productCategory');
 
             // Initialize item number
             $itemNo = 1;
 
+            // Array to store ticket numbers
+            $ticketNumbers = [];
+
             // Transfer data to SALES_FOLDER_PAX with ORIGIN and UPDATE_SOURCE set to 'M' and ITEM_NO assigned
             foreach ($tempData as $row) {
-                if($row->PROD_CAT = 'A') {
-                    $docflag = 'N';
-                } else {
-                    $docflag = 'Y';
-                }
+                $docflag = ($row->PROD_CAT === 'A') ? 'N' : 'Y';
+
                 DB::table('SALES_FOLDER_PAX')->insert([
                     'SF_NO' => $row->SF_NO,
                     'DOC_ID' => $row->DOC_ID,
@@ -92,20 +95,34 @@ class SalesFolderPaxController extends Controller
                     'GDS_PROVIDER' => NULL,
                     'DUE_DATE' => now()->format('Y-m-d'),
                 ]);
+
+                // Collect ticket numbers for updating Inventory
+                $ticketNumbers[] = $row->TICKET_NO;
             }
 
             Log::info('Data transferred from TEMP_SALES_FOLDER_PAX to SALES_FOLDER_PAX successfully.');
 
-            // Truncate the TEMP_SALES_FOLDER_AIR table
+            // Truncate the TEMP_SALES_FOLDER_PAX table
             DB::table('TEMP_SALES_FOLDER_PAX')->truncate();
 
             Log::info('TEMP_SALES_FOLDER_PAX table truncated.');
 
+            // Update the Inventory table where TICKET_NO is in the collected ticket numbers
+            if (!empty($ticketNumbers)) {
+                Inventory::whereIn('TICKET_NO', $ticketNumbers)->update(['SF_NO' => $row->SF_NO]);
+                Log::info('Inventory records updated with new SF_NO.', ['SF_NO' => $row->SF_NO, 'ticketNumbers' => $ticketNumbers]);
+            }
+
+            DB::commit();
+
             // Return a response
             return response()->json(['message' => 'Data saved and TEMP_SALES_FOLDER_PAX table truncated.']);
         } catch (\Exception $e) {
+            DB::rollBack();
+
             Log::error('Error transferring data and truncating TEMP_SALES_FOLDER_PAX table: ' . $e->getMessage());
             return response()->json(['message' => 'Error saving data.'], 500);
         }
     }
+
 }
