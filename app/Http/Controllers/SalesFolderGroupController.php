@@ -170,7 +170,7 @@ class SalesFolderGroupController extends Controller
 
             // Update Inventory records where TICKET_NO matches and set SF_NO to NULL
             if ($ticketNumbers->isNotEmpty()) {
-                Inventory::whereIn('TICKET_NO', $ticketNumbers)->update(['SF_NO' => null]);
+                Inventory::whereIn('TICKET_NO', $ticketNumbers)->update(['SF_NO' => 'NULL']);
                 Log::info("Inventory records updated to set SF_NO to NULL.", ['troNumber' => $troNumber, 'ticketNumbers' => $ticketNumbers]);
             }
 
