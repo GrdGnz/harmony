@@ -168,12 +168,10 @@ class SalesFolderGroupController extends Controller
                                             ->where('DOC_ID', $docId)
                                             ->pluck('TICKET_NO');
 
-            // Update Inventory records where TICKET_NO matches and set SF_NO to NULL
+            // Update Inventory records where TICKET_NO matches and set SF_NO to NULL using a raw query
             if ($ticketNumbers->isNotEmpty()) {
-                $query = Inventory::whereIn('TICKET_NO', $ticketNumbers);
-                $sql = $query->toSql();
-                Log::info("Generated SQL query for updating Inventory: " . $sql);
-                $query->update(['SF_NO' => null]);
+                $ticketNumbersArray = $ticketNumbers->toArray();
+                DB::table('Inventory')->whereIn('TICKET_NO', $ticketNumbersArray)->update(['SF_NO' => null]);
                 Log::info("Inventory records updated to set SF_NO to NULL.", ['troNumber' => $troNumber, 'ticketNumbers' => $ticketNumbers]);
             }
 
