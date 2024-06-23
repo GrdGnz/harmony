@@ -93,17 +93,7 @@ $(document).ready(function() {
                     return '<input type="checkbox" class="ticket-checkbox" value="' + row.TICKET_NO + '" data-pnr="' + row.PNR + '" data-paxname="' + row.FIRST_PAX_NAME + '">';
                 }
             },
-            {
-                "data": "TICKET_NO",
-                "render": function(data, type, row, meta) {
-                    var sfno = '{{ $troNumber }}';
-                    var tktno = row.TICKET_NO;
-                    var url = "{{ route('forms.tro.add_product', [':troNumber', ':ticketNumber']) }}"
-                        .replace(':troNumber', sfno)
-                        .replace(':ticketNumber', tktno);
-                    return '<a href="' + url + '">' + data + '</a>';
-                }
-            },
+            { "data": "TICKET_NO"},
             { "data": "PNR" },
             { "data": "FIRST_PAX_NAME" },
         ]

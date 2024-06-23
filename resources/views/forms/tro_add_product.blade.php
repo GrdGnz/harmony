@@ -1161,10 +1161,10 @@
                             @endif
 
                             <div class="table-responsive">
-                                <table id="taxList" class="table table-bordered">
+                                <table id="taxList" class="table table-bordered table-striped">
                                     <thead class="marsman-bg-color-dark text-white">
                                         <tr>
-                                            <th>Code</th>
+                                            <th></th>
                                             <th colspan="3" class="text-center">Cost</th>
                                             <th colspan="5" class="text-center">Sales</th>
                                         </tr>
@@ -1181,7 +1181,7 @@
                                     </thead>
                                     <tbody>
                                         @if (isset($taxTempData))
-                                            @foreach ($tempTaxData as $tax)
+                                            @foreach ($taxTempData as $tax)
                                                 <tr>
                                                     <td>{{ $tax->TAX_CODE }}</td>
                                                     <td>{{ $tax->COST_CURR_CODE }}</td>
@@ -1457,7 +1457,7 @@
 
                         </div>
 
-                        <!-- Tab 6 :: Remarks -->
+                        <!-- Tab 7 :: Passengers -->
                         <div class="tab-pane fade show" id="passenger" role="tabpanel" aria-labelledby="passenger-tab">
                             <p class="h3">Passenger</p>
 
@@ -1465,27 +1465,20 @@
                                 <table id="passengerList" class="table table-bordered table-striped">
                                     <thead class="marsman-bg-color-darkgray text-white">
                                         <tr>
+                                            <th><input type="checkbox" id="selectAllPax"></th>
                                             <th>Passenger Name</th>
                                             <th>Ticket Number</th>
                                             <th>PNR</th>
-                                            <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="marsman-bg-color-gray2">
+                                    <tbody>
                                         @if (isset($tempPaxData))
                                             @foreach ($tempPaxData as $data)
                                                 <tr>
+                                                    <td><input type="checkbox" class="selectRow" data-ticket-number="{{ $data->TICKET_NO }}"></td>
                                                     <td>{{ $data->PAX_NAME }}</td>
                                                     <td>{{ $data->TICKET_NO }}</td>
                                                     <td>{{ $data->PNR }}</td>
-                                                    <td class="text-center">
-                                                        <form id="deletePassenger" action="{{ route('sales-folder-pax.tempdata.delete') }}" method="post">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <input type="hidden" id="ticketNumber" name="ticketNumber" value="{{ $data->TICKET_NO }}">
-                                                            <button type="submit" class="btn btn-danger txt-1">delete</button>
-                                                        </form>
-                                                    </td>
                                                 </tr>
                                             @endforeach
                                         @endif
@@ -1493,7 +1486,7 @@
                                 </table>
                             </div>
 
-                            <hr class="w-100">
+                            <button class="btn btn-danger txt-1 mt-3" id="deleteSelected">Delete Selected</button>
 
                             <div class="col-md-12 d-flex">
                                 <div class="col-md-6">
@@ -2149,140 +2142,103 @@
                 passengerTicketNumber: $('#passengerTicketNumber').val(),
                 passengerPNR: $('#passengerPNR').val(),
                 _token: '{{ csrf_token() }}'
-            }
+            };
 
             $.ajax({
                 url: '{{ route('sales-folder-pax.tempdata.pax.store') }}',
                 type: 'POST',
                 data: data,
                 success: function(response) {
-                    console.log(response);  // Log the response to the console
+                    alert(response.message);
 
-                    $('#successText').text(response.message);
-                    $('#successMessage').show();
-                    $('#errorMessage').hide();
-
-                    //Update pax count in cost unit quantity
-                    updatePaxCount();
-
-                    // Check if response.data exists
                     if (response.data) {
-                        //Calculate cost grand total
-                        calculateCostGrandTotal();
-
-                        // Update the table with all the data
                         const tableBody = $('#passengerList tbody');
                         tableBody.empty();
                         response.data.forEach(function(row) {
-                            console.log(row); // Log each row to debug
                             tableBody.append(`
                                 <tr>
+                                    <td><input type="checkbox" class="selectRow" data-ticket-number="${row.TICKET_NO}"></td>
                                     <td>${row.PAX_NAME}</td>
                                     <td>${row.TICKET_NO}</td>
                                     <td>${row.PNR}</td>
-                                    <td>
-                                        <form id="deletePassenger" action="{{ route('sales-folder-pax.tempdata.delete') }}" method="post">
-                                            <input type="hidden" id="ticketNumber" name="ticketNumber" value="${row.TICKET_NO}">
-                                            <button type="submit" class="btn btn-danger txt-1">delete</button>
-                                        </form>
-                                    </td>
                                 </tr>
                             `);
                         });
-                    } else {
-                        console.error('Response data is undefined');
                     }
 
-                    //Clear data inputs
                     $('#passengerName').val('');
                     $('#passengerTicketNumber').val('');
                     $('#passengerPNR').val('');
                 },
                 error: function(xhr) {
                     const errorMessage = xhr.responseJSON ? xhr.responseJSON.error : 'An error occurred';
-                    console.error('Error:', xhr);  // Log the full error response for debugging
-                    $('#errorText').text(errorMessage);
-                    $('#errorMessage').show();
-                    $('#successMessage').hide();
+                    alert(errorMessage);
                 }
             });
         });
 
+        // Select All Checkbox
+        $('#selectAllPax').change(function() {
+            $('.selectRow').prop('checked', $(this).prop('checked'));
+        });
 
-        //Delete temporary passenger
-        $(document).on('submit', '#deletePassenger', function(e) {
-            e.preventDefault();
+        // Handle individual row checkbox change
+        $(document).on('change', '.selectRow', function() {
+            if ($('.selectRow:checked').length === $('.selectRow').length) {
+                $('#selectAll').prop('checked', true);
+            } else {
+                $('#selectAll').prop('checked', false);
+            }
+        });
 
-            var form = $(this);
-            var ticketNumber = form.find('input[name="ticketNumber"]').val();
-            var actionUrl = form.attr('action');
-
-            $.ajax({
-                url: actionUrl,
-                type: 'POST',
-                data: {
-                    ticketNumber: ticketNumber,
-                    _token: '{{ csrf_token() }}', // Include CSRF token for security
-                    _method: 'DELETE' // Include the method override for DELETE
-                },
-                success: function(response) {
-                    if (response.message) {
-                        $('#successText').text(response.message);
-                        $('#successMessage').show();
-                        $('#errorMessage').hide();
-
-                        //Update pax count in cost unit quantity
-                        updatePaxCount();
-
-                    }
-
-                    // Check if response.data exists
-                    if (response.data) {
-                        //Update cost grand total
-                        calculateCostGrandTotal();
-
-                        // Update the table with the remaining data
-                        const tableBody = $('#passengerList tbody');
-                        tableBody.empty();
-                        response.data.forEach(function(row) {
-                            tableBody.append(`
-                                <tr>
-                                    <td>${row.PAX_NAME}</td>
-                                    <td>${row.TICKET_NO}</td>
-                                    <td>${row.PNR}</td>
-                                    <td>
-                                        <form id="deletePassenger" action="{{ route('sales-folder-pax.tempdata.delete') }}" method="post">
-                                            @csrf
-                                            @method('DELETE')
-                                            <input type="hidden" id="ticketNumber" name="ticketNumber" value="${row.TICKET_NO}">
-                                            <button type="submit" class="btn btn-danger txt-1">delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            `);
-                        });
-
-                        getTotalPax(function(count) {
-                        if (count !== null) {
-                            $('#costUnitQuantity').val(count);
-                            console.log('This is the callback result after deleting pax.');
-                        } else {
-                            $('#costUnitQuantity').val(0);
-                            console.log('Error fetching passenger count. Defaulting to 0');
-                        }
-                    });
-                    } else {
-                        console.error('Response data is undefined');
-                    }
-                },
-                error: function(xhr) {
-                    const errorMessage = xhr.responseJSON ? xhr.responseJSON.error : 'An error occurred';
-                    console.error('Error:', xhr);  // Log the full error response for debugging
-                    $('#errorText').text(errorMessage);
-                    $('#errorMessage').show();
-                    $('#successMessage').hide();
-                }
+        // Delete Selected Passengers
+        $('#deleteSelected').click(function() {
+            const selectedTickets = [];
+            $('.selectRow:checked').each(function() {
+                selectedTickets.push($(this).data('ticket-number'));
             });
+
+            if (selectedTickets.length > 0) {
+                $.ajax({
+                    url: '{{ route('sales-folder-pax.tempdata.delete') }}',
+                    type: 'POST',
+                    data: {
+                        ticketNumbers: selectedTickets,
+                        _token: '{{ csrf_token() }}',
+                        _method: 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.message) {
+                            alert(response.message);
+                            //$('#successMessage').show();
+                            //$('#errorMessage').hide();
+                        }
+
+                        if (response.data) {
+                            const tableBody = $('#passengerList tbody');
+                            tableBody.empty();
+                            response.data.forEach(function(row) {
+                                tableBody.append(`
+                                    <tr>
+                                        <td><input type="checkbox" class="selectRow" data-ticket-number="${row.TICKET_NO}"></td>
+                                        <td>${row.PAX_NAME}</td>
+                                        <td>${row.TICKET_NO}</td>
+                                        <td>${row.PNR}</td>
+                                    </tr>
+                                `);
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        const errorMessage = xhr.responseJSON ? xhr.responseJSON.error : 'An error occurred';
+                        alert(errorMessage);
+                        //$('#errorMessage').show();
+                        //$('#successMessage').hide();
+                    }
+                });
+            } else {
+                alert('No passengers selected.');
+            }
         });
 
 
