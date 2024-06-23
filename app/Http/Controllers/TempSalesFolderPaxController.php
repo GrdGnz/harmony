@@ -13,7 +13,7 @@ class TempSalesFolderPaxController extends Controller
     public function saveTickets(Request $request)
     {
         try {
-            //$this->truncateTemporaryPaxTable($request);
+            $this->truncateTemporaryTaxTable($request);
 
             $troNumber = $request->input('troNumber');
             $docId = $request->input('docId');
@@ -87,6 +87,38 @@ class TempSalesFolderPaxController extends Controller
         }
     }
 
+    public function deletePax(Request $request)
+    {
+        try {
+            $ticketNumbers = $request->input('ticketNumbers', []);
+
+            if (!empty($ticketNumbers)) {
+                // Fetch the corresponding troNumber from one of the tickets
+                $troNumber = TempSalesFolderPax::whereIn('TICKET_NO', $ticketNumbers)->value('SF_NO');
+
+                // Delete passengers with the given ticket numbers
+                TempSalesFolderPax::whereIn('TICKET_NO', $ticketNumbers)->delete();
+
+                // Fetch all remaining passengers for the given troNumber
+                $allPax = TempSalesFolderPax::where('SF_NO', $troNumber)->get();
+
+                Log::info('Deleted ticket numbers: ' . implode(', ', $ticketNumbers));
+                Log::info($allPax); // Log data to debug
+
+                return response()->json([
+                    'message' => 'Selected passengers deleted successfully.',
+                    'data' => $allPax
+                ]);
+            }
+
+            return response()->json(['error' => 'No passengers selected for deletion.'], 400);
+        } catch (\Exception $e) {
+            Log::error('Error deleting passenger records: ' . $e->getMessage());
+            return response()->json(['error' => 'Error deleting passenger records. Please try again.'], 500);
+        }
+    }
+
+
 
     public function truncateTemporaryPaxTable(Request $request)
     {
@@ -105,33 +137,20 @@ class TempSalesFolderPaxController extends Controller
         }
     }
 
-    public function deletePax(Request $request)
+    public function truncateTemporaryTaxTable(Request $request)
     {
         try {
-            $ticketNumber = $request->input('ticketNumber');
+            $troNumber = $request->input('troNumber');
 
-            Log::info('Delete ticket number: '.$ticketNumber);
-
-            $row = TempSalesFolderPax::where('TICKET_NO', $ticketNumber)->first();
-
-            if ($row) {
-                $row->delete();
-                Log::info('Data successfully deleted.');
-
-                // Fetch all passengers for the given troNumber
-                $troNumber = $row->SF_NO;
-                $allPax = TempSalesFolderPax::where('SF_NO', $troNumber)->get();
-
-                return response()->json([
-                    'message' => 'Passenger record deleted successfully.',
-                    'data' => $allPax
-                ]);
-            } else {
-                return response()->json(['error' => 'Passenger record not found.'], 404);
-            }
+            DB::table('TEMP_SALES_FOLDER_TAX')->truncate();
+            Log::info('TEMP_SALES_FOLDER_TAX table truncated.');
+            return response()->json([
+                'message' => 'TEMP_SALES_FOLDER_TAX table truncated.',
+                'redirect_url' => route('forms.tro.add_product', ['troNumber' => $troNumber]),
+            ], 200);
         } catch (\Exception $e) {
-            Log::error('Error deleting passenger record: ' . $e->getMessage());
-            return response()->json(['error' => 'Error deleting passenger record. Please try again.'], 500);
+            Log::error('Error truncating TEMP_SALES_FOLDER_TAX table: ' . $e->getMessage());
+            return response()->json(['message' => 'Error truncating TEMP_SALES_FOLDER_TAX table.'], 500);
         }
     }
 
