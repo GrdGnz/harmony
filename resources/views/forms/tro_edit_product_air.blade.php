@@ -529,25 +529,68 @@
                                             <th></th>
                                             <th colspan="3" class="text-center">Cost</th>
                                             <th colspan="5" class="text-center">Sales</th>
-                                            <th></th>
+
                                         </tr>
                                         <tr>
                                             <th>Code</th>
                                             <th>Currency</th>
                                             <th>Rate</th>
                                             <th>Amount</th>
-                                            <th>Bill</th>
-                                            <th>Incl.</th>
                                             <th>Currency</th>
                                             <th>Rate</th>
                                             <th>Amount</th>
-                                            <th>Code</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td></td>
-                                        </tr>
+                                        @if (isset($sfTax))
+                                            @foreach ($sfTax as $tax)
+                                            <form action="{{ route('sales-folder-air.update', [
+                                                'sfNo' => $troNumber,
+                                                'docId' => $docId,
+                                                'itemNo' => $tax->ITEM_NO,
+                                            ]) }}" method="POST">
+                                                @csrf
+                                                @method("PUT")
+                                                <tr>
+                                                    <td>
+                                                        <input list="dataTaxCode" id="airline" name="airline" value="{{ $air->AL_CODE }}" class="form-control">
+                                                        <datalist id="dataTaxCode">
+                                                            @if (isset($taxCodes))
+                                                                @foreach ($taxCodes as $taxcode)
+                                                                    <option value="{{ $taxcode->TAX_CODE }}">{{ $taxcode->TAX_DESCR }}</option>
+                                                                @endforeach
+                                                            @endif
+                                                        </datalist>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="taxCostCurrCode" name="taxCostCurrCode" value="{{ $tax->COST_CURR_CODE }}" class="form-control">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="taxCostCurrRate" name="taxCostCurrRate" value="{{ $tax->COST_CURR_RATE }}" class="form-control">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="taxCostCurrAmount" name="taxCostCurrAmount" value="{{ $tax->COST_AMOUNT }}" class="form-control">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="taxSaleCurrCode" name="taxSaleCurrCode" value="{{ $tax->SELL_CURR_CODE }}" class="form-control">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="taxSaleCurrRate" name="taxSaleCurrRate" value="{{ $tax->SELL_CURR_RATE }}" class="form-control">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="taxSaleCurrAmount" name="taxSaleCurrAmount" value="{{ $tax->SELL_AMOUNT }}" class="form-control">
+                                                    </td>
+                                                    <td>
+                                                        <button type="submit" class="btn btn-primary txt-1" id="updateTax">Update</button>
+                                                    </td>
+                                                </tr>
+                                                <input type="hidden" name="sfNo" id="sfNo" value="{{ $air->SF_NO }}">
+                                                <input type="hidden" name="docId" id="docId" value="{{ $air->DOC_ID }}">
+                                                <input type="hidden" name="itemNumber" id="itemNumber" value="{{ $air->ITEM_NO }}">
+                                            </form>
+                                            @endforeach
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>

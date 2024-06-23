@@ -14,6 +14,7 @@ class CreateTempSalesFolderTaxTable extends Migration
     public function up()
     {
         Schema::create('TEMP_SALES_FOLDER_TAX', function (Blueprint $table) {
+            $table->id();
             $table->string('TAX_CODE', 3)->nullable();
             $table->string('TAX_NUM', 20)->nullable();
             $table->string('COST_CURR_CODE', 3)->nullable(false);

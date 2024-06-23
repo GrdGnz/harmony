@@ -33,10 +33,12 @@ use App\Models\SalesFolderGroup;
 use App\Models\SalesFolderHotel;
 use App\Models\SalesFolderMisc;
 use App\Models\SalesFolderPax;
+use App\Models\SalesFolderTax;
 use App\Models\SalesFolderTransfer;
 use App\Models\SalesType;
 use App\Models\ServiceClass;
 use App\Models\Supplier;
+use App\Models\TaxCode;
 use App\Models\TempSalesFolderAir;
 use App\Models\TempSalesFolderPax;
 use App\Models\TempSalesFolderTax;
@@ -171,6 +173,11 @@ class TravelRequestOrderController extends Controller
 
     public function searchTicket($troNumber, $docId)
     {
+        //Clear temporary data
+        $this->truncateTemporaryPaxTable();
+        $this->truncateTemporaryTaxTable();
+        $this->truncateTemporaryAirTable();
+
         $inventory = Inventory::where('SF_NO', '')
             ->whereNull('SF_NO')
             ->get();
@@ -183,7 +190,6 @@ class TravelRequestOrderController extends Controller
             )
         );
     }
-
 
     public function clientForm($clientId)
     {
@@ -217,6 +223,7 @@ class TravelRequestOrderController extends Controller
     {
         //Clear temporary data
         $this->truncateTemporaryPaxTable();
+        $this->truncateTemporaryTaxTable();
         $this->truncateTemporaryAirTable();
 
         //Get current DOC ID
@@ -270,7 +277,6 @@ class TravelRequestOrderController extends Controller
 
     public function addProductForm($troNumber)
     {
-
         //Clear tables with temporary data
         //$this->truncateTemporaryAirTable();
         //$this->truncateTemporaryPaxTable();
@@ -294,7 +300,7 @@ class TravelRequestOrderController extends Controller
         $routes = Route::all();
 
         //Air Itinerary
-        $airlines = Airline::orderBy('AL_DESCR', 'asc')->get();
+        $airlines = Airline::where('AL_DESCR','<>','')->orderBy('AL_DESCR', 'asc')->get();
         $serviceClasses = ServiceClass::all();
         $cities = City::orderBy('CITY_DESCR','asc')->get();
 
@@ -325,6 +331,17 @@ class TravelRequestOrderController extends Controller
 
         //Vessel
         $vessels = Vessel::all();
+
+        //Employees
+        $employees = Employee::all();
+
+        //Tax
+        $taxes = TaxCode::where('STATUS', 'Y')
+            ->orderBy('TAX_DESCR', 'asc')
+            ->get();
+
+        //Temp Tax data
+        $tempTaxData = TempSalesFolderTax::all();
 
         //Temporary Pax data
         $tempPaxData = TempSalesFolderPax::all();
@@ -379,6 +396,9 @@ class TravelRequestOrderController extends Controller
             'paxCount',
             'airTempData',
             'taxTempData',
+            'employees',
+            'taxes',
+            'tempTaxData',
         ));
     }
 
@@ -538,6 +558,13 @@ class TravelRequestOrderController extends Controller
             ->where('DOC_ID', $docId)
             ->get();
 
+        //Sales Folder Tax
+        $sfTax = SalesFolderTax::where('SF_NO', $troNumber)
+            ->where('DOC_ID', $docId)
+            ->get();
+
+        $taxCodes = TaxCode::orderBy('TAX_DESCR', 'asc')->get();
+
         //Vessel
         $vessels = Vessel::all();
 
@@ -561,6 +588,10 @@ class TravelRequestOrderController extends Controller
                 ->where('DOC_ID', $docId)
                 ->first();
 
+            $infoTax = SalesFolderTax::where('SF_NO', $troNumber)
+                ->where('DOC_ID', $docId)
+                ->get();
+
         if($productCategory == 'A') {
             return view('forms.tro_edit_product_air', compact([
                 'troNumber',
@@ -574,6 +605,8 @@ class TravelRequestOrderController extends Controller
                 'sfGroup',
                 'sfAir',
                 'sfAirPax',
+                'sfTax',
+                'taxCodes',
                 'bookStatus',
             ]));
         } elseif ($productCategory == 'M') {
@@ -615,7 +648,5 @@ class TravelRequestOrderController extends Controller
                 'bookStatus',
             ]));
         }
-
-
     }
 }
