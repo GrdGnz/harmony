@@ -92,35 +92,27 @@
             "pageLength": 30,  // Default number of records per page
             "lengthChange": false,
             "columns": [
-                {
-                    "data": "SF_NO",
-                    "render": function(data, type, row, meta) {
-                        // Extract CLT_CODE from the row data
-                        var sfno = row.SF_NO;
-                        // Generate the URL with the CLT_CODE parameter
-                        var url = "{{ route('forms.tro.sf', ':clientId') }}".replace(':clientId', sfno);
-                        // Create the anchor tag with the generated URL
-                        return '<a href="' + url + '">' + data + '</a>';
-                    }
-                },
-                {
-                    // Include a link to the client detail page
-                    "data": "CLT_NAME",
-                    "render": function(data, type, row, meta) {
-                        // Extract CLT_CODE from the row data
-                        var sfno = row.SF_NO;
-                        // Generate the URL with the CLT_CODE parameter
-                        var url = "{{ route('forms.tro.sf', ':clientId') }}".replace(':clientId', sfno);
-                        // Create the anchor tag with the generated URL
-                        return '<a href="' + url + '">' + data + '</a>';
-                    }
-                },
+                { "data": "SF_NO" },
+                { "data": "CLT_NAME" },
                 { "data": "BILL_CURR_CODE" },
                 { "data": "BILL_CURR_RATE" },
                 { "data": "TRIP_DATE" },
                 { "data": "SF_DATE" },
                 { "data": "STATUS" }
             ]
+        });
+
+        // Handle click on table rows
+        $('#salesFoldersTable tbody').on('click', 'tr', function () {
+            var data = table.row(this).data();
+            if (data) {
+                // Extract SF_NO from the row data
+                var sfno = data.SF_NO;
+                // Generate the URL with the SF_NO parameter
+                var url = "{{ route('forms.tro.sf', ':clientId') }}".replace(':clientId', sfno);
+                // Navigate to the URL
+                window.location.href = url;
+            }
         });
 
         // Trigger reload on form submission
