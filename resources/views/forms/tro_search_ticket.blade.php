@@ -146,13 +146,13 @@ $(document).ready(function() {
         }); // Add logging here
 
         $.ajax({
-            url: '{{ route("sales-folder-pax.tempdata.store") }}',
+            url: '{{ route("sales-folder-pax.tempdata.ticket.store") }}',
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
                 troNumber: troNumber,
                 docId: docId,
-                tickets: selectedTickets
+                passengerTicketNumber: selectedTickets
             },
             success: function(response) {
                 window.location.href = response.redirect_url;

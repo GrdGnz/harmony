@@ -20,6 +20,7 @@ class SalesFolderMiscController extends Controller
                 'MISC_CODE' => $request->input('miscType'),
                 'DOC_FLAG' => 'Y',
                 'PROC_CENTER' => $request->input('procCenter'),
+                'DOC_OFFICER' => $request->input('docOfficer'),
                 'START_DATE' => $request->input('miscStartDate'),
                 'START_LOC' => $request->input('miscStartLoc'),
                 'END_DATE' => $request->input('miscEndDate'),

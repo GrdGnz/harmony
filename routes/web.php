@@ -62,9 +62,25 @@ Route::get('/sales-folder/data', [App\Http\Controllers\SalesFolderController::cl
     Route::put('/sales-folder-air/update/{sfNo}/{docId}/{itemNo}', [App\Http\Controllers\SalesFolderAirController::class, 'update'])->name('sales-folder-air.update');
 
 //Transfer Pax Data
+    //Store data from ticket
+    Route::post('/sales-folder-pax/tempdata/ticket/store', [App\Http\Controllers\TempSalesFolderPaxController::class, 'saveTickets'])->name('sales-folder-pax.tempdata.ticket.store');
     //Store data
-    Route::post('/sales-folder-pax/tempdata/store', [App\Http\Controllers\TempSalesFolderPaxController::class, 'saveTickets'])->name('sales-folder-pax.tempdata.store');
+    Route::post('/sales-folder-pax/tempdata/pax/store', [App\Http\Controllers\TempSalesFolderPaxController::class, 'savePax'])->name('sales-folder-pax.tempdata.pax.store');
     //Clear data
     Route::post('/sales-folder-pax/tempdata/clear', [App\Http\Controllers\TempSalesFolderPaxController::class, 'truncateTemporaryPaxTable'])->name('sales-folder-pax.tempdata.clear');
-    //Transfer temp data to Sales Folder Air
+    //Transfer temp data to Sales Folder Pax
     Route::post('/transfer-temp-pax-data', [App\Http\Controllers\SalesFolderPaxController::class, 'transferPaxData'])->name('sales-folder-pax.tempdata.transfer');
+    //Delete temp pax
+    Route::delete('/transfer-temp-pax-data/delete', [App\Http\Controllers\TempSalesFolderPaxController::class, 'deletePax'])->name('sales-folder-pax.tempdata.delete');
+    //Update pax count
+    Route::post('/get-pax-count', [App\Http\Controllers\TempSalesFolderPaxController::class, 'countTotalPax'])->name('sales-folder-pax.tempdata.count');
+
+//Sales Folder Tax
+    //Store temp tax data
+    Route::post('/sales-folder-tax/tempdata/store', [App\Http\Controllers\TempSalesFolderTaxController::class, 'store'])->name('sales-folder-tax.tempdata.store');
+    //Delete a temp data
+    Route::delete('/sales-folder-tax/tempdata/delete', [App\Http\Controllers\TempSalesFolderTaxController::class, 'destroy'])->name('sales-folder-tax.tempdata.delete');
+    //Transfer temp data to Sales Folder Tax
+    Route::post('/transfer-temp-tax-data', [App\Http\Controllers\SalesFolderTaxController::class, 'transferTaxData'])->name('sales-folder-tax.tempdata.transfer');
+    //Get total taxes
+    Route::post('/total-cost-tax-amount', [App\Http\Controllers\TempSalesFolderTaxController::class, 'getTotalTax'])->name('sales-folder-tax.tempdata.total');

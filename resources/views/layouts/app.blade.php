@@ -59,6 +59,10 @@
 
     <!-- Popper -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+
+    <!-- MomentJS - date formatter -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
 </head>
 <body class="sb-nav-fixed txt-1 marsman-bg-color-lightblue">
     <div id="app">

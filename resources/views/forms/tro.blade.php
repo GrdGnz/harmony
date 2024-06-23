@@ -290,6 +290,21 @@
                 <div class="tab-content marsman-bg-color-lightgray p-3">
                     <div class="tab-pane fade show active p-3" id="products" role="tabpanel" aria-labelledby="products-tab">
                         <div class="row marsman-bg-color-lightgray">
+
+                            <div class="col-md-12 justify-content-end p-0 m-0 d-flex">
+                            @if(isset($sf) || session('iNextID') != null)
+                                <div class="p-o m-0">
+                                    <div>
+                                        @if(isset($sf))
+                                            <a href="{{ url('forms/tro/add-product/'.$sf->SF_NO) }}" class="btn btn-success txt-1">Add</a>
+                                        @elseif(session('iNextID') != null)
+                                        <a href="{{ url('forms/tro/add-product/'.session('iNextID')) }}" class="btn btn-success txt-1">Add</a>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
+                            </div>
+
                             @if(session('success'))
                                 <div class="alert alert-success">
                                     {{ session('success') }}
@@ -328,17 +343,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        @if(isset($sf) || session('iNextID') != null)
-                            <div class="row justify-content-end w-100">
-                                <div class="col-sm-2">
-                                    @if(isset($sf))
-                                        <a href="{{ url('forms/tro/add-product/'.$sf->SF_NO) }}" class="btn btn-success txt-1">Add</a>
-                                    @elseif(session('iNextID') != null)
-                                    <a href="{{ url('forms/tro/add-product/'.session('iNextID')) }}" class="btn btn-success txt-1">Add</a>
-                                    @endif
-                                </div>
-                            </div>
-                        @endif
+
                     </div>
 
 

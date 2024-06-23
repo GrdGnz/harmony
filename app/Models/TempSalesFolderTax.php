@@ -11,6 +11,8 @@ class TempSalesFolderTax extends Model
 
     protected $table = 'TEMP_SALES_FOLDER_TAX';
 
+    public $timestamps = false;
+
     protected $fillable = [
        'TAX_CODE',
        'TAX_NUM',

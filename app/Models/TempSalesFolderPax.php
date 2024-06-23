@@ -11,6 +11,12 @@ class TempSalesFolderPax extends Model
 
     protected $table = 'TEMP_SALES_FOLDER_PAX';
 
+    public $timestamps = false;
+
+    protected $primaryKey = 'TICKET_NO';
+
+    public $incrementing = false;
+
     protected $fillable = [
       'SF_NO',
       'DOC_ID',
@@ -20,5 +26,4 @@ class TempSalesFolderPax extends Model
       'PNR',
     ];
 
-    public $timestamps = false;
 }

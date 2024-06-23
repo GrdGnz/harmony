@@ -58,7 +58,7 @@ class SalesFolderGroupController extends Controller
                 'COST_DISC_AMT' => ['value' => (float) $request->input('costDiscountAmount'), 'type' => 'decimal'],
                 'COST_DISC_PERC' => ['value' => (float) $request->input('costDiscountRate'), 'type' => 'decimal'],
                 'COST_TTAX_AMT' => ['value' => (float) $request->input('costTax'), 'type' => 'decimal'],
-                'COST_INS_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'COST_INS_AMT' => ['value' => (float) $request->input('costInsurance'), 'type' => 'decimal'],
                 'COST_CURR_CODE' => ['value' => $request->input('costCurrencyCode'), 'type' => 'string'],
                 'COST_CURR_RATE' => ['value' => (float) $request->input('costCurrencyAmount'), 'type' => 'decimal'],
                 'TTL_COST_AMT' => ['value' => (float) $request->input('costTotalUnitCost'), 'type' => 'decimal'],
@@ -113,13 +113,17 @@ class SalesFolderGroupController extends Controller
                 'SELL_BAL_AMT' => ['value' => 0, 'type' => 'decimal'],
                 'COST_BAL_AMT' => ['value' => 0, 'type' => 'decimal'],
                 'SHOW_CONV' => ['value' => 'N', 'type' => 'string'],
-                'FARE_SAVE_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'FARE_SAVE_AMT' => ['value' => (float) $request->input('fareSaving'), 'type' => 'decimal'],
                 'STAFF_DISC_PERC' => ['value' => (float) 0, 'type' => 'decimal'],
-                'STAFF_DISC_AMT' => ['value' => (float) 0, 'type' => 'decimal'],
-                'PROMO_ALLOC' => ['value' => (float) 0, 'type' => 'decimal'],
-                'ADM_ALLOC' => ['value' => (float) 0, 'type' => 'decimal'],
-                'LOWEST_FARE' => ['value' => (float) 0, 'type' => 'decimal'],
-                'IATA_FARE' => ['value' => (float) 0, 'type' => 'decimal'],
+                'STAFF_DISC_AMT' => ['value' => (float) $request->input('staffDiscount'), 'type' => 'decimal'],
+                'PROMO_ALLOC' => ['value' => (float) $request->input('promoAlloc'), 'type' => 'decimal'],
+                'ADM_ALLOC' => ['value' => (float) $request->input('admAlloc'), 'type' => 'decimal'],
+                'LOWEST_FARE' => ['value' => (float) $request->input('lowestFare'), 'type' => 'decimal'],
+                'IATA_FARE' => ['value' => (float) $request->input('iataFare'), 'type' => 'decimal'],
+                'CONF_NO' => ['value' => $request->input('confirmationNumber'), 'type' => 'string'],
+                'PAX_REF_NO' => ['value' => $request->input('paxReferenceNumber'), 'type' => 'string'],
+                'PTA' => ['value' => $request->input('pta'), 'type' => 'string'],
+                'RTT' => ['value' => $request->input('rtt'), 'type' => 'string'],
             ];
 
             foreach ($attributes as $attribute => $data) {
@@ -165,13 +169,14 @@ class SalesFolderGroupController extends Controller
 
             // Fetch TICKET_NO from SalesFolderPax records to be deleted
             $ticketNumbers = SalesFolderPax::where('SF_NO', $troNumber)
-                                            ->where('DOC_ID', $docId)
-                                            ->pluck('TICKET_NO');
+                ->where('DOC_ID', $docId)
+                ->pluck('TICKET_NO');
 
             // Update Inventory records where TICKET_NO matches and set SF_NO to NULL using a raw query
             if ($ticketNumbers->isNotEmpty()) {
                 $ticketNumbersArray = $ticketNumbers->toArray();
-                DB::table('Inventory')->whereIn('TICKET_NO', $ticketNumbersArray)->update(['SF_NO' => null]);
+                DB::table('INVENTORY')->whereIn('TICKET_NO', $ticketNumbersArray)->update(['SF_NO' => null]);
+                DB::table('SALES_FOLDER_PAX')->whereIn('TICKET_NO', $ticketNumbersArray)->update(['TICKET_NO' => null]);
                 Log::info("Inventory records updated to set SF_NO to NULL.", ['troNumber' => $troNumber, 'ticketNumbers' => $ticketNumbers]);
             }
 
