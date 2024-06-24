@@ -286,23 +286,24 @@
                 </ul>
 
                 <!-- TAB CONTENTS -->
-                 <!-- TAB 1 : Products -->
                 <div class="tab-content marsman-bg-color-lightgray p-3">
+
+                    <!-- TAB 1 : Products -->
                     <div class="tab-pane fade show active p-3" id="products" role="tabpanel" aria-labelledby="products-tab">
                         <div class="row marsman-bg-color-lightgray">
 
                             <div class="col-md-12 justify-content-end p-0 m-0 d-flex">
-                            @if(isset($sf) || session('iNextID') != null)
-                                <div class="p-o m-0">
-                                    <div>
-                                        @if(isset($sf))
-                                            <a href="{{ url('forms/tro/add-product/'.$sf->SF_NO) }}" class="btn btn-success txt-1">Add</a>
-                                        @elseif(session('iNextID') != null)
-                                        <a href="{{ url('forms/tro/add-product/'.session('iNextID')) }}" class="btn btn-success txt-1">Add</a>
-                                        @endif
+                                @if(isset($sf) || session('iNextID') != null)
+                                    <div class="p-o m-0">
+                                        <div>
+                                            @if(isset($sf))
+                                                <a href="{{ url('forms/tro/add-product/'.$sf->SF_NO) }}" class="btn btn-success txt-1">Add</a>
+                                            @elseif(session('iNextID') != null)
+                                                <a href="{{ url('forms/tro/add-product/'.session('iNextID')) }}" class="btn btn-success txt-1">Add</a>
+                                            @endif
+                                        </div>
                                     </div>
-                                </div>
-                            @endif
+                                @endif
                             </div>
 
                             @if(session('success'))
@@ -316,36 +317,39 @@
                                     {{ session('error') }}
                                 </div>
                             @endif
-                            <table class="table table-bordered table-striped">
-                                <thead class="marsman-bg-color-dark text-white">
-                                    <tr>
-                                        <th>PRODUCT NAME</th>
-                                        <th>CATEGORY</th>
-                                        <th>PNR</th>
-                                        <th width="10%" class="text-center"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (isset($existingProducts))
-                                        @foreach ($existingProducts as $existing)
-                                            <tr>
-                                                <td>
-                                                    <a href="{{ route('details.product', ['troNumber' => $existing->SF_NO, 'docId' => $existing->DOC_ID]) }}">
-                                                        {{ $existing->product->PROD_DESCR }}
-                                                    </a>
-                                                </td>
-                                                <td>{{ $existing->productCategory->PROD_CAT_DESCR }}</td>
-                                                <td>{{ $existing->PNR }}</td>
-                                                <td class="text-center"><a class="btn btn-danger txt-1" onclick="showDeleteModal('{{ $existing->SF_NO }}', {{ $existing->DOC_ID }})">Delete</a></td>
-                                            </tr>
-                                        @endforeach
-                                    @endif
-                                </tbody>
-                            </table>
+
+                            <form id="deleteForm" action="{{ route('sales-folder-group.bulkDelete') }}" method="POST">
+                                @csrf
+                                <table class="table table-bordered table-striped">
+                                    <thead class="marsman-bg-color-dark text-white">
+                                        <tr>
+                                            <th><input type="checkbox" id="selectAll"></th>
+                                            <th>PRODUCT NAME</th>
+                                            <th>CATEGORY</th>
+                                            <th>PNR</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (isset($existingProducts))
+                                            @foreach ($existingProducts as $existing)
+                                                <tr>
+                                                    <td><input type="checkbox" name="selectedProducts[]" value="{{ $existing->SF_NO }}_{{ $existing->DOC_ID }}"></td>
+                                                    <td>
+                                                        <a href="{{ route('details.product', ['troNumber' => $existing->SF_NO, 'docId' => $existing->DOC_ID]) }}">
+                                                            {{ $existing->product->PROD_DESCR }}
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ $existing->productCategory->PROD_CAT_DESCR }}</td>
+                                                    <td>{{ $existing->PNR }}</td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    </tbody>
+                                </table>
+                                <button type="submit" class="btn btn-danger txt-1">Delete Selected</button>
+                            </form>
                         </div>
-
                     </div>
-
 
                     <!-- TAB 2 : Client Reference -->
                     <div class="tab-pane fade marsman-bg-color-lightblue p-2" id="reference" role="tabpanel" aria-labelledby="reference-tab">
@@ -749,6 +753,11 @@ function showDeleteModal(troNumber, docId) {
 
 document.getElementById('confirmDelete').addEventListener('click', function() {
     window.location.href = deleteUrl;
+});
+
+var checkboxes = document.querySelectorAll('input[name="selectedProducts[]"]');
+checkboxes.forEach(function(checkbox) {
+    checkbox.checked = e.target.checked;
 });
 </script>
 
