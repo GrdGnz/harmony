@@ -38,6 +38,7 @@ Route::get('/sales-folder/data', [App\Http\Controllers\SalesFolderController::cl
     //Store data
     Route::post('/sales-folder-group/store', [App\Http\Controllers\SalesFolderGroupController::class, 'store'])->name('sales-folder-group.store');
     Route::get('/sales-folder-group/delete/{troNumber}/{docId}', [App\Http\Controllers\SalesFolderGroupController::class, 'delete'])->name('sales-folder-group.delete');
+    Route::post('/sales-folder-group/bulk-delete', [App\Http\Controllers\SalesFolderGroupController::class, 'bulkDelete'])->name('sales-folder-group.bulkDelete');
 
 //Sales Folder Hotel
     //Store data

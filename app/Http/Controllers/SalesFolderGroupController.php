@@ -207,4 +207,32 @@ class SalesFolderGroupController extends Controller
         }
     }
 
+    public function bulkDelete(Request $request)
+    {
+        $selectedProducts = $request->input('selectedProducts');
+        if (empty($selectedProducts)) {
+            return redirect()->back()->with('error', 'No products selected for deletion.');
+        }
+
+        DB::beginTransaction();
+
+        try {
+            foreach ($selectedProducts as $product) {
+                list($troNumber, $docId) = explode('_', $product);
+                $this->delete($troNumber, $docId);
+            }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Selected products deleted successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Error in bulk deleting records.", [
+                'selectedProducts' => $selectedProducts,
+                'error' => $e->getMessage()
+            ]);
+            return redirect()->back()->with('error', 'An error occurred while deleting the selected products.');
+        }
+    }
+
+
 }
