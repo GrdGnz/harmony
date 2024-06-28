@@ -25,44 +25,44 @@ class SalesFolderGroupController extends Controller
             // Define attributes and their types
             $attributes = [
                 'SF_NO' => ['value' => $request->input('troNumber'), 'type' => 'string'],
-                'DOC_ID' => ['value' => (int) $request->input('docId'), 'type' => 'integer'],
+                'DOC_ID' => ['value' => (int) $this->unformatNumber($request->input('docId')), 'type' => 'integer'],
                 'PROD_TYPE' => ['value' => $request->input('productType'), 'type' => 'string'],
                 'PROD_CAT' => ['value' => $request->input('productCategory'), 'type' => 'string'],
                 'PNR' => ['value' => null, 'type' => 'NULL'],
                 'AL_PNR' => ['value' => $request->input('productType') == 'Air' ? $request->input('airline') : null, 'type' => 'string'],
                 'ROUTE' => ['value' => $request->input('route'), 'type' => 'string'],
-                'QTY' => ['value' => (int) $request->input('salesUnitQuantity'), 'type' => 'integer'],
+                'QTY' => ['value' => (int) $this->unformatNumber($request->input('costUnitQuantity')), 'type' => 'integer'],
                 'TAX_TYPE' => ['value' => 'N', 'type' => 'string'],
-                'TAX_AMT' => ['value' => (float) $request->input('salesTax'), 'type' => 'decimal'],
+                'TAX_AMT' => ['value' => (float) $this->unformatNumber($request->input('costTax')), 'type' => 'decimal'],
                 'TAX_RATE' => ['value' => 0, 'type' => 'integer'],
                 'CHARGE_AMT' => ['value' => 0, 'type' => 'decimal'],
                 'SELL_CURR_CODE' => ['value' => $request->input('salesCurrencyCode'), 'type' => 'string'],
-                'SELL_CURR_RATE' => ['value' => (float) $request->input('salesCurrencyAmount'), 'type' => 'decimal'],
-                'SELL_AMT' => ['value' => (float) $request->input('salesUnitAmount'), 'type' => 'decimal'],
+                'SELL_CURR_RATE' => ['value' => (float) $this->unformatNumber($request->input('salesCurrencyAmount')), 'type' => 'decimal'],
+                'SELL_AMT' => ['value' => (float) $this->unformatNumber($request->input('salesUnitAmount')), 'type' => 'decimal'],
                 'SELL_TTAX_AMT' => ['value' => 0, 'type' => 'decimal'],
-                'SELL_DISC_AMT' => ['value' => (float) $request->input('salesDiscountAmount'), 'type' => 'decimal'],
-                'SELL_DISC_PERC' => ['value' => (float) $request->input('salesDiscountRate'), 'type' => 'decimal'],
-                'SELL_COMM_AMT' => ['value' => (float) $request->input('salesCommissionAmount'), 'type' => 'decimal'],
-                'SELL_COMM_PERC' => ['value' => (float) $request->input('salesCommissionRate'), 'type' => 'decimal'],
+                'SELL_DISC_AMT' => ['value' => (float) $this->unformatNumber($request->input('salesDiscountAmount')), 'type' => 'decimal'],
+                'SELL_DISC_PERC' => ['value' => (float) $this->unformatNumber($request->input('salesDiscountRate')), 'type' => 'decimal'],
+                'SELL_COMM_AMT' => ['value' => (float) $this->unformatNumber($request->input('salesCommissionAmount')), 'type' => 'decimal'],
+                'SELL_COMM_PERC' => ['value' => (float) $this->unformatNumber($request->input('salesCommissionRate')), 'type' => 'decimal'],
                 'SELL_INS_AMT' => ['value' => 0, 'type' => 'decimal'],
-                'SELL_SURCHARGE' => ['value' => (float) $request->input('salesSurcharge'), 'type' => 'decimal'],
-                'TTL_SELL_AMT' => ['value' => (float) $request->input('salesTotalUnitAmount'), 'type' => 'decimal'],
-                'SELL_GRAND_TOTAL' => ['value' => (float) $request->input('salesGrandTotal'), 'type' => 'decimal'],
-                'PUBLISH_AMT' => ['value' => 0, 'type' => 'decimal'],
+                'SELL_SURCHARGE' => ['value' => (float) $this->unformatNumber($request->input('salesSurcharge')), 'type' => 'decimal'],
+                'TTL_SELL_AMT' => ['value' => (float) $this->unformatNumber($request->input('salesTotalUnitAmount')), 'type' => 'decimal'],
+                'SELL_GRAND_TOTAL' => ['value' => (float) $this->unformatNumber($request->input('salesGrandTotal')), 'type' => 'decimal'],
+                'PUBLISH_AMT' => ['value' => (float) $this->unformatNumber($request->input('costUnitAmount')), 'type' => 'decimal'],
                 'SPL_FARE_CODE' => ['value' => 0, 'type' => 'integer'],
                 'NETT_AMT' => ['value' => 0, 'type' => 'decimal'],
                 'NET_FARE_FLAG' => ['value' => 'N', 'type' => 'string'],
-                'NAIR_NETT_AMT' => ['value' => 0, 'type' => 'decimal'],
-                'COST_COMM_AMT' => ['value' => (float) $request->input('costCommissionAmount'), 'type' => 'decimal'],
-                'COST_COMM_PERC' => ['value' => (float) $request->input('costCommissionRate'), 'type' => 'decimal'],
-                'COST_DISC_AMT' => ['value' => (float) $request->input('costDiscountAmount'), 'type' => 'decimal'],
-                'COST_DISC_PERC' => ['value' => (float) $request->input('costDiscountRate'), 'type' => 'decimal'],
-                'COST_TTAX_AMT' => ['value' => (float) $request->input('costTax'), 'type' => 'decimal'],
-                'COST_INS_AMT' => ['value' => (float) $request->input('costInsurance'), 'type' => 'decimal'],
+                'NAIR_NETT_AMT' => ['value' => (float) $this->unformatNumber($request->input('nonAirNetRate')), 'type' => 'decimal'],
+                'COST_COMM_AMT' => ['value' => (float) $this->unformatNumber($request->input('costCommissionAmount')), 'type' => 'decimal'],
+                'COST_COMM_PERC' => ['value' => (float) $this->unformatNumber($request->input('costCommissionRate')), 'type' => 'decimal'],
+                'COST_DISC_AMT' => ['value' => (float) $this->unformatNumber($request->input('costDiscountAmount')), 'type' => 'decimal'],
+                'COST_DISC_PERC' => ['value' => (float) $this->unformatNumber($request->input('costDiscountRate')), 'type' => 'decimal'],
+                'COST_TTAX_AMT' => ['value' => (float) $this->unformatNumber($request->input('costTax')), 'type' => 'decimal'],
+                'COST_INS_AMT' => ['value' => (float) $this->unformatNumber($request->input('costInsurance')), 'type' => 'decimal'],
                 'COST_CURR_CODE' => ['value' => $request->input('costCurrencyCode'), 'type' => 'string'],
-                'COST_CURR_RATE' => ['value' => (float) $request->input('costCurrencyAmount'), 'type' => 'decimal'],
-                'TTL_COST_AMT' => ['value' => (float) $request->input('costTotalUnitCost'), 'type' => 'decimal'],
-                'COST_GRAND_TOTAL' => ['value' => (float) $request->input('costGrandTotal'), 'type' => 'decimal'],
+                'COST_CURR_RATE' => ['value' => (float) $this->unformatNumber($request->input('costCurrencyAmount')), 'type' => 'decimal'],
+                'TTL_COST_AMT' => ['value' => (float) $this->unformatNumber($request->input('costTotalUnitCost')), 'type' => 'decimal'],
+                'COST_GRAND_TOTAL' => ['value' => (float) $this->unformatNumber($request->input('costGrandTotal')), 'type' => 'decimal'],
                 'INCOME' => ['value' => 0, 'type' => 'decimal'],
                 'SELL_AMT_1' => ['value' => 0, 'type' => 'decimal'],
                 'SELL_AMT_2' => ['value' => 0, 'type' => 'decimal'],
@@ -100,55 +100,44 @@ class SalesFolderGroupController extends Controller
                 'MIX_INV_CNT' => ['value' => 0, 'type' => 'integer'],
                 'CAV_CNT' => ['value' => 0, 'type' => 'integer'],
                 'BYPASS_FLAG' => ['value' => 'N', 'type' => 'string'],
-                'SUPRESS_PRINT' => ['value' => 'N', 'type' => 'string'],
-                'PAX_DESCR' => ['value' => null, 'type' => 'NULL'],
-                'PRINT_PAX_DESCR' => ['value' => 'N', 'type' => 'string'],
-                'FIRST_PAX_NAME' => ['value' => null, 'type' => 'NULL'],
-                'SECOND_PAX_NAME' => ['value' => null, 'type' => 'NULL'],
-                'PKG_FLAG' => ['value' => 'N', 'type' => 'string'],
-                'GROUP_FLAG' => ['value' => 'N', 'type' => 'string'],
-                'XO_AMT' => ['value' => 0, 'type' => 'decimal'],
-                'INV_AMT' => ['value' => 0, 'type' => 'decimal'],
-                'CAV_AMT' => ['value' => 0, 'type' => 'decimal'],
-                'SELL_BAL_AMT' => ['value' => 0, 'type' => 'decimal'],
-                'COST_BAL_AMT' => ['value' => 0, 'type' => 'decimal'],
-                'SHOW_CONV' => ['value' => 'N', 'type' => 'string'],
-                'FARE_SAVE_AMT' => ['value' => (float) $request->input('fareSaving'), 'type' => 'decimal'],
-                'STAFF_DISC_PERC' => ['value' => (float) 0, 'type' => 'decimal'],
-                'STAFF_DISC_AMT' => ['value' => (float) $request->input('staffDiscount'), 'type' => 'decimal'],
-                'PROMO_ALLOC' => ['value' => (float) $request->input('promoAlloc'), 'type' => 'decimal'],
-                'ADM_ALLOC' => ['value' => (float) $request->input('admAlloc'), 'type' => 'decimal'],
-                'LOWEST_FARE' => ['value' => (float) $request->input('lowestFare'), 'type' => 'decimal'],
-                'IATA_FARE' => ['value' => (float) $request->input('iataFare'), 'type' => 'decimal'],
-                'CONF_NO' => ['value' => $request->input('confirmationNumber'), 'type' => 'string'],
-                'PAX_REF_NO' => ['value' => $request->input('paxReferenceNumber'), 'type' => 'string'],
-                'PTA' => ['value' => $request->input('pta'), 'type' => 'string'],
-                'RTT' => ['value' => $request->input('rtt'), 'type' => 'string'],
+                'SUPRESS_PRINT' => ['value' => $request->input('sfGroupSupressPrint') == 'Y' ? 'Y' : 'N', 'type' => 'string'],
+                'GROUP_FLAG' => ['value' => $request->input('sfGroupFlag') == 'Y' ? 'Y' : 'N', 'type' => 'string'],
+                'GROUP_PRODUCT' => ['value' => $request->input('sfGroupProduct') == 'Y' ? 'Y' : 'N', 'type' => 'string'],
+                'GROUP_ID' => ['value' => $request->input('sfGroupId'), 'type' => 'string'],
+                'UPDATE_SOURCE' => ['value' => 'M', 'type' => 'string'],
             ];
 
-            foreach ($attributes as $attribute => $data) {
-                Log::info('Setting SalesFolderGroup attribute', [
-                    'attribute' => $attribute,
-                    'value' => $data['value'],
-                    'type' => $data['type']
-                ]);
-                $salesFolderGroup->$attribute = $data['value'];
+            // Assign attributes to the salesFolderGroup object
+            foreach ($attributes as $key => $attribute) {
+                if ($attribute['type'] === 'string') {
+                    $salesFolderGroup->$key = (string)$attribute['value'];
+                } elseif ($attribute['type'] === 'integer') {
+                    $salesFolderGroup->$key = (int)$attribute['value'];
+                } elseif ($attribute['type'] === 'decimal') {
+                    $salesFolderGroup->$key = (float)$attribute['value'];
+                } elseif ($attribute['type'] === 'NULL') {
+                    $salesFolderGroup->$key = null;
+                }
             }
 
+            // Save the salesFolderGroup object to the database
             $salesFolderGroup->save();
 
-            Log::info('SalesFolderGroup saved successfully', ['salesFolderGroup' => $salesFolderGroup]);
+            Log::info("Saved: ". $salesFolderGroup);
 
-            return response()->json(['message' => 'Sales Folder Group saved successfully'], 201);
+            return response()->json([
+                'message' => 'Sales folder group created successfully'
+            ], 201);
+
         } catch (\Exception $e) {
-            Log::error('Failed to save SalesFolderGroup', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
+            Log::error('Error in SalesFolderGroup store method', ['error' => $e->getMessage()]);
 
-            return response()->json(['message' => 'Failed to save Sales Folder Group', 'error' => $e->getMessage()], 500);
+            return response()->json([
+                'message' => 'An error occurred while creating the sales folder group'
+            ], 500);
         }
     }
+
 
     public function delete($troNumber, $docId)
     {
@@ -234,5 +223,129 @@ class SalesFolderGroupController extends Controller
         }
     }
 
+    //Unformat a number
+    function unformatNumber($number) {
+        return str_replace(',', '', $number);
+    }
+
+    public function update(Request $request)
+    {
+        try {
+            // Validate the request
+            $request->validate([
+                'troNumber' => 'required|string',
+                'docId' => 'required|integer',
+                // Add more validation rules for other fields as needed
+            ]);
+
+            // Prepare the attributes based on the provided $attributes array
+            $attributes = [
+                'SF_NO' => $request->input('troNumber'),
+                'DOC_ID' => $request->input('docId'),
+                'PNR' => null,
+                'AL_PNR' => $request->input('productType') == 'Air' ? $request->input('airline') : null,
+           'QTY' => (int) $request->input('costUnitQuantity'),
+                'TAX_TYPE' => 'N',
+                'TAX_AMT' => (float) $this->unformatNumber($request->input('costTax')),
+                'TAX_RATE' => 0,
+                'CHARGE_AMT' => 0,
+                'SELL_CURR_CODE' => $request->input('salesCurrencyCode'),
+                'SELL_CURR_RATE' => (float) $request->input('salesCurrencyAmount'),
+                'SELL_AMT' => (float) $this->unformatNumber($request->input('salesUnitAmount')),
+                'SELL_TTAX_AMT' => 0,
+                'SELL_DISC_AMT' => (float) $this->unformatNumber($request->input('salesDiscountAmount')),
+                'SELL_DISC_PERC' => (float) $request->input('salesDiscountRate'),
+                'SELL_COMM_AMT' => (float) $this->unformatNumber($request->input('salesCommissionAmount')),
+                'SELL_COMM_PERC' => (float) $request->input('salesCommissionRate'),
+                'SELL_INS_AMT' => 0,
+                'SELL_SURCHARGE' => (float) $request->input('salesSurcharge'),
+                'TTL_SELL_AMT' => (float) $this->unformatNumber($request->input('salesTotalUnitAmount')),
+                'SELL_GRAND_TOTAL' => (float) $this->unformatNumber($request->input('salesGrandTotal')),
+                'PUBLISH_AMT' => (float) $this->unformatNumber($request->input('costUnitAmount')),
+                'SPL_FARE_CODE' => 0,
+                'NETT_AMT' => 0,
+                'NET_FARE_FLAG' => 'N',
+                'NAIR_NETT_AMT' => (float) $this->unformatNumber($request->input('nonAirNetRate')),
+                'COST_COMM_AMT' => (float) $this->unformatNumber($request->input('costCommissionAmount')),
+                'COST_COMM_PERC' => (float) $request->input('costCommissionRate'),
+                'COST_DISC_AMT' => (float) $this->unformatNumber($request->input('costDiscountAmount')),
+                'COST_DISC_PERC' => (float) $request->input('costDiscountRate'),
+                'COST_TTAX_AMT' => (float) $this->unformatNumber($request->input('costTax')),
+                'COST_INS_AMT' => (float) $this->unformatNumber($request->input('costInsurance')),
+                'COST_CURR_CODE' => $request->input('costCurrencyCode'),
+                'COST_CURR_RATE' => (float) $request->input('costCurrencyAmount'),
+                'TTL_COST_AMT' => (float) $this->unformatNumber($request->input('costTotalUnitCost')),
+                'COST_GRAND_TOTAL' => (float) $this->unformatNumber($request->input('costGrandTotal')),
+                'INCOME' => 0,
+                'SELL_AMT_1' => 0,
+                'SELL_AMT_2' => 0,
+                'SELL_AMT_3' => 0,
+                'SELL_AMT_4' => 0,
+                'SELL_AMT_5' => 0,
+                'CURR_CODE_1' => 'PHP',
+                'CURR_CODE_2' => 'PHP',
+                'CURR_CODE_3' => 'PHP',
+                'CURR_CODE_4' => 'PHP',
+                'CURR_CODE_5' => 'PHP',
+                'CURR_RATE_1' => 1.00,
+                'CURR_RATE_2' => 1.00,
+                'CURR_RATE_3' => 1.00,
+                'CURR_RATE_4' => 1.00,
+                'CURR_RATE_5' => 1.00,
+                'SUPP_ID' => null,
+                'ACCT_CODE' => null,
+                'XO_NO' => null,
+                'VOUCHER_NO' => null,
+                'MPD_TICKET_NO' => null,
+                'TOUR_CODE' => null,
+                'BULK_FLAG' => 'N',
+                'ETICKET_FLAG' => 'N',
+                'GDS_PROVIDER' => null,
+                'SHORT_DESCR' => null,
+                'LONG_DESCR' => $request->input('longItineraryDesc'),
+                'REMARKS' => $request->input('generalRemarks'),
+                'AIRLINE_REMARKS' => $request->input('airlineReference'),
+                'PRINT_LONG_DESCR' => 'N',
+                'CASH_INV_CNT' => 0,
+                'CREDIT_INV_CNT' => 1,
+                'CHARGE_INV_CNT' => 0,
+                'UATP_INV_CNT' => 0,
+                'MIX_INV_CNT' => 0,
+                'CAV_CNT' => 0,
+                'BYPASS_FLAG' => 'N',
+                'SUPRESS_PRINT' => $request->input('sfGroupSupressPrint') == 'Y' ? 'Y' : 'N',
+                'GROUP_FLAG' => $request->input('sfGroupFlag') == 'Y' ? 'Y' : 'N',
+                'GROUP_PRODUCT' => $request->input('sfGroupProduct') == 'Y' ? 'Y' : 'N',
+                'GROUP_ID' => $request->input('sfGroupId'),
+                'UPDATE_SOURCE' => 'M',
+            ];
+
+            Log::info('Attributes array:', $attributes);
+
+            // Use DB transaction for atomic operation
+            DB::beginTransaction();
+
+            // Update the SalesFolderGroup record
+            DB::table('SALES_FOLDER_GROUP')
+                ->where('SF_NO', $attributes['SF_NO'])
+                ->where('DOC_ID', $attributes['DOC_ID'])
+                ->update($attributes);
+
+            // Commit transaction if all queries succeed
+            DB::commit();
+
+            // Return a JSON response indicating success
+            return response()->json(['message' => 'Sales Folder Group updated successfully.']);
+        } catch (\Exception $e) {
+            // Rollback transaction if any errors occur
+            DB::rollback();
+
+            // Log the error
+            Log::error('Error updating Sales Folder Group: ' . $e->getMessage());
+
+            // Return a JSON response with error message
+            return response()->json(['error' => 'Failed to update Sales Folder Group.'], 500);
+        }
+    }
 
 }

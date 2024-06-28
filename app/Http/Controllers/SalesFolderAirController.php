@@ -108,36 +108,61 @@ class SalesFolderAirController extends Controller
 
     public function update(Request $request, $sfNo, $docId, $itemNo)
     {
-        $primaryKeyValues = [
-            'SF_NO' => (string) $sfNo,
-            'DOC_ID' => (string) $docId,
-            'ITEM_NO' => (string) $itemNo,
-        ];
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'airline' => 'required|string|max:255',
+            'flightNumber' => 'required|string|max:50',
+            'serviceClass' => 'required|string|max:50',
+            'departureCity' => 'nullable|string|max:255',
+            'departureDate' => 'nullable|date',
+            'departureTime' => 'nullable|string|max:50',
+            'arrivalCity' => 'nullable|string|max:255',
+            'arrivalDate' => 'nullable|date',
+            'arrivalTime' => 'nullable|string|max:50',
+        ]);
 
         try {
-            // Find the record by composite primary key
-            $record = SalesFolderAir::where('SF_NO', $primaryKeyValues['SF_NO'])
-                                    ->where('DOC_ID', $primaryKeyValues['DOC_ID'])
-                                    ->where('ITEM_NO', $primaryKeyValues['ITEM_NO'])
-                                    ->firstOrFail();
+            // Update the SalesFolderAir record using raw SQL query
+            $affected = DB::update('UPDATE SALES_FOLDER_AIR SET
+                                    AL_CODE = ?,
+                                    FLIGHT_NUM = ?,
+                                    SERVICE_CLASS = ?,
+                                    DEPT_CITY = ?,
+                                    DEPT_DATE = ?,
+                                    DEPT_TIME = ?,
+                                    ARVL_CITY = ?,
+                                    ARVL_DATE = ?,
+                                    ARVL_TIME = ?
+                                    WHERE SF_NO = ? AND DOC_ID = ? AND ITEM_NO = ?',
+                                    [
+                                        $validatedData['airline'],
+                                        $validatedData['flightNumber'],
+                                        $validatedData['serviceClass'],
+                                        $validatedData['departureCity'],
+                                        $validatedData['departureDate'],
+                                        $validatedData['departureTime'],
+                                        $validatedData['arrivalCity'],
+                                        $validatedData['arrivalDate'],
+                                        $validatedData['arrivalTime'],
+                                        $sfNo,
+                                        $docId,
+                                        $itemNo
+                                    ]);
 
-            // Update the record with the provided data from the request
-            $record->update([
-                'AL_CODE' => $request->input('airline'),
-                'FLIGHT_NUM' => $request->input('flightNumber'),
-                'DEPT_CITY' => $request->input('departureCity'),
-                'DEPT_DATE' => $request->input('departureDate'),
-                'DEPT_TIME' => $request->input('departureTime'),
-                'ARVL_CITY' => $request->input('arrivalCity'),
-                'ARVL_DATE' => $request->input('arrivalDate'),
-                'ARVL_TIME' => $request->input('arrivalTime'),
-            ]);
+            // Check if any record was updated
+            if ($affected > 0) {
+                // Log the update
+                Log::info('SalesFolderAir record updated: SF_NO = ' . $sfNo . ', DOC_ID = ' . $docId . ', ITEM_NO = ' . $itemNo);
 
-            return redirect()->back()->with('success', 'Record updated successfully.');
-        } catch (ModelNotFoundException $e) {
-            return redirect()->back()->with('error', 'Record not found.');
+                return response()->json(['success' => 'Record updated successfully.']);
+            } else {
+                return response()->json(['error' => 'No record found or updated.'], 404);
+            }
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'An error occurred while updating the record.');
+            // Log the error
+            Log::error('Error updating SalesFolderAir record: ' . $e->getMessage());
+
+            return response()->json(['error' => 'Error updating record: ' . $e->getMessage()], 500);
         }
     }
 }

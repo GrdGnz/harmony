@@ -553,8 +553,7 @@ class TravelRequestOrderController extends Controller
             ->first();
 
         //Sales Folder Air
-        $sfAirPax = SalesFolderPax::where('PROD_CAT', 'A')
-            ->where('SF_NO', $troNumber)
+        $sfAirPax = SalesFolderPax::where('SF_NO', $troNumber)
             ->where('DOC_ID', $docId)
             ->get();
 

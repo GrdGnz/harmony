@@ -39,6 +39,7 @@ Route::get('/sales-folder/data', [App\Http\Controllers\SalesFolderController::cl
     Route::post('/sales-folder-group/store', [App\Http\Controllers\SalesFolderGroupController::class, 'store'])->name('sales-folder-group.store');
     Route::get('/sales-folder-group/delete/{troNumber}/{docId}', [App\Http\Controllers\SalesFolderGroupController::class, 'delete'])->name('sales-folder-group.delete');
     Route::post('/sales-folder-group/bulk-delete', [App\Http\Controllers\SalesFolderGroupController::class, 'bulkDelete'])->name('sales-folder-group.bulkDelete');
+    Route::put('/sales-folder-group/update', [App\Http\Controllers\SalesFolderGroupController::class, 'update'])->name('sales-folder-group.update');
 
 //Sales Folder Hotel
     //Store data
@@ -85,3 +86,5 @@ Route::get('/sales-folder/data', [App\Http\Controllers\SalesFolderController::cl
     Route::post('/transfer-temp-tax-data', [App\Http\Controllers\SalesFolderTaxController::class, 'transferTaxData'])->name('sales-folder-tax.tempdata.transfer');
     //Get total taxes
     Route::post('/total-cost-tax-amount', [App\Http\Controllers\TempSalesFolderTaxController::class, 'getTotalTax'])->name('sales-folder-tax.tempdata.total');
+    //Delete existing tax data
+    Route::delete('/sales-folder-tax/delete', [App\Http\Controllers\SalesFolderTaxController::class, 'destroy'])->name('sales-folder-tax.delete');
