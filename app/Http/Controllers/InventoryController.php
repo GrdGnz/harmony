@@ -20,11 +20,11 @@ class InventoryController extends Controller
             $query->where('TICKET_NO', 'like', "%{$request->ticketNumber}%");
         }
         if (!empty($request->pnr)) {
-            $query->whereDate('PNR', 'like',"%{$request->pnr}%");
+            $query->where('PNR', 'like',"%{$request->pnr}%");
         }
 
         // Filter out records where SF_NO is not empty or null
-        $query->whereNull('SF_NO');
+        $query->whereNull('SF_NO')->orWhere('SF_NO','');
 
         return DataTables::of($query)->make(true);
     }

@@ -294,10 +294,10 @@
 
                             <div class="col-md-12 justify-content-end p-0 m-0 d-flex">
                                 @if(isset($sf) || session('iNextID') != null)
-                                    <div class="p-o m-0">
+                                    <div class="p-o m-3">
                                         <div>
                                             @if(isset($sf))
-                                                <a href="{{ url('forms/tro/add-product/'.$sf->SF_NO) }}" class="btn btn-success txt-1">Add</a>
+                                                <a href="{{ url('forms/tro/add-product/'.$sf->SF_NO) }}" class="btn btn-success txt-1">Add Product</a>
                                             @elseif(session('iNextID') != null)
                                                 <a href="{{ url('forms/tro/add-product/'.session('iNextID')) }}" class="btn btn-success txt-1">Add</a>
                                             @endif
@@ -755,9 +755,11 @@ document.getElementById('confirmDelete').addEventListener('click', function() {
     window.location.href = deleteUrl;
 });
 
-var checkboxes = document.querySelectorAll('input[name="selectedProducts[]"]');
-checkboxes.forEach(function(checkbox) {
-    checkbox.checked = e.target.checked;
+document.getElementById('selectAll').addEventListener('change', function(e) {
+    var checkboxes = document.querySelectorAll('input[name="selectedProducts[]"]');
+    checkboxes.forEach(function(checkbox) {
+        checkbox.checked = e.target.checked;
+    });
 });
 </script>
 

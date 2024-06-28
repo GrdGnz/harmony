@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SalesFolderGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\SalesFolderTax;
 use Log;
 
 class SalesFolderTaxController extends Controller
@@ -67,6 +69,59 @@ class SalesFolderTaxController extends Controller
 
             Log::error('Error transferring data and truncating TEMP_SALES_FOLDER_TAX table: ' . $e->getMessage());
             return response()->json(['message' => 'Error saving data.'], 500);
+        }
+    }
+
+    public function destroy(Request $request)
+    {
+        try {
+            // Retrieve the ITEM_NO values from the request
+            $itemNos = $request->input('taxIds');
+            $sfNo = $request->input('sfNo');
+            $docId = $request->input('docId');
+
+            if (empty($itemNos)) {
+                return response()->json(['error' => 'No tax data selected for deletion.'], 400);
+            }
+
+            // Fetch the records to ensure they exist before attempting deletion
+            $taxesToDelete = SalesFolderTax::where('SF_NO', $sfNo)
+                ->where('DOC_ID', $docId)
+                ->whereIn('ITEM_NO', $itemNos)
+                ->get();
+
+            if ($taxesToDelete->isEmpty()) {
+                return response()->json(['error' => 'No tax data found for the provided ITEM_NO values.'], 404);
+            }
+
+            // Calculate the total cost amount to subtract
+            $totalCostAmount = $taxesToDelete->sum('COST_AMOUNT');
+
+            // Delete the records
+            SalesFolderTax::where('SF_NO', $sfNo)
+                ->where('DOC_ID', $docId)
+                ->whereIn('ITEM_NO', $itemNos)
+                ->delete();
+
+            // Update the COST_TTAX_AMT field in SalesFolderGroup
+            SalesFolderGroup::where('SF_NO', $sfNo)
+                ->where('DOC_ID', $docId)
+                ->decrement('COST_TTAX_AMT', $totalCostAmount);
+
+            // Log the success
+            Log::info('Temp Sales Folder Tax deleted successfully', ['ITEM_NO' => $itemNos, 'COST_AMOUNT' => $totalCostAmount]);
+
+            // Fetch the updated data
+            $taxData = SalesFolderTax::all();
+
+            return response()->json([
+                'success' => 'Selected tax data successfully deleted.',
+                'data' => $taxData
+            ]);
+        } catch (\Exception $e) {
+            // Log the exception
+            Log::error('Error deleting Temp Sales Folder Tax: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to delete selected tax data: ' . $e->getMessage()], 500);
         }
     }
 

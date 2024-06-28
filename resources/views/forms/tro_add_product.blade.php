@@ -87,6 +87,24 @@
 
                     </div>
 
+                    <div class="col-md-12 d-flex my-2">
+                        <div class="btn-group p-1 m-1" role="group" aria-label="Basic checkbox toggle button group">
+                            <input type="checkbox" value="Y" class="btn-check" id="sfGroupFlag" name="sfGroupFlag" autocomplete="off">
+                            <label class="btn btn-outline-primary my-1" for="sfGroupFlag">Group</label>
+
+                            <input type="checkbox" value="Y" class="btn-check" id="sfGroupSupressPrint" name="sfGroupSupressPrint" autocomplete="off">
+                            <label class="btn btn-outline-primary my-1" for="sfGroupSupressPrint">Do not include this group when printed</label>
+
+                            <input type="checkbox" value="Y" class="btn-check" id="sfGroupProduct" name="sfGroupProduct" autocomplete="off">
+                            <label class="btn btn-outline-primary my-1" for="sfGroupProduct">Part of multiple products</label>
+
+                        </div>
+                        <div class="m-2 col-md-4 d-flex">
+                            <label for="sfGroupId" class="form-label txt-1 my-1 marsman-bg-color-label text-white p-2 rounded-start">Group ID</label>
+                            <input type="number" class="form-control txt-2 m-0 p-2 rounded-end w-25" id="sfGroupId" name="sfGroupId">
+                        </div>
+                    </div>
+
                     <!-- Tabs -->
                     <ul class="nav nav-tabs mb-3 bg-white" id="myTabs" role="tablist">
                         <li class="nav-item">
@@ -250,7 +268,7 @@
                                             </div>
                                             <div class="col-md-12 d-flex mt-2">
                                                 <div class="form-group col-md-6">
-                                                    <label for="salesGrandTotal" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Grand Total</label>
+                                                    <label for="salesGrandTotal" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        al</label>
                                                     <input type="text" class="form-control txt-1 p-2" id="salesGrandTotal" name="salesGrandTotal" value="0">
                                                 </div>
                                                 <div class="form-group col-md-6 mx-2">
@@ -463,41 +481,41 @@
                                                 <div class="col-md-4 mb-2 p-1">
                                                     <label for="costInsurance" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Insurance</label>
                                                     @if (isset($ticketInventory->COST_INS_AMOUNT))
-                                                        <input type="text" class="form-control txt-1" id="costInsurance" name="costInsurance" value="{{ number_format($ticketInventory->COST_INS_AMOUNT, 2, '.', ',') }}">
+                                                        <input type="text" class="form-control-plaintext txt-1" id="costInsurance" name="costInsurance" value="{{ number_format($ticketInventory->COST_INS_AMOUNT, 2, '.', ',') }}" readonly>
                                                     @else
-                                                        <input type="text" class="form-control txt-1" id="costInsurance" name="costInsurance" value="0">
+                                                        <input type="text" class="form-control-plaintext txt-1" id="costInsurance" name="costInsurance" value="0">
                                                     @endif
                                                 </div>
                                                 <div class="col-md-2 mb-2 p-1">
                                                     <label for="costTax" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Taxes</label>
                                                     @if (isset($ticketInventory->COST_TAX_AMOUNT))
-                                                        <input type="text" class="form-control txt-1" id="costTax" name="costTax" value="{{ number_format($ticketInventory->COST_TAX_AMOUNT, 2, '.', ',') }}">
+                                                        <input type="text" class="form-control-plaintext txt-1" id="costTax" name="costTax" value="{{ number_format($ticketInventory->COST_TAX_AMOUNT, 2, '.', ',') }}" readonly>
                                                     @else
-                                                        <input type="text" class="form-control txt-1" id="costTax" name="costTax" value="0">
+                                                        <input type="text" class="form-control-plaintext txt-1" id="costTax" name="costTax" value="0" readonly>
                                                     @endif
                                                 </div>
                                                 <div class="col-md-2 mb-2 p-1">
                                                     <label for="costTotalUnitCost" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Total Unit Cost</label>
                                                     @if (isset($ticketInventory->PUBLISH_AMOUNT))
-                                                        <input type="text" class="form-control txt-1" id="costTotalUnitCost" name="costTotalUnitCost" value="{{ number_format($ticketInventory->PUBLISH_AMOUNT, 2, '.', ',') }}">
+                                                        <input type="text" class="form-control-plaintext txt-1" id="costTotalUnitCost" name="costTotalUnitCost" value="{{ number_format($ticketInventory->PUBLISH_AMOUNT, 2, '.', ',') }}" readonly>
                                                     @else
-                                                        <input type="text" class="form-control txt-1" id="costTotalUnitCost" name="costTotalUnitCost" value="0">
+                                                        <input type="text" class="form-control-plaintext txt-1" id="costTotalUnitCost" name="costTotalUnitCost" value="0" readonly>
                                                     @endif
                                                 </div>
                                                 <div class="col-md-2 mb-2 p-1">
                                                     <label for="costUnitQuantity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Quantity</label>
                                                     @if (isset($paxCount))
-                                                        <input type="text" class="form-control txt-1" id="costUnitQuantity" name="costUnitQuantity" value="{{ $paxCount }}" readonly>
+                                                        <input type="text" class="form-control-plaintext txt-1" id="costUnitQuantity" name="costUnitQuantity" value="{{ $paxCount }}" readonly>
                                                     @else
-                                                        <input type="number" class="form-control txt-1" id="costUnitQuantity" name="costUnitQuantity" value="0" readonly>
+                                                        <input type="number" class="form-control-plaintext txt-1" id="costUnitQuantity" name="costUnitQuantity" value="0" readonly>
                                                     @endif
                                                 </div>
                                                 <div class="col-md-2 mb-2 p-1">
                                                     <label for="costGrandTotal" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Grand Total</label>
                                                     @if (isset($ticketInventory->PUBLISH_AMOUNT) && isset($paxCount))
-                                                        <input type="text" class="form-control txt-1" id="costGrandTotal" name="costGrandTotal" value="{{ number_format(($ticketInventory->PUBLISH_AMOUNT + $ticketInventory->COST_TAX_AMOUNT + $ticketInventory->COST_INS_AMOUNT) * $paxCount, 2, '.', ',') }}" readonly>
+                                                        <input type="text" class="form-control-plaintext txt-1" id="costGrandTotal" name="costGrandTotal" value="{{ number_format(($ticketInventory->PUBLISH_AMOUNT + $ticketInventory->COST_TAX_AMOUNT + $ticketInventory->COST_INS_AMOUNT) * $paxCount, 2, '.', ',') }}" readonly>
                                                     @else
-                                                        <input type="text" class="form-control txt-1" id="costGrandTotal" name="costGrandTotal" value="0" readonly>
+                                                        <input type="text" class="form-control-plaintext txt-1" id="costGrandTotal" name="costGrandTotal" value="0" readonly>
                                                     @endif
                                                 </div>
                                             </div>
@@ -1617,6 +1635,34 @@
         const closeButtons = document.querySelectorAll('.close-button');
         const lightboxContainers = document.querySelectorAll('.lightbox-container');
 
+        //Cost amount auto update on manual input
+        const costInsuranceInput = document.getElementById('costInsurance');
+        const unitAmountInput = document.getElementById('costUnitAmount');
+        const taxInput = document.getElementById('costTax');
+        const totalUnitCostInput = document.getElementById('costTotalUnitCost');
+        const unitQuantityInput = document.getElementById('costUnitQuantity');
+        const currencyQuantityInput = document.getElementById('costCurrencyQuantity');
+
+        function updateTotalUnitCost() {
+            const unitAmount = parseFloat(unitAmountInput.value.replace(/,/g, '')) || 0;
+            const tax = parseFloat(taxInput.value.replace(/,/g, '')) || 0;
+            const insurance = parseFloat(costInsuranceInput.value.replace(/,/g, '')) || 0;
+            const totalUnitCost = unitAmount + tax + insurance;
+            totalUnitCostInput.value = formatNumber(totalUnitCost);
+            calculateCostGrandTotal();
+        }
+
+        function updateCurrencyQuantity() {
+            unitQuantityInput.value = currencyQuantityInput.value;
+            calculateCostGrandTotal();
+        }
+
+        unitAmountInput.addEventListener('input', updateTotalUnitCost);
+        taxInput.addEventListener('input', updateTotalUnitCost);
+        costInsuranceInput.addEventListener('input', updateTotalUnitCost);
+        currencyQuantityInput.addEventListener('input', updateCurrencyQuantity);
+
+        // Popup notification box
         closeButtons.forEach((button) => {
             button.addEventListener('click', () => {
                 successMessage.style.display = 'none';
@@ -1725,7 +1771,7 @@
                     callback(response.count);
                 },
                 error: function(error) {
-                    console.error('Error fetching passenger count:', message);
+                    console.error('Error fetching passenger count:', error.message);
                     callback(null);
                 }
             });
@@ -1745,18 +1791,21 @@
 
         function calculateCostGrandTotal() {
             // Get the values of insurance, tax, unit cost, and quantity
+            var unitQuantity = $('#costUnitQuantity').val();
             var insurance = parseFloat($('#costInsurance').val().replace(/,/g, '')) || 0;
             var tax = parseFloat($('#costTax').val().replace(/,/g, '')) || 0;
             var unitCost = parseFloat($('#costTotalUnitCost').val().replace(/,/g, '')) || 0;
 
             getTotalPax(function(count) {
                 console.log('Get total pax count: ' + count);
-                var quantity = count !== null ? count : 0;
+                var quantity = count !== 0 ? count : unitQuantity;
                 console.log('Current quantity: ' + quantity);
+                console.log('Current manual quantity: ' + unitQuantity);
                 $('#costUnitQuantity').val(quantity);
 
                 // Calculate the grand total
-                var grandTotal = (insurance + tax + unitCost) * quantity;
+                var grandTotal = unitCost * quantity;
+                console.log('Final quantity: ' + quantity);
                 if (quantity === 0) {
                     grandTotal = 0;
                 }
@@ -1780,6 +1829,8 @@
         });
 
         //Initial load cost grand total
+        updateTotalUnitCost();
+        updateCurrencyQuantity();
         calculateCostGrandTotal();
         //Initial load cost tax
         getTotalTax();
@@ -2272,6 +2323,7 @@
                 salesSurcharge: $('#salesSurcharge').val(),
                 salesTotalUnitAmount: $('#salesTotalUnitAmount').val(),
                 salesGrandTotal: $('#salesGrandTotal').val(),
+                costUnitAmount: $('#costUnitAmount').val(),
                 costCommissionAmount: $('#costCommissionAmount').val(),
                 costCommissionRate: $('#costCommissionRate').val(),
                 costDiscountAmount: $('#costDiscountAmount').val(),
@@ -2293,6 +2345,10 @@
                 fareSaving: $('#fareSaving').val(),
                 pta: $('#pta').val(),
                 rtt: $('#rtt').val(),
+                sfGroupFlag: $('#sfGroupFlag').val(),
+                sfSupressPrint: $('#sfSupressPrint').val(),
+                sfGroupProduct: $('#sfGroupProduct').val(),
+                sfGroupId: $('#sfGroupId').val(),
             };
 
             var productCategory = $('#productCategory').val();
