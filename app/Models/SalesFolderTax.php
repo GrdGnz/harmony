@@ -9,6 +9,8 @@ class SalesFolderTax extends Model
 {
     use HasFactory;
 
+    public $timestamps = false; // Disable timestamps
+
     protected $table = 'SALES_FOLDER_TAX';
 
     protected $fillable = [

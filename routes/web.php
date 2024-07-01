@@ -52,18 +52,26 @@ Route::get('/sales-folder/data', [App\Http\Controllers\SalesFolderController::cl
 //Sales Folder Miscellaneous
     //Store data
     Route::post('/sales-folder-misc/store', [App\Http\Controllers\SalesFolderMiscController::class, 'store'])->name('sales-folder-misc.store');
+    //Update data
+    Route::put('/sales-folder-misc/update', [App\Http\Controllers\SalesFolderMiscController::class, 'update'])->name('sales-folder-misc.update');
 
 //Sales Folder Air
-    //Store data
+    //Store temporary data
     Route::post('/sales-folder-air/tempdata/store', [App\Http\Controllers\SalesFolderAirController::class, 'storeTemporaryData'])->name('sales-folder-air.tempdata.store');
+    //Store data
+    Route::post('/sales-folder-air/store', [App\Http\Controllers\SalesFolderAirController::class, 'store'])->name('sales-folder-air.store');
     //Truncate temporary table of Air itinerary
     Route::post('/truncate-temp-air-data', [App\Http\Controllers\SalesFolderAirController::class, 'truncateTable'])->name('sales-folder-air.tempdata.truncate');
     //Transfer temp data to Sales Folder Air
     Route::post('/transfer-temp-data', [App\Http\Controllers\SalesFolderAirController::class, 'transferData'])->name('sales-folder-air.tempdata.transfer');
     //Update data
     Route::put('/sales-folder-air/update/{sfNo}/{docId}/{itemNo}', [App\Http\Controllers\SalesFolderAirController::class, 'update'])->name('sales-folder-air.update');
+    //Delete multiple data
+    Route::delete('/sales-folder-air/delete-multiple', [App\Http\Controllers\SalesFolderAirController::class, 'deleteMultiple'])->name('sales-folder-air.deleteMultiple');
 
-//Transfer Pax Data
+//Sales Folder Pax Data
+    //Store data
+    Route::post('/sales-folder-pax/store', [App\Http\Controllers\SalesFolderPaxController::class, 'store'])->name('sales-folder-pax.store');
     //Store data from ticket
     Route::post('/sales-folder-pax/tempdata/ticket/store', [App\Http\Controllers\TempSalesFolderPaxController::class, 'saveTickets'])->name('sales-folder-pax.tempdata.ticket.store');
     //Store data
@@ -76,8 +84,14 @@ Route::get('/sales-folder/data', [App\Http\Controllers\SalesFolderController::cl
     Route::delete('/transfer-temp-pax-data/delete', [App\Http\Controllers\TempSalesFolderPaxController::class, 'deletePax'])->name('sales-folder-pax.tempdata.delete');
     //Update pax count
     Route::post('/get-pax-count', [App\Http\Controllers\TempSalesFolderPaxController::class, 'countTotalPax'])->name('sales-folder-pax.tempdata.count');
+    //Update pax data
+    Route::put('/sales-folder-pax/update/{sfNo}/{docId}/{itemNo}', [App\Http\Controllers\SalesFolderPaxController::class, 'update'])->name('sales-folder-pax.update');
+    //Delete multiple data
+    Route::delete('/sales-folder-pax/delete-multiple', [App\Http\Controllers\SalesFolderPaxController::class, 'deleteMultiple'])->name('sales-folder-pax.deleteMultiple');
 
 //Sales Folder Tax
+    //Store data
+    Route::post('/sales-folder-tax/store', [App\Http\Controllers\SalesFolderTaxController::class, 'store'])->name('sales-folder-tax.store');
     //Store temp tax data
     Route::post('/sales-folder-tax/tempdata/store', [App\Http\Controllers\TempSalesFolderTaxController::class, 'store'])->name('sales-folder-tax.tempdata.store');
     //Delete a temp data
@@ -88,3 +102,9 @@ Route::get('/sales-folder/data', [App\Http\Controllers\SalesFolderController::cl
     Route::post('/total-cost-tax-amount', [App\Http\Controllers\TempSalesFolderTaxController::class, 'getTotalTax'])->name('sales-folder-tax.tempdata.total');
     //Delete existing tax data
     Route::delete('/sales-folder-tax/delete', [App\Http\Controllers\SalesFolderTaxController::class, 'destroy'])->name('sales-folder-tax.delete');
+    //Delete multiple data
+    Route::delete('/sales-folder-tax/delete-multiple', [App\Http\Controllers\SalesFolderTaxController::class, 'deleteMultiple'])->name('sales-folder-tax.deleteMultiple');
+    //Success delete
+    Route::get('sales-folder-tax/success-delete', function () {
+        return redirect()->back()->with('success','Successfully deleted data')->with('deletedTaxRecords', true);
+    })->name('sales-folder-tax.successDelete');

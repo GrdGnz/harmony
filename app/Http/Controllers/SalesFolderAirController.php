@@ -12,6 +12,43 @@ use App\Models\SalesFolderAir;
 
 class SalesFolderAirController extends Controller
 {
+    public function store(Request $request)
+    {
+        try {
+            $itemNo = DB::table('SALES_FOLDER_AIR')
+                        ->where('SF_NO', $request->sfNo)
+                        ->where('DOC_ID', $request->docId)
+                        ->max('ITEM_NO') + 1;
+
+            $newRecord = [
+                'SF_NO' => $request->sfNo,
+                'DOC_ID' => $request->docId,
+                'ITEM_NO' => $itemNo,
+                'AL_CODE' => $request->airlineNew,
+                'FLIGHT_NUM' => $request->flightNumberNew,
+                'DEPT_CITY' => $request->departureCityNew,
+                'DEPT_DATE' => $request->departureDateNew,
+                'DEPT_TIME' => $request->departureTimeNew,
+                'ARVL_CITY' => $request->arrivalCityNew,
+                'ARVL_DATE' => $request->arrivalDateNew,
+                'ARVL_TIME' => $request->arrivalTimeNew,
+                'SERVICE_CLASS' => $request->serviceClassNew,
+                'ORIGIN' => 'M',
+                'UPDATE_SOURCE' => 'M',
+            ];
+
+            DB::table('SALES_FOLDER_AIR')->insert($newRecord);
+
+            Log::info('New record added to SALES_FOLDER_AIR', $newRecord);
+
+            return redirect()->back()->with('success','Successfully added data')->with('newRecord', true);
+
+        } catch (\Exception $e) {
+            Log::error('Error adding new record to SALES_FOLDER_AIR', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error','Failed to add new record');
+        }
+    }
+
     public function storeTemporaryData(Request $request)
     {
         try {
@@ -149,6 +186,8 @@ class SalesFolderAirController extends Controller
                                         $itemNo
                                     ]);
 
+            Log::info('Update data: ' . $affected);
+
             // Check if any record was updated
             if ($affected > 0) {
                 // Log the update
@@ -163,6 +202,36 @@ class SalesFolderAirController extends Controller
             Log::error('Error updating SalesFolderAir record: ' . $e->getMessage());
 
             return response()->json(['error' => 'Error updating record: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteMultiple(Request $request)
+    {
+        try {
+            $records = $request->input('records');
+
+            if (!is_array($records)) {
+                Log::error('Invalid input: records are not an array', ['records' => $records]);
+                return response()->json(['success' => false, 'message' => 'Invalid input.']);
+            }
+
+            Log::info('Received request to delete multiple records', ['records' => $records]);
+
+            // Loop through the records and delete them
+            foreach ($records as $record) {
+                Log::info('Attempting to delete record', $record);
+                SalesFolderAir::where('SF_NO', $record['sfNo'])
+                    ->where('DOC_ID', $record['docId'])
+                    ->where('ITEM_NO', $record['itemNo'])
+                    ->delete();
+                Log::info('Successfully deleted record', $record);
+            }
+
+            Log::info('All selected records deleted successfully');
+            return response()->json(['success' => true, 'message' => 'Records deleted successfully.']);
+        } catch (\Exception $e) {
+            Log::error('Error deleting records', ['exception' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
 }

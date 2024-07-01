@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\SalesFolderGroup;
 use App\Models\SalesFolderAir;
 use App\Models\SalesFolderPax;
+use App\Models\SalesFolderTax;
 use App\Models\SalesFolderHotel;
 use App\Models\SalesFolderTransfer;
+use App\Models\SalesFolderMisc;
 use App\Models\Inventory;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -105,6 +107,8 @@ class SalesFolderGroupController extends Controller
                 'GROUP_PRODUCT' => ['value' => $request->input('sfGroupProduct') == 'Y' ? 'Y' : 'N', 'type' => 'string'],
                 'GROUP_ID' => ['value' => $request->input('sfGroupId'), 'type' => 'string'],
                 'UPDATE_SOURCE' => ['value' => 'M', 'type' => 'string'],
+                'PAX_DESCR' => ['value' => $request->input('paxDescription'), 'type' => 'string'],
+                'FARE_CALC' => ['value' => $request->input('fareCalculation'), 'type' => 'string'],
             ];
 
             // Assign attributes to the salesFolderGroup object
@@ -172,8 +176,10 @@ class SalesFolderGroupController extends Controller
             // Delete related records in other models
             SalesFolderAir::where('SF_NO', $troNumber)->where('DOC_ID', $docId)->delete();
             SalesFolderPax::where('SF_NO', $troNumber)->where('DOC_ID', $docId)->delete();
+            SalesFolderTax::where('SF_NO', $troNumber)->where('DOC_ID', $docId)->delete();
             SalesFolderHotel::where('SF_NO', $troNumber)->where('DOC_ID', $docId)->delete();
             SalesFolderTransfer::where('SF_NO', $troNumber)->where('DOC_ID', $docId)->delete();
+            SalesFolderMisc::where('SF_NO', $troNumber)->where('DOC_ID', $docId)->delete();
 
             Log::info("Related records deleted from SalesFolderAir, SalesFolderPax, SalesFolderHotel, and SalesFolderTransfer.", ['troNumber' => $troNumber, 'docId' => $docId]);
 
@@ -305,6 +311,8 @@ class SalesFolderGroupController extends Controller
                 'LONG_DESCR' => $request->input('longItineraryDesc'),
                 'REMARKS' => $request->input('generalRemarks'),
                 'AIRLINE_REMARKS' => $request->input('airlineReference'),
+                'FARE_CALC' => $request->input('fareCalculation'),
+                'PAX_DESCR' => $request->input('paxDescription'),
                 'PRINT_LONG_DESCR' => 'N',
                 'CASH_INV_CNT' => 0,
                 'CREDIT_INV_CNT' => 1,

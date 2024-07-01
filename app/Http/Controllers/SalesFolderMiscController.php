@@ -41,4 +41,64 @@ class SalesFolderMiscController extends Controller
             return response()->json(['error' => 'An error occurred while creating the Misc Sales Folder'], 500);
         }
     }
+
+    public function update(Request $request)
+    {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'sfNo' => 'required|string|max:255',
+            'docId' => 'required|string|max:255',
+            'miscType' => 'required|string|max:255',
+            'additionalDescription' => 'nullable|string|max:255',
+            'miscServiceClass' => 'nullable|string|max:255',
+            'miscStatus' => 'nullable|string|max:255',
+            'miscStartDate' => 'required|date',
+            'miscStartLoc' => 'nullable|string|max:255',
+            'miscEndDate' => 'required|date',
+            'miscEndLoc' => 'nullable|string|max:255',
+            'miscRemarks' => 'nullable|string|max:255',
+            'procCenter' => 'nullable|string|max:255',
+            'docOfficer' => 'nullable|string|max:255',
+            'miscCategory' => 'nullable|string|max:255',
+            'miscConfNo' => 'nullable|string|max:255',
+            'miscPaxRefNo' => 'nullable|string|max:255',
+        ]);
+
+        try {
+            // Find the SalesFolderMisc record by SF_NO and DOC_ID
+            $sfMisc = SalesFolderMisc::where('SF_NO', $validatedData['sfNo'])
+                                     ->where('DOC_ID', $validatedData['docId'])
+                                     ->firstOrFail();
+
+            // Update the record with the validated data
+            $sfMisc->update([
+                'MISC_CODE' => $validatedData['miscType'],
+                'ADDITIONAL_SERVICE' => $validatedData['additionalDescription'],
+                'SERVICE_CLASS' => $validatedData['miscServiceClass'],
+                'STATUS' => $validatedData['miscStatus'],
+                'START_DATE' => $validatedData['miscStartDate'],
+                'START_LOC' => $validatedData['miscStartLoc'],
+                'END_DATE' => $validatedData['miscEndDate'],
+                'END_LOC' => $validatedData['miscEndLoc'],
+                'REMARKS' => $validatedData['miscRemarks'],
+                'PROC_CENTER' => $validatedData['procCenter'],
+                'DOC_OFFICER' => $validatedData['docOfficer'],
+                'MISC_CAT' => $validatedData['miscCategory'],
+                'CONF_NO' => $validatedData['miscConfNo'],
+                'PAX_REF_NO' => $validatedData['miscPaxRefNo'],
+                'UPDATE_SOURCE' => 'M',
+            ]);
+
+            // Log the update
+            Log::info('SalesFolderMisc record updated successfully', ['SF_NO' => $validatedData['SF_NO'], 'DOC_ID' => $validatedData['DOC_ID'], 'data' => $validatedData]);
+
+            return response()->json(['message' => 'Miscellaneous itinerary updated successfully.'], 200);
+
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error updating SalesFolderMisc record', ['SF_NO' => $validatedData['SF_NO'], 'DOC_ID' => $validatedData['DOC_ID'], 'error' => $e->getMessage()]);
+
+            return response()->json(['message' => 'Failed to update miscellaneous itinerary. Please try again.'], 500);
+        }
+    }
 }
