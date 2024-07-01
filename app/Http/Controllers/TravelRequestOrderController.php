@@ -356,10 +356,6 @@ class TravelRequestOrderController extends Controller
                 $this->saveTemporaryAirTableWithTicket($troNumber, $docId, $paxTicketNumber->TICKET_NO);
             }
 
-            $clearTax = $this->truncateTemporaryTaxTable();
-            if($clearTax) {
-                $this->saveTemporaryTaxTable($paxTicketNumber->TICKET_NO);
-            }
 
             $airTempData = TempSalesFolderAir::all();
             $taxTempData = TempSalesFolderTax::all();
@@ -367,7 +363,7 @@ class TravelRequestOrderController extends Controller
             $ticketInventory = [];
             $paxCount = 0;
             $airTempData = [];
-            $taxTempData = [];
+            $taxTempData = TempSalesFolderTax::all();
         }
 
         return view('forms.tro_add_product', compact(
@@ -552,10 +548,17 @@ class TravelRequestOrderController extends Controller
             ->where('DOC_ID', $docId)
             ->first();
 
+        //Sales Folder Hotel
+        $sfMisc = SalesFolderMisc::where('SF_NO', $troNumber)
+            ->where('DOC_ID', $docId)
+            ->first();
+
         //Sales Folder Air
         $sfAirPax = SalesFolderPax::where('SF_NO', $troNumber)
             ->where('DOC_ID', $docId)
             ->get();
+
+        Log::info('Pax data: '. $sfAirPax);
 
         //Sales Folder Tax
         $sfTax = SalesFolderTax::where('SF_NO', $troNumber)
@@ -591,6 +594,12 @@ class TravelRequestOrderController extends Controller
                 ->where('DOC_ID', $docId)
                 ->get();
 
+            $infoPax = SalesFolderPax::where('SF_NO', $troNumber)
+                ->where('DOC_ID', $docId)
+                ->get();
+
+            $infoPaxCount = $infoPax->count();
+
         if($productCategory == 'A') {
             return view('forms.tro_edit_product_air', compact([
                 'troNumber',
@@ -607,6 +616,7 @@ class TravelRequestOrderController extends Controller
                 'sfTax',
                 'taxCodes',
                 'bookStatus',
+                'infoPax',
             ]));
         } elseif ($productCategory == 'M') {
             return view('forms.tro_edit_product_misc', compact([
@@ -619,6 +629,11 @@ class TravelRequestOrderController extends Controller
                 'miscRates',
                 'bookStatus',
                 'serviceClasses',
+                'sfGroup',
+                'sfTax',
+                'infoPax',
+                'sfMisc',
+                'infoPaxCount',
             ]));
         } elseif ($productCategory == 'H') {
             return view('forms.tro_edit_product_hotel', compact([

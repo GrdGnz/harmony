@@ -2202,6 +2202,12 @@
                 success: function(response) {
                     alert(response.message);
 
+                    //Update product quantity
+                    $('#costCurrencyQuantity').val(response.totalCount);
+                    $('#costUnitQuantity').val(response.totalCount);
+                    updateTotalUnitCost();
+                    calculateCostGrandTotal();
+
                     if (response.data) {
                         const tableBody = $('#passengerList tbody');
                         tableBody.empty();
@@ -2349,6 +2355,8 @@
                 sfSupressPrint: $('#sfSupressPrint').val(),
                 sfGroupProduct: $('#sfGroupProduct').val(),
                 sfGroupId: $('#sfGroupId').val(),
+                paxDescription: $('#paxDescription').val(),
+                fareCalculation: $('#fareCalculation').val(),
             };
 
             var productCategory = $('#productCategory').val();
@@ -2506,6 +2514,8 @@
                 success: function(response) {
                     // Get total tax
                     getTotalTax();
+                    updateTotalUnitCost();
+
                     // Handle success
                     console.log(response);
                     // Show success message

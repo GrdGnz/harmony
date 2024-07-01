@@ -502,15 +502,17 @@
                             @endif
 
                             <div class="table-responsive">
-                                <table class="table table-bordered">
+                                <table id="airItineraryTable" class="table table-bordered">
                                     <thead class="marsman-bg-color-darkgray text-white">
                                         <tr>
-                                            <th colspan="3"></th>
+                                            <th></th>
+                                            <th colspan="2"></th>
                                             <th colspan="3" class="text-center">Departure</th>
                                             <th colspan="3" class="text-center">Arrival</th>
-                                            <th></th>
+                                            <th colspan="2"></th>
                                         </tr>
                                         <tr>
+                                            <th><input type="checkbox" id="selectAllAirItinerary"></th>
                                             <th>Airline</th>
                                             <th>Flight No.</th>
                                             <th>Service Class</th>
@@ -530,13 +532,16 @@
                                                 'sfNo' => $troNumber,
                                                 'docId' => $docId,
                                                 'itemNo' => $air->ITEM_NO,
-                                            ]) }}" method="POST" class="update-form" id="updateAirItinerary">
+                                            ]) }}" method="POST" class="update-air-form" id="updateAirItinerary">
                                                 @csrf
                                                 @method('PUT')
-                                                <input type="hidden" name="sfNo" id="sfNo" value="{{ $air->SF_NO }}">
-                                                <input type="hidden" name="docId" id="docId" value="{{ $air->DOC_ID }}">
-                                                <input type="hidden" name="itemNumber" id="itemNumber" value="{{ $air->ITEM_NO }}">
-                                                <tr>
+                                                <input type="hidden" name="sfNo" id="sfNoAirItinerary" value="{{ $air->SF_NO }}">
+                                                <input type="hidden" name="docId" id="docIdAirItinerary" value="{{ $air->DOC_ID }}">
+                                                <input type="hidden" name="itemNumber" id="itemNumberAirItinerary" value="{{ $air->ITEM_NO }}">
+                                                <tr data-sf-no="{{ $air->SF_NO }}" data-doc-id="{{ $air->DOC_ID }}" data-item-no="{{ $air->ITEM_NO }}">
+                                                    <td>
+                                                        <input type="checkbox" name="selectedAirItinerary[]" value="{{ $air->ITEM_NO }}" class="select-item-air-itinerary">
+                                                    </td>
                                                     <td>
                                                         <input list="dataAirlines" id="airline" name="airline" value="{{ $air->AL_CODE }}" class="form-control txt-1">
                                                         <datalist id="dataAirlines">
@@ -596,11 +601,155 @@
                                 </table>
                             </div>
 
+                            <button id="deleteAirItinerary" class="btn btn-danger txt-1">Delete Selection</button>
+
+                            <hr class="w-100">
+
+                            <form action="{{ route('sales-folder-air.store') }}" method="POST" id="addAirItineraryForm">
+                                @csrf
+                                <input type="hidden" id="sfNo" name="sfNo" value="{{ $troNumber }}">
+                                <input type="hidden" id="docId" name="docId" value="{{ $docId }}">
+                                <div class="col-md-12 d-flex">
+                                    <!-- Column 1 -->
+                                    <div class="col-md-6 p-1">
+                                        <div class="card mt-2">
+                                            <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
+                                                <p class="mx-2 my-2">{{ __('FLIGHT DETAILS') }}</p>
+                                            </div>
+                                            <div class="card-body marsman-bg-color-gray1">
+                                                <div class="form-group mb-2">
+                                                    <label for="airlineNew" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Airline</label>
+                                                    <select id="airlineNew" name="airlineNew" class="form-control form-select txt-1">
+                                                        @if (isset($airlines))
+                                                            @foreach ($airlines as $airline)
+                                                                <option value="{{ $airline->AL_CODE }}">{{ $airline->AL_DESCR }}</option>
+                                                            @endforeach
+                                                        @endif
+                                                    </select>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label for="flightNumberNew" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Flight Number</label>
+                                                    <input type="text" class="form-control txt-1" id="flightNumberNew" name="flightNumberNew">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label for="serviceClassNew" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Service Class</label>
+                                                    <select id="serviceClassNew" name="serviceClassNew" class="form-control form-select txt-1">
+                                                        @if (isset($serviceClasses))
+                                                            @foreach ($serviceClasses as $serviceClass)
+                                                                <option value="{{ $serviceClass->SRVC_CLASS }}">{{ $serviceClass->SRVC_DESCR }}</option>
+                                                            @endforeach
+                                                        @endif
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Column 2 -->
+                                    <div class="col-md-6 p-1 d-flex">
+                                        <div class="card mt-2 col-md-6 m-1">
+                                            <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
+                                                <p class="mx-2 my-2">{{ __('DEPARTURE') }}</p>
+                                            </div>
+                                            <div class="card-body marsman-bg-color-gray1">
+                                                <div class="form-group mb-2">
+                                                    <label for="departureCityNew" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">City</label>
+                                                    <select id="departureCityNew" name="departureCityNew" class="form-control form-select txt-1">
+                                                        @if (isset($cities))
+                                                            @foreach ($cities as $city)
+                                                                <option value="{{ $city->CITY_CODE }}">{{ $city->CITY_DESCR }}</option>
+                                                            @endforeach
+                                                        @endif
+                                                    </select>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label for="departureDateNew" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Date</label>
+                                                    <input type="date" class="form-control txt-1" id="departureDateNew" name="departureDateNew" min="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label for="departureTimeNew" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Time</label>
+                                                    <input type="text" class="form-control txt-1" id="departureTimeNew" name="departureTimeNew" value="1200">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card mt-2 col-md-6 m-1">
+                                            <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
+                                                <p class="mx-2 my-2">{{ __('ARRIVAL') }}</p>
+                                            </div>
+                                            <div class="card-body marsman-bg-color-gray1">
+                                                <div class="form-group mb-2">
+                                                    <label for="arrivalCityNew" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">City</label>
+                                                    <select id="arrivalCityNew" name="arrivalCityNew" class="form-control form-select txt-1">
+                                                        @if (isset($cities))
+                                                            @foreach ($cities as $city)
+                                                                <option value="{{ $city->CITY_CODE }}">{{ $city->CITY_DESCR }}</option>
+                                                            @endforeach
+                                                        @endif
+                                                    </select>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label for="arrivalDateNew" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Date</label>
+                                                    <input type="date" class="form-control txt-1" id="arrivalDateNew" name="arrivalDateNew" min="{{ \Carbon\Carbon::now()->addDay()->format('Y-m-d') }}" value="{{ \Carbon\Carbon::now()->addDay()->format('Y-m-d') }}">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label for="arrivalTimeNew" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Time</label>
+                                                    <input type="text" class="form-control txt-1" id="arrivalTimeNew" name="arrivalTimeNew" value="1200">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Confirmation number and Pax ref number -->
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-header"></div>
+                                        <div class="card-body marsman-bg-color-gray1">
+                                            <div class="col-md-12 d-flex">
+                                                <div class="form-group col-md-6 p-1">
+                                                    <label for="airConfNo" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Confirmation Number</label>
+                                                    <input type="text" id="airConfNo" name="airConfNo" class="form-control txt-1">
+                                                </div>
+                                                <div class="form-group col-md-6 p-1">
+                                                    <label for="airPaxRefNo" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Passenger Reference Number</label>
+                                                    <input type="text" id="airPaxRefNo" name="airPaxRefNo" class="form-control txt-1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end mt-2">
+                                    <button type="submit" class="btn btn-primary txt-1">Add</button>
+                                </div>
+                            </form>
+
                         </div>
 
                         <!-- Tab 4 :: Taxes -->
                         <div class="tab-pane fade show" id="addtaxes" role="tabpanel" aria-labelledby="addtaxes-tab">
                             <h4>Taxes</h4>
+
+                            <!-- Notification placeholders -->
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
+
                             <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <thead class="marsman-bg-color-dark text-white">
@@ -680,6 +829,85 @@
                             <div class="col-md-12 justify-content-start d-flex mt-3">
                                 <button class="btn btn-danger txt-1" id="deleteSelectedTaxData">Delete Selected</button>
                             </div>
+
+                            <hr class="w-100">
+
+                            <!-- Add new tax data -->
+                            <form id="taxAddForm" action="{{ route('sales-folder-tax.store') }}" method="post">
+                                @csrf
+                                <input type="hidden" id="sfNo" name="sfNo" value="{{ $troNumber }}">
+                                <input type="hidden" id="docId" name="docId" value="{{ $docId }}">
+
+                            <div class="col-md-12 d-flex">
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header m-0 p-0"></div>
+                                        <div class="card-body marsman-bg-color-gray1">
+                                            <div class="form-group">
+                                                <label for="taxCodeNew" class="form-label marsman-bg-color-label text-white m-0 p-2 rounded-top">Tax Code</label>
+                                                <select id="taxCode" name="taxCodeNew" class="form-control form-select txt-1">
+                                                    @if(isset($taxCodes))
+                                                        @foreach ($taxCodes as $tax)
+                                                            <option value="{{ $tax->TAX_CODE }}">{{ trim($tax->TAX_DESCR) }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header m-0 p-0"></div>
+                                        <div class="card-body marsman-bg-color-gray1">
+                                            <div class="form-group mb-2">
+                                                <label for="taxCostCurrCodeNew" class="form-label marsman-bg-color-label text-white m-0 p-2 rounded-top">Cost Currency Code</label>
+                                                <select id="taxCostCurrCodeNew" name="taxCostCurrCodeNew" class="form-control form-select txt-1">
+                                                    <option value="PHP">PHP</option>
+                                                    <option value="USD">USD</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group mb-2">
+                                                <label for="taxCostCurrRateNew" class="form-label marsman-bg-color-label text-white m-0 p-2 rounded-top">Cost Currency Rate</label>
+                                                <input type="number" id="taxCostCurrRateNew" name="taxCostCurrRateNew" class="form-control txt-1" value="0">
+                                            </div>
+                                            <div class="form-group mb-2">
+                                                <label for="taxCostCurrAmountNew" class="form-label marsman-bg-color-label text-white m-0 p-2 rounded-top">Cost Currency Amount</label>
+                                                <input type="number" id="taxCostCurrAmountNew" name="taxCostCurrAmountNew" class="form-control txt-1" value="0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header m-0 p-0"></div>
+                                        <div class="card-body marsman-bg-color-gray1">
+                                            <div class="form-group mb-2">
+                                                <label for="taxSaleCurrCodeNew" class="form-label marsman-bg-color-label text-white m-0 p-2 rounded-top">Sale Currency Code</label>
+                                                <select id="taxSaleCurrCodeNew" name="taxSaleCurrCodeNew" class="form-control form-select txt-1">
+                                                    <option value="PHP">PHP</option>
+                                                    <option value="USD">USD</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group mb-2">
+                                                <label for="taxSaleCurrRateNew" class="form-label marsman-bg-color-label text-white m-0 p-2 rounded-top">Sale Currency Rate</label>
+                                                <input type="number" id="taxSaleCurrRateNew" name="taxSaleCurrRateNew" class="form-control txt-1" value="0">
+                                            </div>
+                                            <div class="form-group mb-2">
+                                                <label for="taxSaleCurrAmountNew" class="form-label marsman-bg-color-label text-white m-0 p-2 rounded-top">Sale Currency Amount</label>
+                                                <input type="number" id="taxSaleCurrAmountNew" name="taxSaleCurrAmountNew" class="form-control txt-1" value="0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-12 justify-content-end d-flex mt-3">
+                                <button type="submit" class="btn btn-primary txt-1" id="addTaxData">Add Tax</button>
+                            </div>
+
+                            </form>
                         </div>
 
                         <!-- Tab 5 :: MIS -->
@@ -860,7 +1088,7 @@
 
                         </div>
 
-                        <!-- Tab 6 :: Passenger -->
+                        <!-- Tab 7 :: Passenger -->
                         <div class="tab-pane fade show" id="passenger" role="tabpanel" aria-labelledby="passenger-tab">
                             <p class="h3">Passenger</p>
 
@@ -868,23 +1096,29 @@
                                 <table id="passengerList" class="table table-bordered">
                                     <thead class="marsman-bg-color-darkgray text-white">
                                         <tr>
+                                            <th><input type="checkbox" id="selectAllPax"></th>
                                             <th>Passenger Name</th>
                                             <th>Ticket Number</th>
                                             <th>PNR</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if (isset($sfAirPax))
-                                            @foreach ($sfAirPax as $pax)
-                                                <tr>
+                                        @if (isset($infoPax))
+                                            @foreach ($infoPax as $pax)
+                                                <tr data-sf-no="{{ $pax->SF_NO }}" data-doc-id="{{ $pax->DOC_ID }}" data-item-no="{{ $pax->ITEM_NO }}">
+                                                    <td><input type="checkbox" class="rowCheckbox"></td>
                                                     <td>
-                                                        <input type="text" name="passengerName" id="passengerName" class="form-control txt-1" value="{{ $pax->PAX_NAME }}">
+                                                        <input type="text" name="passengerName" class="form-control txt-1 passenger-name" value="{{ $pax->PAX_NAME }}">
                                                     </td>
                                                     <td>
-                                                        <input type="text" name="passengerName" id="passengerName" class="form-control txt-1" value="{{ $pax->TICKET_NO }}">
+                                                        <input type="text" name="ticketNumber" class="form-control txt-1 ticket-number number-only" value="{{ $pax->TICKET_NO }}">
                                                     </td>
                                                     <td>
-                                                        <input type="text" name="passengerName" id="passengerName" class="form-control txt-1" value="{{ $pax->PNR }}">
+                                                        <input type="text" name="pnr" class="form-control txt-1 pnr" value="{{ $pax->PNR }}">
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-primary txt-1 form-control updatePax">Update</button>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -893,6 +1127,34 @@
                                 </table>
                             </div>
 
+                            <button id="deletePaxSelection" class="btn btn-danger txt-1">Delete Selection</button>
+                            <hr class="w-100">
+
+                            <div class="col-md-12 d-flex mt-2">
+                                <div class="col-md-6">
+                                    <div class="card-body marsman-bg-color-gray1">
+                                        <div class="form-group">
+                                            <label for="passengerNameNew" class="form-label txt-1 marsman-bg-color-label text-white rounded-top p-2 m-0">Passenger Name</label>
+                                            <input type="text" class="form-control txt-1" id="passengerNameNew" name="passengerNameNew">
+                                        </div>
+                                        <div class="form-group mt-2">
+                                            <label for="passengerPNRNew" class="form-label txt-1 marsman-bg-color-label text-white rounded-top p-2 m-0">PNR</label>
+                                            <input type="text" class="form-control txt-1" id="passengerPNRNew" name="passengerPNRNew" maxlength="6">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card-body marsman-bg-color-gray1">
+                                        <div class="form-group">
+                                            <label for="passengerTicketNumberNew" class="form-label txt-1 marsman-bg-color-label text-white rounded-top p-2 m-0">Ticket Number</label>
+                                            <input type="text" class="form-control txt-1 number-only" id="passengerTicketNumberNew" name="passengerTicketNumberNew" maxlength="10">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12 mx-1 my-1 d-flex justify-content-end">
+                                        <button class="btn btn-success txt-1 mt-3" id="addPax">Add</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- End Tab Panes -->
@@ -931,6 +1193,7 @@
         const salesTab = document.getElementById('sales-tab');
         const airTab = document.getElementById('itineraryAir-tab');
         const miscTab = document.getElementById('itineraryMisc-tab');
+        const taxTab = document.getElementById('addtaxes-tab');
 
         // Add click event listeners to the close buttons and the background
         const successMessage = document.getElementById('successMessage');
@@ -945,6 +1208,42 @@
         const totalUnitCostInput = document.getElementById('costTotalUnitCost');
         const unitQuantityInput = document.getElementById('costUnitQuantity');
         const currencyQuantityInput = document.getElementById('costCurrencyQuantity');
+
+        // Select all elements with the class 'number-only'
+        const numberInputs = document.querySelectorAll('.number-only');
+
+        // Default tabs depending on scenarios
+        @if (session('newRecord'))
+                new bootstrap.Tab(airTab).show();
+                airTab.style.display = 'block';
+        @endif
+        @if (session('newTaxRecord') || session('deletedTaxRecords'))
+                new bootstrap.Tab(taxTab).show();
+                taxTab.style.display = 'block';
+        @endif
+
+        // Add an event listener to each element and not allow letters
+        numberInputs.forEach(function(input) {
+            input.addEventListener('keydown', function(event) {
+                // Allow control keys like backspace, tab, enter, etc.
+                const allowedKeys = [
+                    'Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+                    'Tab', 'Enter', 'Delete'
+                ];
+
+                // Allow numeric keys, numpad keys, and allowed control keys
+                if (
+                    (event.key >= '0' && event.key <= '9') ||
+                    (event.key >= 'Numpad0' && event.key <= 'Numpad9') ||
+                    allowedKeys.includes(event.key)
+                ) {
+                    return; // Allow the keypress
+                } else {
+                    event.preventDefault(); // Prevent the keypress
+                    alert('Letters are not allowed. Please enter numbers only.');
+                }
+            });
+        });
 
         function updateTotalUnitCost() {
             const unitAmount = parseFloat(unitAmountInput.value.replace(/,/g, '')) || 0;
@@ -964,17 +1263,6 @@
         taxInput.addEventListener('input', updateTotalUnitCost);
         costInsuranceInput.addEventListener('input', updateTotalUnitCost);
         currencyQuantityInput.addEventListener('input', updateCurrencyQuantity);
-
-        // Make #itineraryAir-tab the active when ticket with AIR product is present
-        @if (isset($paxTicketNumber))
-            if (categorySelect.value === 'AIR') {
-                //new bootstrap.Tab(airTab).show();
-                airTab.style.display = 'block';
-            } else if(categorySelect.value === 'MISCELLANEOUS') {
-                new bootstrap.Tab(miscTab).show();
-                miscTab.style.display = 'block';
-            }
-        @endif
 
         // Function to update the #costUnitQuantity input
         function updatePaxCount() {
@@ -1107,269 +1395,43 @@
             return formattedGrandTotal;
         }
 
-        // Add Air Itinerary segment
-        $('#addAirItinerary').click(function() {
-
-            if (!validateProductType()) {
-                return;
-            }
-
-            const data = {
-                troNumber: $('#troNumber').val(),
-                docId: $('#docId').val(),
-                airline: $('#airline').val(),
-                flightNumber: $('#flightNumber').val(),
-                serviceClass: $('#serviceClass').val(),
-                departureCity: $('#departureCity').val(),
-                departureDate: $('#departureDate').val(),
-                departureTime: $('#departureTime').val(),
-                arrivalCity: $('#arrivalCity').val(),
-                arrivalDate: $('#arrivalDate').val(),
-                arrivalTime: $('#arrivalTime').val(),
-                _token: '{{ csrf_token() }}'
-            };
-
-            $.ajax({
-                url: '{{ route('sales-folder-air.tempdata.store') }}',
-                type: 'POST',
-                data: data,
-                success: function(response) {
-                    $('#successText').text(response.message);
-                    $('#successMessage').show();
-                    $('#errorMessage').hide();
-
-                    // Update the table with the new data
-                    const tableBody = $('#itineraryAir tbody');
-                    tableBody.empty();
-                    response.data.forEach(function(row) {
-                        tableBody.append(`
-                            <tr>
-                                <td>${row.AL_CODE}</td>
-                                <td>${row.FLIGHT_NUM}</td>
-                                <td>${row.SERVICE_CLASS}</td>
-                                <td>${row.DEPT_CITY}</td>
-                                <td>${row.DEPT_DATE}</td>
-                                <td>${row.DEPT_TIME}</td>
-                                <td>${row.ARVL_CITY}</td>
-                                <td>${row.ARVL_DATE}</td>
-                                <td>${row.ARVL_TIME}</td>
-                            </tr>
-                        `);
-                    });
-                },
-                error: function(xhr) {
-                    const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred';
-                    $('#errorText').text(errorMessage);
-                    $('#errorMessage').show();
-                    $('#successMessage').hide();
-                }
-            });
-        });
-
-        //Add Temporary Passengers
-        $('#addPax').click(function() {
-            const data = {
-                troNumber: $('#troNumber').val(),
-                docId: $('#docId').val(),
-                passengerName: $('#passengerName').val(),
-                passengerTicketNumber: $('#passengerTicketNumber').val(),
-                passengerPNR: $('#passengerPNR').val(),
-                _token: '{{ csrf_token() }}'
-            };
-
-            $.ajax({
-                url: '{{ route('sales-folder-pax.tempdata.pax.store') }}',
-                type: 'POST',
-                data: data,
-                success: function(response) {
-                    alert(response.message);
-
-                    if (response.data) {
-                        const tableBody = $('#passengerList tbody');
-                        tableBody.empty();
-                        response.data.forEach(function(row) {
-                            tableBody.append(`
-                                <tr>
-                                    <td><input type="checkbox" class="selectRow" data-ticket-number="${row.TICKET_NO}"></td>
-                                    <td>${row.PAX_NAME}</td>
-                                    <td>${row.TICKET_NO}</td>
-                                    <td>${row.PNR}</td>
-                                </tr>
-                            `);
-                        });
-                    }
-
-                    $('#passengerName').val('');
-                    $('#passengerTicketNumber').val('');
-                    $('#passengerPNR').val('');
-                },
-                error: function(xhr) {
-                    const errorMessage = xhr.responseJSON ? xhr.responseJSON.error : 'An error occurred';
-                    alert(errorMessage);
-                }
-            });
-        });
-
-        // Select All Checkbox
-        $('#selectAllPax').change(function() {
-            $('.selectRow').prop('checked', $(this).prop('checked'));
-        });
-
-        // Handle individual row checkbox change
-        $(document).on('change', '.selectRow', function() {
-            if ($('.selectRow:checked').length === $('.selectRow').length) {
-                $('#selectAll').prop('checked', true);
-            } else {
-                $('#selectAll').prop('checked', false);
-            }
-        });
-
-        // Delete Selected Passengers
-        $('#deleteSelected').click(function() {
-            const selectedTickets = [];
-            $('.selectRow:checked').each(function() {
-                selectedTickets.push($(this).data('ticket-number'));
-            });
-
-            if (selectedTickets.length > 0) {
-                $.ajax({
-                    url: '{{ route('sales-folder-pax.tempdata.delete') }}',
-                    type: 'POST',
-                    data: {
-                        ticketNumbers: selectedTickets,
-                        _token: '{{ csrf_token() }}',
-                        _method: 'DELETE'
-                    },
-                    success: function(response) {
-                        if (response.message) {
-                            alert(response.message);
-                            //$('#successMessage').show();
-                            //$('#errorMessage').hide();
-                        }
-
-                        if (response.data) {
-                            const tableBody = $('#passengerList tbody');
-                            tableBody.empty();
-                            response.data.forEach(function(row) {
-                                tableBody.append(`
-                                    <tr>
-                                        <td><input type="checkbox" class="selectRow" data-ticket-number="${row.TICKET_NO}"></td>
-                                        <td>${row.PAX_NAME}</td>
-                                        <td>${row.TICKET_NO}</td>
-                                        <td>${row.PNR}</td>
-                                    </tr>
-                                `);
-                            });
-                        }
-                    },
-                    error: function(xhr) {
-                        const errorMessage = xhr.responseJSON ? xhr.responseJSON.error : 'An error occurred';
-                        alert(errorMessage);
-                        //$('#errorMessage').show();
-                        //$('#successMessage').hide();
-                    }
-                });
-            } else {
-                alert('No passengers selected.');
-            }
-        });
-
-        //Save tax data
-        $('#taxAddForm').on('submit', function(e) {
-            e.preventDefault(); // Prevent the default form submission
-
-            // Get form data
-            var formData = $(this).serialize();
-
-            // AJAX request for adding tax data
-            $.ajax({
-                url: '{{ route('sales-folder-tax.tempdata.store') }}',
-                type: 'POST',
-                data: formData,
-                success: function(response) {
-                    // Handle success
-                    console.log(response);
-                    // Show success message
-                    alert(response.success);
-                    // Update the table or UI with the returned data
-                    if (response.data) {
-                        var tableBody = $('#taxList tbody');
-                        tableBody.empty(); // Clear existing rows
-                        $.each(response.data, function(index, tax) {
-                            tableBody.append(
-                                '<tr>' +
-                                    '<td>' + tax.TAX_CODE + '</td>' +
-                                    '<td>' + tax.COST_CURR_CODE + '</td>' +
-                                    '<td>' + tax.COST_CURR_RATE + '</td>' +
-                                    '<td>' + tax.COST_AMOUNT + '</td>' +
-                                    '<td>' + tax.SELL_CURR_CODE + '</td>' +
-                                    '<td>' + tax.SELL_CURR_RATE + '</td>' +
-                                    '<td>' + tax.SELL_AMOUNT + '</td>' +
-                                    '<td><input type="checkbox" class="taxCheckbox" value="' + tax.id + '"></td>' +
-                                '</tr>'
-                            );
-                        });
-                    }
-                },
-                error: function(xhr, status, error) {
-                    // Handle error
-                    console.error(xhr.responseText);
-                    alert('Failed to save tax data: ' + xhr.responseText);
-                }
-            });
-        });
-
         // Handle select all checkbox
         $('#selectAll').on('change', function() {
             $('.taxCheckbox').prop('checked', $(this).prop('checked'));
         });
 
         // Handle delete selected tax data
-        $('#deleteSelectedTaxData').on('click', function() {
+        $('#deleteSelectedTaxData').click(function() {
             var selectedIds = $('.taxCheckbox:checked').map(function() {
                 return $(this).val();
             }).get();
 
             if (selectedIds.length > 0) {
                 if (confirm('Are you sure you want to delete the selected tax data?')) {
-                    // AJAX request for deleting selected tax data
-                    $.ajax({
-                        url: '{{ route('sales-folder-tax.delete') }}',
-                        type: 'DELETE',
-                        data: {
-                            _token: '{{ csrf_token() }}',
+                    var records = selectedIds.map(function(itemId) {
+                        var row = $('#taxList').find('input[value="' + itemId + '"]').closest('tr');
+                        return {
                             sfNo: @json($troNumber),
                             docId: @json($docId),
-                            taxIds: selectedIds
+                            itemNo: itemId // ITEM_NO from checkbox value
+                        };
+                    });
+
+                    console.log('Selected Records:', records); // Debugging line
+
+                    $.ajax({
+                        url: '{{ route("sales-folder-tax.deleteMultiple") }}',
+                        type: 'DELETE',
+                        data: {
+                            records: records,
+                            _token: '{{ csrf_token() }}'
                         },
                         success: function(response) {
-                            // Handle success
-                            console.log(response);
-                            // Show success message
-                            alert(response.success);
-                            // Update the table or UI with the returned data
-                            if (response.data) {
-                                var tableBody = $('#taxList tbody');
-                                tableBody.empty(); // Clear existing rows
-                                $.each(response.data, function(index, tax) {
-                                    tableBody.append(
-                                        '<tr>' +
-                                            '<td><input type="checkbox" class="taxCheckbox" value="' + tax.id + '"></td>' +
-                                            '<td>' + tax.TAX_CODE + '</td>' +
-                                            '<td>' + tax.COST_CURR_CODE + '</td>' +
-                                            '<td>' + tax.COST_CURR_RATE + '</td>' +
-                                            '<td>' + tax.COST_AMOUNT + '</td>' +
-                                            '<td>' + tax.SELL_CURR_CODE + '</td>' +
-                                            '<td>' + tax.SELL_CURR_RATE + '</td>' +
-                                            '<td>' + tax.SELL_AMOUNT + '</td>' +
-                                        '</tr>'
-                                    );
-                                });
-                            }
+                            // Redirect back to the previous page
+                            window.location.href = '{{ route("sales-folder-tax.successDelete") }}';
                         },
-                        error: function(xhr, status, error) {
-                            // Handle error
-                            console.error(xhr.responseText);
+                        error: function(xhr) {
+                            console.error('Error:', xhr.responseText); // Improved error logging
                             alert('Failed to delete tax data: ' + xhr.responseText);
                         }
                     });
@@ -1393,8 +1455,8 @@
             }
         }
 
-        //Update air itinerary
-        $('#updateAirItinerary').on('submit', function(event) {
+        // Update air itinerary
+        $(document).on('submit', '.update-air-form', function(event) {
             event.preventDefault();
 
             var form = $(this);
@@ -1458,6 +1520,8 @@
             var sfGroupFlag = $('#sfGroupFlag').val();
             var sfGroupProduct = $('#sfGroupProduct').val();
             var sfGroupId = $('#sfGroupId').val();
+            var fareCalculation = $('#fareCalculation').val();
+            var paxDescription = $('#paxDescription').val();
 
             // AJAX request
             $.ajax({
@@ -1501,6 +1565,8 @@
                     sfGroupFlag: sfGroupFlag,
                     sfGroupProduct: sfGroupProduct,
                     sfGroupId: sfGroupId,
+                    fareCalculation: fareCalculation,
+                    paxDescription: paxDescription
                 },
                 success: function(response) {
                     console.log('Update successful:', response);
@@ -1513,6 +1579,206 @@
                     // Optionally handle error actions here
                 }
             });
+        });
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $(document).on('click', '.updatePax', function() {
+            var row = $(this).closest('tr');
+            var sfNo = row.data('sf-no');
+            var docId = row.data('doc-id');
+            var itemNo = row.data('item-no');
+            var paxName = row.find('.passenger-name').val();
+            var ticketNo = row.find('.ticket-number').val();
+            var pnr = row.find('.pnr').val();
+
+            $.ajax({
+                url: '{{ url('/sales-folder-pax/update') }}/' + sfNo + '/' + docId + '/' + itemNo,
+                type: 'POST', // Use POST method for AJAX
+                data: {
+                    paxName: paxName,
+                    ticketNo: ticketNo,
+                    pnr: pnr,
+                    _token: '{{ csrf_token() }}',
+                    _method: 'PUT' // Spoof PUT method
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert('Record updated successfully.');
+                    } else {
+                        alert('Error: ' + response.error);
+                    }
+                },
+                error: function(xhr) {
+                    alert('Error: ' + xhr.responseText);
+                }
+            });
+        });
+
+        //Select all passengers
+        $('#selectAllPax').change(function() {
+            $('.rowCheckbox').prop('checked', this.checked);
+        });
+
+
+        //Delete selected passengers
+        $('#deletePaxSelection').click(function() {
+            let idsToDelete = [];
+            $('.rowCheckbox:checked').each(function() {
+                let tr = $(this).closest('tr');
+                idsToDelete.push({
+                    sf_no: tr.data('sf-no'),
+                    doc_id: tr.data('doc-id'),
+                    item_no: tr.data('item-no')
+                });
+            });
+
+            if (idsToDelete.length > 0) {
+                let confirmed = confirm('Are you sure you want to delete the selected records?');
+                if (confirmed) {
+                    $.ajax({
+                        url: '{{ route("sales-folder-pax.deleteMultiple") }}',
+                        type: 'DELETE',
+                        data: {
+                            ids: idsToDelete,
+                            sfNo: @json($troNumber),
+                            docId: @json($docId),
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            console.log(response.success);
+
+                            //Update quantity values in product
+                            $('#costCurrencyQuantity').val(response.totalCount);
+                            $('#costUnitQuantity').val(response.totalCount);
+                            calculateCostGrandTotal();
+
+                            $('.rowCheckbox:checked').closest('tr').remove();
+                        },
+                        error: function(response) {
+                            console.log(response.error);
+                        }
+                    });
+                }
+            } else {
+                alert('No records selected');
+            }
+        });
+
+        //Add passenger data
+        $('#addPax').click(function(e) {
+            e.preventDefault();
+
+            let passengerName = $('#passengerNameNew').val();
+            let passengerPNR = $('#passengerPNRNew').val();
+            let passengerTicketNumber = $('#passengerTicketNumberNew').val();
+            let sf_no = @json($sfGroup->SF_NO);
+            let doc_id = @json($sfGroup->DOC_ID);
+            let productCategory = @json($sfGroup->PROD_CAT);
+
+            $.ajax({
+                url: '{{ route("sales-folder-pax.store") }}',
+                type: 'POST',
+                data: {
+                    passengerName: passengerName,
+                    passengerPNR: passengerPNR,
+                    passengerTicketNumber: passengerTicketNumber,
+                    sf_no: sf_no,
+                    doc_id: doc_id,
+                    productCategory: productCategory,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    alert(response.message);
+
+                    $('#costCurrencyQuantity').val(response.totalCount);
+                    $('#costUnitQuantity').val(response.totalCount);
+                    calculateCostGrandTotal();
+
+                    if (response.data) {
+                        const tableBody = $('#passengerList tbody');
+                        tableBody.empty();
+                        response.data.forEach(function(row) {
+                            console.log("Appending row:", row);
+                            tableBody.append(`
+                                <tr data-sf-no="${row.SF_NO}" data-doc-id="${row.DOC_ID}" data-item-no="${row.ITEM_NO}">
+                                    <td><input type="checkbox" class="rowCheckbox"></td>
+                                    <td>
+                                        <input type="text" name="passengerName" class="form-control txt-1 passenger-name" value="${row.PAX_NAME}">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="ticketNumber" class="form-control txt-1 ticket-number" value="${row.TICKET_NO}">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="pnr" class="form-control txt-1 pnr" value="${row.PNR}">
+                                    </td>
+                                    <td><button class="btn btn-primary txt-1 form-control updatePax">Update</button></td>
+                                </tr>
+                            `);
+                        });
+                    }
+
+                    // Clear the form fields
+                    $('#passengerNameNew').val('');
+                    $('#passengerTicketNumberNew').val('');
+                    $('#passengerPNRNew').val('');
+                },
+                error: function(response) {
+                    console.log(response);
+                    alert('Error adding passenger. Please check data provided.');
+                }
+            });
+        });
+
+        //Select all air itinerary
+        document.getElementById('selectAllAirItinerary').addEventListener('click', function() {
+            const checkboxes = document.querySelectorAll('.select-item-air-itinerary');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+
+         //Delete air itinerary
+         $('#deleteAirItinerary').click(function() {
+            var selected = $('.select-item-air-itinerary:checked');
+            var records = selected.map(function() {
+                var tr = $(this).closest('tr');
+                return {
+                    sfNo: tr.data('sf-no'),
+                    docId: tr.data('doc-id'),
+                    itemNo: tr.data('item-no')
+                };
+            }).get();
+
+            if (records.length > 0) {
+                console.log('Selected Records:', records); // Debugging line
+
+                $.ajax({
+                    url: '{{ route("sales-folder-air.deleteMultiple") }}',
+                    type: 'DELETE',
+                    data: {
+                        records: records,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Remove deleted rows from the table
+                            selected.closest('tr').remove();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error:', xhr.responseText); // Improved error logging
+                    }
+                });
+            } else {
+                alert('No items selected.');
+            }
         });
 
     });

@@ -10,6 +10,69 @@ use Log;
 
 class SalesFolderTaxController extends Controller
 {
+    public function store(Request $request)
+    {
+        // Validate incoming request data
+        $validatedData = $request->validate([
+            'taxCodeNew' => 'required|string',
+            'taxCostCurrCodeNew' => 'required|string',
+            'taxCostCurrRateNew' => 'required|numeric',
+            'taxCostCurrAmountNew' => 'required|numeric',
+            'taxSaleCurrCodeNew' => 'required|string',
+            'taxSaleCurrRateNew' => 'required|numeric',
+            'taxSaleCurrAmountNew' => 'required|numeric',
+        ]);
+
+        try {
+            // Dynamically calculate ITEM_NO
+            $maxItemNo = SalesFolderTax::where('SF_NO', $request->input('sfNo'))
+                ->where('DOC_ID', $request->input('docId'))
+                ->max('ITEM_NO');
+            $nextItemNo = $maxItemNo ? $maxItemNo + 1 : 1;
+
+            // Create a new SalesFolderTax instance
+            $salesFolderTax = new SalesFolderTax([
+                'SF_NO' => $request->input('sfNo'),
+                'DOC_ID' => $request->input('docId'),
+                'ITEM_NO' => $nextItemNo,
+                'TAX_CODE' => $validatedData['taxCodeNew'],
+                'COST_CURR_CODE' => $validatedData['taxCostCurrCodeNew'],
+                'COST_CURR_RATE' => $validatedData['taxCostCurrRateNew'],
+                'COST_AMOUNT' => $validatedData['taxCostCurrAmountNew'],
+                'SELL_CURR_CODE' => $validatedData['taxSaleCurrCodeNew'],
+                'SELL_CURR_RATE' => $validatedData['taxSaleCurrRateNew'],
+                'SELL_AMOUNT' => $validatedData['taxSaleCurrAmountNew'],
+                'UPDATE_SOURCE' => 'M',
+                // Include other fields as needed
+            ]);
+
+            // Save the SalesFolderTax instance
+            $salesFolderTax->save();
+
+            // Log success message
+            Log::info('SalesFolderTax record created successfully', [
+                'user_id' => auth()->id(),
+                'sales_folder_tax_id' => $salesFolderTax->id,
+            ]);
+
+            // Optionally, you can redirect or return a response
+            return redirect()->back()->with('success', 'Tax data added successfully.')->with('newTaxRecord', true);
+
+        } catch (\Exception $e) {
+            // Log error if exception occurs
+            Log::error('Error creating SalesFolderTax record: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_data' => $validatedData,
+                'SF_NO' => $request->input('sfNo'),
+                'DOC_ID' => $request->input('docId'),
+                'UPDATE_SOURCE' => 'M',
+            ]);
+
+            // Handle the exception (e.g., show error message, redirect back)
+            return redirect()->back()->with('error', 'Failed to add tax data. Please try again.');
+        }
+    }
+
     public function transferTaxData(Request $request)
     {
         DB::beginTransaction();
@@ -125,5 +188,33 @@ class SalesFolderTaxController extends Controller
         }
     }
 
+    public function deleteMultiple(Request $request)
+    {
+        try {
+            $records = $request->input('records');
 
+            if (!is_array($records)) {
+                Log::error('Invalid input: records are not an array', ['records' => $records]);
+                return response()->json(['success' => false, 'message' => 'Invalid input.']);
+            }
+
+            Log::info('Received request to delete multiple records', ['records' => $records]);
+
+            // Loop through the records and delete them
+            foreach ($records as $record) {
+                Log::info('Attempting to delete record', $record);
+                SalesFolderTax::where('SF_NO', $record['sfNo'])
+                    ->where('DOC_ID', $record['docId'])
+                    ->where('ITEM_NO', $record['itemNo'])
+                    ->delete();
+                Log::info('Successfully deleted record', $record);
+            }
+
+            Log::info('All selected records deleted successfully');
+            return response()->json(['success' => true, 'message' => 'Records deleted successfully.']);
+        } catch (\Exception $e) {
+            Log::error('Error deleting records', ['exception' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
 }

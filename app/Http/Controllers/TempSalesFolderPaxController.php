@@ -71,12 +71,15 @@ class TempSalesFolderPaxController extends Controller
 
             $allPax = TempSalesFolderPax::where('SF_NO', $troNumber)->get();
 
+            $totalCount = $allPax->count();
+
             Log::info($allPax); // Log data to debug
 
             // Return the newly created record as part of the response
             return response()->json([
                 'message' => 'Passenger saved successfully',
-                'data' => $allPax
+                'data' => $allPax,
+                'totalCount' => $totalCount,
             ]);
         } catch (\Exception $e) {
             // Log the error

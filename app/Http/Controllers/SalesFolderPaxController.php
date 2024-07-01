@@ -5,10 +5,100 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Inventory;
+use App\Models\SalesFolderPax;
 use Log;
 
 class SalesFolderPaxController extends Controller
 {
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'passengerName' => 'required|string|max:255',
+            'passengerPNR' => 'required|string|max:255',
+            'passengerTicketNumber' => 'required|string|max:255',
+            'productCategory' => 'required|string|max:255',
+        ]);
+
+        try {
+            // Log the entire request for debugging
+            Log::info('SalesFolderPax store method called', ['request' => $request->all()]);
+
+            $sfNo = $request->input('sf_no');
+            $docId = $request->input('doc_id');
+            $productCategory = $validatedData['productCategory'];
+
+            // Fetch the last ITEM_NO for the given SF_NO and DOC_ID
+            $lastItem = SalesFolderPax::where('SF_NO', $sfNo)
+                ->where('DOC_ID', $docId)
+                ->orderByDesc('ITEM_NO')
+                ->first();
+
+            $nextItemNo = $lastItem ? $lastItem->ITEM_NO + 1 : 1;
+
+            $docflag = ($productCategory === 'A') ? 'N' : 'Y';
+
+            // Prepare the data for insertion
+            $data = [
+                'SF_NO' => $sfNo,
+                'DOC_ID' => $docId,
+                'ITEM_NO' => $nextItemNo,
+                'PROD_CAT' => $validatedData['productCategory'],
+                'DOC_FLAG' => $docflag,
+                'PAX_NAME' => strtoupper($validatedData['passengerName']),
+                'PAX_ID' => -1,
+                'TICKET_NO' => $validatedData['passengerTicketNumber'],
+                'CONJUNCT_COUNT' => 0,
+                'CAV_NO' => null,
+                'SELL_BAL_AMT' => 0.00,
+                'COST_BAL_AMT' => 0.00,
+                'CASH_INV_CNT' => 0,
+                'CREDIT_INV_CNT' => 0,
+                'CHARGE_INV_CNT' => 0,
+                'UATP_INV_CNT' => 0,
+                'PASSPORT_NUMBER' => null,
+                'PASSPORT_ISSUE' => null,
+                'PASSPORT_EXPIRY' => null,
+                'VISA_NO' => null,
+                'VISA_ISSUE' => null,
+                'VISA_EXPIRY' => null,
+                'NATIONALITY' => null,
+                'REMARKS' => null,
+                'ORIGIN' => 'M',
+                'SEL' => 'Y',
+                'UPDATE_SOURCE' => 'M',
+                'OEC' => null,
+                'OEC_DATE' => null,
+                'PNR' => strtoupper($validatedData['passengerPNR']),
+                'GDS_PROVIDER' => null,
+                'DUE_DATE' => \Carbon\Carbon::now()->format('Y-m-d'),
+            ];
+
+            // Insert the data into the database
+            DB::table('SALES_FOLDER_PAX')->insert($data);
+
+            Log::info('New passenger added', ['passenger' => $data]);
+
+            $allPax = SalesFolderPax::where('SF_NO', $sfNo)
+                ->where('DOC_ID', $docId)
+                ->get();
+
+            // Count the total number of passengers
+            $totalCount = $allPax->count();
+
+            return response()->json([
+                'message' => 'Passenger added successfully',
+                'data' => $allPax,
+                'totalCount' => $totalCount
+            ], 201);
+
+        } catch (\Exception $e) {
+            Log::error('Error adding new passenger', ['message' => $e->getMessage()]);
+
+            return response()->json(['message' => 'An error occurred while adding the passenger. Please try again.'], 500);
+        }
+    }
+
+
     public function storeTemporaryData(Request $request)
     {
         try {
@@ -122,6 +212,92 @@ class SalesFolderPaxController extends Controller
 
             Log::error('Error transferring data and truncating TEMP_SALES_FOLDER_PAX table: ' . $e->getMessage());
             return response()->json(['message' => 'Error saving data.'], 500);
+        }
+    }
+
+    public function update(Request $request, $sfNo, $docId, $itemNo)
+    {
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'paxName' => 'required|string|max:255',
+            'ticketNo' => 'required|string|max:50',
+            'pnr' => 'required|string|max:50',
+        ]);
+
+        try {
+            // Update the SalesFolderPax record using raw SQL query
+            $affected = DB::update('UPDATE SALES_FOLDER_PAX SET
+                                    PAX_NAME = ?,
+                                    TICKET_NO = ?,
+                                    PNR = ?
+                                    WHERE SF_NO = ? AND DOC_ID = ? AND ITEM_NO = ?',
+                                    [
+                                        $validatedData['paxName'],
+                                        $validatedData['ticketNo'],
+                                        $validatedData['pnr'],
+                                        $sfNo,
+                                        $docId,
+                                        $itemNo
+                                    ]);
+
+            // Check if any record was updated
+            if ($affected > 0) {
+                // Log the update
+                Log::info('SalesFolderPax record updated: SF_NO = ' . $sfNo . ', DOC_ID = ' . $docId . ', ITEM_NO = ' . $itemNo);
+
+                return response()->json(['success' => 'Record updated successfully.']);
+            } else {
+                return response()->json(['error' => 'No record found or updated.'], 404);
+            }
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error updating SalesFolderPax record: ' . $e->getMessage());
+
+            return response()->json(['error' => 'Error updating record: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteMultiple(Request $request)
+    {
+        $idsToDelete = $request->input('ids');
+        $sfNo = $request->input('sfNo');
+        $docId = $request->input('docId');
+
+        if ($idsToDelete) {
+            Log::info('Starting to delete multiple records', ['ids' => $idsToDelete]);
+
+            try {
+                foreach ($idsToDelete as $id) {
+                    SalesFolderPax::where('SF_NO', $id['sf_no'])
+                                  ->where('DOC_ID', $id['doc_id'])
+                                  ->where('ITEM_NO', $id['item_no'])
+                                  ->delete();
+
+                    Log::info('Deleted record', ['sf_no' => $id['sf_no'], 'doc_id' => $id['doc_id'], 'item_no' => $id['item_no']]);
+                }
+
+                Log::info('Finished deleting multiple records');
+
+                $allPax = SalesFolderPax::where('SF_NO', $sfNo)
+                    ->where('DOC_ID', $docId)
+                    ->get();
+
+                // Count the total number of passengers
+                $totalCount = $allPax->count();
+
+                return response()->json([
+                    'success' => 'Selected records deleted successfully',
+                    'totalCount' => $totalCount
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Error deleting records', ['error' => $e->getMessage()]);
+
+                return response()->json(['error' => 'An error occurred while deleting the records'], 500);
+            }
+        } else {
+            Log::warning('No records selected for deletion');
+
+            return response()->json(['error' => 'No records selected'], 400);
         }
     }
 
