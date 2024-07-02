@@ -84,6 +84,8 @@ Route::get('/sales-folder/data', [App\Http\Controllers\SalesFolderController::cl
     Route::delete('/transfer-temp-pax-data/delete', [App\Http\Controllers\TempSalesFolderPaxController::class, 'deletePax'])->name('sales-folder-pax.tempdata.delete');
     //Update pax count
     Route::post('/get-pax-count', [App\Http\Controllers\TempSalesFolderPaxController::class, 'countTotalPax'])->name('sales-folder-pax.tempdata.count');
+    //Update pax count
+    Route::post('/get-total-pax', [App\Http\Controllers\SalesFolderPaxController::class, 'countTotalPax'])->name('sales-folder-pax.count');
     //Update pax data
     Route::put('/sales-folder-pax/update/{sfNo}/{docId}/{itemNo}', [App\Http\Controllers\SalesFolderPaxController::class, 'update'])->name('sales-folder-pax.update');
     //Delete multiple data

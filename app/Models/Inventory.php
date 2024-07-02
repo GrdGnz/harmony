@@ -158,4 +158,9 @@ class Inventory extends Model
     {
         return $this->belongsTo(Route::class, 'ROUTE_TYPE', 'ROUTE_CODE');
     }
+
+    public function airSegments()
+    {
+        return $this->hasMany(InventoryAirSegment::class, 'TICKET_NO', 'TICKET_NO');
+    }
 }

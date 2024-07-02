@@ -90,13 +90,13 @@ class SalesFolderMiscController extends Controller
             ]);
 
             // Log the update
-            Log::info('SalesFolderMisc record updated successfully', ['SF_NO' => $validatedData['SF_NO'], 'DOC_ID' => $validatedData['DOC_ID'], 'data' => $validatedData]);
+            Log::info('SalesFolderMisc record updated successfully', ['SF_NO' => $validatedData['sfNo'], 'DOC_ID' => $validatedData['docId'], 'data' => $validatedData]);
 
             return response()->json(['message' => 'Miscellaneous itinerary updated successfully.'], 200);
 
         } catch (\Exception $e) {
             // Log the error
-            Log::error('Error updating SalesFolderMisc record', ['SF_NO' => $validatedData['SF_NO'], 'DOC_ID' => $validatedData['DOC_ID'], 'error' => $e->getMessage()]);
+            Log::error('Error updating SalesFolderMisc record', ['SF_NO' => $validatedData['sfNo'], 'DOC_ID' => $validatedData['docId'], 'error' => $e->getMessage()]);
 
             return response()->json(['message' => 'Failed to update miscellaneous itinerary. Please try again.'], 500);
         }

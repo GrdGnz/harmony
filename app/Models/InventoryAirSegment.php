@@ -43,4 +43,10 @@ class InventoryAirSegment extends Model
       'ORIGIN',
       'UPDATE_SOURCE',
     ];
+
+    public function inventory()
+    {
+        return $this->belongsTo(Inventory::class, 'TICKET_NO', 'TICKET_NO');
+    }
+
 }

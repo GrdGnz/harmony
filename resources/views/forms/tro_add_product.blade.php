@@ -89,14 +89,19 @@
 
                     <div class="col-md-12 d-flex my-2">
                         <div class="btn-group p-1 m-1" role="group" aria-label="Basic checkbox toggle button group">
-                            <input type="checkbox" value="Y" class="btn-check" id="sfGroupFlag" name="sfGroupFlag" autocomplete="off">
-                            <label class="btn btn-outline-primary my-1" for="sfGroupFlag">Group</label>
 
-                            <input type="checkbox" value="Y" class="btn-check" id="sfGroupSupressPrint" name="sfGroupSupressPrint" autocomplete="off">
-                            <label class="btn btn-outline-primary my-1" for="sfGroupSupressPrint">Do not include this group when printed</label>
+                            <input type="checkbox" value="Y" class="txt-1 mx-1 px-1" id="sfGroupFlag" name="sfGroupFlag" autocomplete="off">
+                            <label class="btn my-1 mx-0 px-0" for="sfGroupFlag">Group</label>
 
-                            <input type="checkbox" value="Y" class="btn-check" id="sfGroupProduct" name="sfGroupProduct" autocomplete="off">
-                            <label class="btn btn-outline-primary my-1" for="sfGroupProduct">Part of multiple products</label>
+                            <span class="mx-2"></span>
+
+                            <input type="checkbox" value="Y" class="txt-1 mx-1 px-1" id="sfGroupSupressPrint" name="sfGroupSupressPrint" autocomplete="off">
+                            <label class="btn my-1 mx-0 px-0" for="sfGroupSupressPrint">Do not include this group when printed</label>
+
+                            <span class="mx-2"></span>
+
+                            <input type="checkbox" value="Y" class="txt-1 mx-1 px-1" id="sfGroupProduct" name="sfGroupProduct" autocomplete="off">
+                            <label class="btn my-1 mx-0 px-0" for="sfGroupProduct">Part of multiple products</label>
 
                         </div>
                         <div class="m-2 col-md-4 d-flex">
@@ -1681,6 +1686,30 @@
             });
         });
 
+        //Number format any input value with numbers
+        function formatNumber(value) {
+            // Ensure value is converted to a number
+            let num = parseFloat(value);
+
+            // Check if num is a valid number
+            if (!isNaN(num)) {
+                // Format the number with commas and exactly two decimal places
+                return num.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            } else {
+                // Handle case where value is not a valid number
+                return '';
+            }
+        }
+
+        //Default input with number format
+        window.onload = function() {
+            const taxInput = $('costTax').val();
+            formatNumber(taxInput);
+        };
+
         document.getElementById('productType').addEventListener('change', function() {
             var selectedOption = this.options[this.selectedIndex];
 
@@ -1819,9 +1848,6 @@
             });
         }
 
-        function formatNumber(num) {
-            return num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-        }
 
         // Bind the change event to the relevant input fields
         $('#costInsurance, #costTax, #costTotalUnitCost').on('input', function() {
@@ -2631,7 +2657,8 @@
                 },
                 url: "{{ route('sales-folder-tax.tempdata.total') }}",
                 success: function(data) {
-                    $('#costTax').val(data.totalCostAmount);
+                    var taxTotal = formatNumber(data.totalCostAmount);
+                    $('#costTax').val(taxTotal);
                 }
             });
         }
