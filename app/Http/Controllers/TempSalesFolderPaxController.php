@@ -31,7 +31,9 @@ class TempSalesFolderPaxController extends Controller
                 ]);
             }
 
-            return response()->json(['redirect_url' => route('forms.tro.add_product', ['troNumber' => $troNumber])]);
+            return response()->json([
+                'redirect_url' => route('forms.tro.add_product', ['troNumber' => $troNumber])
+            ]);
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error saving tickets: ' . $e->getMessage());

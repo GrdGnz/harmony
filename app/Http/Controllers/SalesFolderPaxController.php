@@ -157,7 +157,7 @@ class SalesFolderPaxController extends Controller
                     'ITEM_NO' => $itemNo++,
                     'PROD_CAT' => $productCategory,
                     'DOC_FLAG' => $docflag,
-                    'PAX_NAME' => $row->PAX_NAME,
+                    'PAX_NAME' => strtoupper($row->PAX_NAME),
                     'PAX_ID' => -1,
                     'TICKET_NO' => $row->TICKET_NO,
                     'CONJUNCT_COUNT' => 0,
@@ -181,7 +181,7 @@ class SalesFolderPaxController extends Controller
                     'UPDATE_SOURCE' => 'M',
                     'OEC' => NULL,
                     'OEC_DATE' => NULL,
-                    'PNR' => $row->PNR,
+                    'PNR' => strtoupper($row->PNR),
                     'GDS_PROVIDER' => NULL,
                     'DUE_DATE' => now()->format('Y-m-d'),
                 ]);
@@ -232,9 +232,9 @@ class SalesFolderPaxController extends Controller
                                     PNR = ?
                                     WHERE SF_NO = ? AND DOC_ID = ? AND ITEM_NO = ?',
                                     [
-                                        $validatedData['paxName'],
+                                        strtoupper($validatedData['paxName']),
                                         $validatedData['ticketNo'],
-                                        $validatedData['pnr'],
+                                        strtoupper($validatedData['pnr']),
                                         $sfNo,
                                         $docId,
                                         $itemNo
@@ -298,6 +298,39 @@ class SalesFolderPaxController extends Controller
             Log::warning('No records selected for deletion');
 
             return response()->json(['error' => 'No records selected'], 400);
+        }
+    }
+
+    public function countTotalPax(Request $request)
+    {
+        try {
+
+            $sfNo = $request->input('sfNo');
+            $docId = $request->input('docId');
+
+            $count = SalesFolderPax::where('SF_NO', $sfNo)
+                ->where('DOC_ID', $docId)
+                ->count();
+
+            if($count) {
+                Log::info('Success, count is: '. $count);
+                return response()->json([
+                    'count' => $count,
+                    'message' => 'Successfully returned pax count.'
+                ]);
+            } else {
+                Log::error('Error getting count');
+                return response()->json([
+                    'count' => 0,
+                    'message' => 'Cannot get count'
+                ]);
+            }
+
+        } catch(\Exception $e) {
+            Log::error('Error getting count: '. $e->getMessage());
+            return response()->json([
+                'message' => $e->getMessage()
+            ]);
         }
     }
 

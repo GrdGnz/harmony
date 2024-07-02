@@ -1119,26 +1119,32 @@
         // Function to update the #costUnitQuantity input
         function updatePaxCount() {
             // Fetch the current TRO number from the form (assuming it's available)
-            var troNumber = $('#troNumber').val(); // Replace with your actual selector
+            var sfNo = $('#troNumber').val();
+            var docId = $('#docId').val();
 
             // Make an AJAX call to get the count of passengers for the current TRO
             $.ajax({
-            url: '{{ route('sales-folder-pax.tempdata.count') }}', // Replace with your actual route
-            data: { troNumber: troNumber },
-            headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                url: '{{ route('sales-folder-pax.count') }}',
+                data: {
+                    sfNo: sfNo,
+                    docId: docId
                 },
-            method: 'POST',
-            success: function(response) {
-                // Update the #costUnitQuantity input with the count
-                console.log('Total current pax count: ' + response.count);
-                $('#costUnitQuantity').val(response.count);
-                //calculateCostGrandTotal();
-                console.log('Value of cost quantity: ' + $('#costUnitQuantity').val());
-            },
-            error: function(error) {
-                console.error('Error fetching passenger count:', error);
-            }
+                headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                method: 'POST',
+                success: function(response) {
+                    //alert(response.count);
+                    // Update the #costUnitQuantity input with the count
+                    console.log('Total current pax count: ' + response.count);
+                    $('#costCurrencyQuantity').val(response.count);
+                    $('#costUnitQuantity').val(response.count);
+                    //calculateCostGrandTotal();
+                    console.log('Value of cost quantity: ' + $('#costUnitQuantity').val());
+                },
+                error: function(error) {
+                    console.error('Error fetching passenger count:', error);
+                }
             });
         }
         //Initial load pax count
@@ -1348,6 +1354,22 @@
             var fareCalculation = $('#fareCalculation').val();
             var paxDescription = $('#paxDescription').val();
 
+            //SalesFolderMisc data
+            var miscType = $('#miscType').val();
+            var additionalDescription = $('#additionalDescription').val();
+            var miscServiceClass = $('#miscServiceClass').val();
+            var miscStatus = $('#miscStatus').val();
+            var miscStartDate = $('#miscStartDate').val();
+            var miscStartLoc = $('#miscStartLoc').val();
+            var miscEndDate = $('#miscEndDate').val();
+            var miscEndLoc = $('#miscEndLoc').val();
+            var miscRemarks = $('#miscRemarks').val();
+            var procCenter = $('#procCenter').val();
+            var docOfficer = $('#docOfficer').val();
+            var miscCategory = $('#miscCategory').val();
+            var miscConfNo = $('#miscConfNo').val();
+            var miscPaxRefNo = $('#miscPaxRefNo').val();
+
             // AJAX request
             $.ajax({
                 url: '{{ route('sales-folder-group.update') }}',
@@ -1395,12 +1417,47 @@
                 },
                 success: function(response) {
                     console.log('Update successful:', response);
-                    alert('Update successful');
-                    // Optionally handle success actions here
+
+                    // AJAX request to update SalesFolderMisc
+                    $.ajax({
+                        url: '{{ route('sales-folder-misc.update') }}',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            _method: 'PUT',
+                            sfNo: troNumber, // Adjust according to your actual field name
+                            docId: docId, // Adjust according to your actual field name
+                            miscType: miscType,
+                            additionalDescription: additionalDescription,
+                            miscServiceClass: miscServiceClass,
+                            miscStatus: miscStatus,
+                            miscStartDate: miscStartDate,
+                            miscStartLoc: miscStartLoc,
+                            miscEndDate: miscEndDate,
+                            miscEndLoc: miscEndLoc,
+                            miscRemarks: miscRemarks,
+                            procCenter: procCenter,
+                            docOfficer: docOfficer,
+                            miscCategory: miscCategory,
+                            miscConfNo: miscConfNo,
+                            miscPaxRefNo: miscPaxRefNo
+                        },
+                        success: function(response) {
+                            console.log('SalesFolderMisc update successful:', response);
+                            alert('Update successful');
+                            // Optionally handle success actions here
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('SalesFolderMisc update error:', error);
+                            alert('Failed to update SalesFolderMisc');
+                            // Optionally handle error actions here
+                        }
+                    });
                 },
                 error: function(xhr, status, error) {
-                    console.error('Update error:', error);
-                    console.error('Update error');
+                    console.error('SalesFolderGroup update error:', error);
+                    alert('Failed to update SalesFolderGroup');
                     // Optionally handle error actions here
                 }
             });
@@ -1429,7 +1486,7 @@
                     ticketNo: ticketNo,
                     pnr: pnr,
                     _token: '{{ csrf_token() }}',
-                    _method: 'PUT' // Spoof PUT method
+                    _method: 'PUT'
                 },
                 success: function(response) {
                     if (response.success) {

@@ -345,17 +345,27 @@ class TravelRequestOrderController extends Controller
 
         //Temporary Pax data
         $tempPaxData = TempSalesFolderPax::all();
-        $paxTicketNumber = TempSalesFolderPax::select('TICKET_NO')->first();
+        $paxTicketNumber = TempSalesFolderPax::select('PNR')->first();
+        //$paxTicketNumber = TempSalesFolderPax::select('TICKET_NO')->first();
+
+        //dd($paxTicketNumber);
         if($paxTicketNumber != null) {
-            $ticketInventory = Inventory::where('TICKET_NO', $paxTicketNumber->TICKET_NO)->first();
-            $paxCount = TempSalesFolderPax::count();
 
             //clear temporary data
             $clearTempTable = $this->truncateTemporaryAirTable();
+            $clearTax = $this->truncateTemporaryTaxTable();
+
+            $ticketInventory = Inventory::where('PNR', $paxTicketNumber->PNR)->first();
+            $paxCount = TempSalesFolderPax::count();
+
+
             if($clearTempTable) {
-                $this->saveTemporaryAirTableWithTicket($troNumber, $docId, $paxTicketNumber->TICKET_NO);
+                $this->saveTemporaryAirTableWithTicket($troNumber, $docId, $paxTicketNumber->TICKET_NO, $paxTicketNumber->PNR);
             }
 
+            if($clearTax) {
+                $this->saveTemporaryTaxTable($paxTicketNumber->TICKET_NO, $paxTicketNumber->PNR);
+            }
 
             $airTempData = TempSalesFolderAir::all();
             $taxTempData = TempSalesFolderTax::all();
@@ -363,7 +373,7 @@ class TravelRequestOrderController extends Controller
             $ticketInventory = [];
             $paxCount = 0;
             $airTempData = [];
-            $taxTempData = TempSalesFolderTax::all();
+            $taxTempData = [];
         }
 
         return view('forms.tro_add_product', compact(
@@ -398,18 +408,26 @@ class TravelRequestOrderController extends Controller
         ));
     }
 
-    public function saveTemporaryAirTableWithTicket($troNumber, $docId, $ticket)
+    public function saveTemporaryAirTableWithTicket($troNumber, $docId, $ticket, $pnr)
     {
         try {
             Log::info('Ticket number selected: '.$ticket);
 
-            // Get ticket info from Inventory Air Segment table
-            $inventoryAirSegments = InventoryAirSegment::where('TICKET_NO', trim($ticket))->get();
+            // Step 1: Fetch all tickets belonging to the specific PNR
+            $tickets = Inventory::where('PNR', $pnr)->whereNull('SF_NO')->pluck('TICKET_NO');
 
-            Log::info('Inventory Air Segment data: '. $inventoryAirSegments);
+            // Step 2: Get the tickets that are present in the InventoryAirSegment table
+            $airSegmentsTickets = InventoryAirSegment::whereIn('TICKET_NO', $tickets)->pluck('TICKET_NO')->first();
+
+            // Step 3: Retrieve all entries of those tickets from the InventoryAirSegment table
+            $airSegments = InventoryAirSegment::where('TICKET_NO', trim($airSegmentsTickets))
+                ->orderBy('ITEM_NO', 'asc')
+                ->get();
+
+            Log::info('Air segments: '. $airSegments);
 
             // Insert data into the TEMP_SALES_FOLDER_AIR table
-            foreach($inventoryAirSegments as $segment) {
+            foreach($airSegments as $segment) {
                 DB::table('TEMP_SALES_FOLDER_AIR')->insert([
                     'SF_NO' => $troNumber,
                     'DOC_ID' => $docId,
@@ -437,12 +455,21 @@ class TravelRequestOrderController extends Controller
         }
     }
 
-    public function saveTemporaryTaxTable($ticket)
+    public function saveTemporaryTaxTable($ticket, $pnr)
     {
         try {
-            $inventoryTax = InventoryTax::where('TICKET_NO', $ticket)->get();
+            // Step 1: Fetch all tickets belonging to the specific PNR
+            $tickets = Inventory::where('PNR', $pnr)->whereNull('SF_NO')->pluck('TICKET_NO');
 
-            foreach($inventoryTax as $tax) {
+            // Step 2: Get the tickets that are present in the InventoryAirSegment table
+            $taxTickets = InventoryTax::whereIn('TICKET_NO', $tickets)->pluck('TICKET_NO')->first();
+
+            // Step 3: Retrieve all entries of those tickets from the InventoryAirSegment table
+            $taxes = InventoryTax::where('TICKET_NO', trim($taxTickets))
+                ->orderBy('ITEM_NO','asc')
+                ->get();
+
+            foreach($taxes as $tax) {
                 TempSalesFolderTax::create([
                     'TAX_CODE' => $tax->TAX_CODE,
                     'TAX_NUM' => $tax->TAX_NUM,
@@ -457,7 +484,7 @@ class TravelRequestOrderController extends Controller
                 ]);
             }
 
-            Log::info('Data saved: ' . $inventoryTax);
+            Log::info('Data saved: ' . $taxes);
 
         } catch(\Exception $e) {
             Log::error('Error inserting data into TEMP_SALES_FOLDER_TAX table: ' . $e->getMessage());
@@ -634,6 +661,7 @@ class TravelRequestOrderController extends Controller
                 'infoPax',
                 'sfMisc',
                 'infoPaxCount',
+                'taxCodes',
             ]));
         } elseif ($productCategory == 'H') {
             return view('forms.tro_edit_product_hotel', compact([

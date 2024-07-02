@@ -339,11 +339,20 @@ class SalesFolderGroupController extends Controller
                 ->where('DOC_ID', $attributes['DOC_ID'])
                 ->update($attributes);
 
+            // Add product category in response
+            $group = DB::table('SALES_FOLDER_GROUP')
+                            ->where('SF_NO', $attributes['SF_NO'])
+                            ->where('DOC_ID', $attributes['DOC_ID'])
+                            ->first();
+
             // Commit transaction if all queries succeed
             DB::commit();
 
             // Return a JSON response indicating success
-            return response()->json(['message' => 'Sales Folder Group updated successfully.']);
+            return response()->json([
+                'message' => 'Sales Folder Group updated successfully.',
+                'category' => $group->PROD_CAT,
+            ]);
         } catch (\Exception $e) {
             // Rollback transaction if any errors occur
             DB::rollback();
