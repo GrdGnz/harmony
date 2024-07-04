@@ -10,6 +10,7 @@ class TempSalesFolderAir extends Model
     use HasFactory;
 
     protected $table = 'TEMP_SALES_FOLDER_AIR';
+    protected $primaryKey = null;
 
     protected $fillable = [
         'SF_NO',

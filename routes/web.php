@@ -71,6 +71,8 @@ Route::get('/sales-folder/data', [App\Http\Controllers\SalesFolderController::cl
     Route::put('/sales-folder-air/update/{sfNo}/{docId}/{itemNo}', [App\Http\Controllers\SalesFolderAirController::class, 'update'])->name('sales-folder-air.update');
     //Delete multiple data
     Route::delete('/sales-folder-air/delete-multiple', [App\Http\Controllers\SalesFolderAirController::class, 'deleteMultiple'])->name('sales-folder-air.deleteMultiple');
+    //Delete multiple temp data
+    Route::delete('sales-folder-air/tempdata/delete-multiple', [App\Http\Controllers\TempSalesFolderAirController::class, 'deleteMultiple'])->name('sales-folder-air.tempdata.deleteMultiple');
 
 //Sales Folder Pax Data
     //Store data

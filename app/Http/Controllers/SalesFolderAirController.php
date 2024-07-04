@@ -136,10 +136,10 @@ class SalesFolderAirController extends Controller
         try {
             DB::table('TEMP_SALES_FOLDER_AIR')->truncate();
             Log::info('TEMP_SALES_FOLDER_AIR table truncated.');
-            return response()->json(['message' => 'TEMP_SALES_FOLDER_AIR table truncated.'], 200);
+            return redirect()->back()->with('message','Itinerary has been cleared.')->with('clearedAirItinerary', true);
         } catch (\Exception $e) {
             Log::error('Error truncating TEMP_SALES_FOLDER_AIR table: ' . $e->getMessage());
-            return response()->json(['message' => 'Error truncating TEMP_SALES_FOLDER_AIR table.'], 500);
+            return redirect()->back()->with('error','Clear itinerary failed.');
         }
     }
 

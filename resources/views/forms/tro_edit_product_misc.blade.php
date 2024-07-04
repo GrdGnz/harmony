@@ -625,59 +625,37 @@
                                             <th>Currency</th>
                                             <th>Rate</th>
                                             <th>Amount</th>
-                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @if (isset($sfTax))
                                             @foreach ($sfTax as $tax)
-                                            <form action="{{ route('sales-folder-air.update', [
-                                                'sfNo' => $troNumber,
-                                                'docId' => $docId,
-                                                'itemNo' => $tax->ITEM_NO,
-                                            ]) }}" method="POST">
-                                                @csrf
-                                                @method("PUT")
                                                 <tr>
                                                     <td>
                                                         <input type="checkbox" class="taxCheckbox" value="{{ $tax->ITEM_NO }}">
                                                     </td>
                                                     <td>
-                                                        <input list="dataTaxCode" id="taxCode" name="taxCode" value="{{ $tax->TAX_CODE }}" class="form-control txt-1">
-                                                        <datalist id="dataTaxCode">
-                                                            @if (isset($taxCodes))
-                                                                @foreach ($taxCodes as $taxcode)
-                                                                    <option value="{{ $taxcode->TAX_CODE }}">{{ $taxcode->TAX_DESCR }}</option>
-                                                                @endforeach
-                                                            @endif
-                                                        </datalist>
+                                                        <input list="dataTaxCode" id="taxCode" name="taxCode" value="{{ $tax->TAX_CODE }}" class="form-control-plaintext txt-1">
                                                     </td>
                                                     <td>
-                                                        <input type="text" id="taxCostCurrCode" name="taxCostCurrCode" value="{{ $tax->COST_CURR_CODE }}" class="form-control txt-1">
+                                                        <input type="text" id="taxCostCurrCode" name="taxCostCurrCode" value="{{ $tax->COST_CURR_CODE }}" class="form-control-plaintext txt-1">
                                                     </td>
                                                     <td>
-                                                        <input type="text" id="taxCostCurrRate" name="taxCostCurrRate" value="{{ $tax->COST_CURR_RATE }}" class="form-control txt-1">
+                                                        <input type="text" id="taxCostCurrRate" name="taxCostCurrRate" value="{{ $tax->COST_CURR_RATE }}" class="form-control-plaintext txt-1">
                                                     </td>
                                                     <td>
-                                                        <input type="text" id="taxCostCurrAmount" name="taxCostCurrAmount" value="{{ $tax->COST_AMOUNT }}" class="form-control txt-1">
+                                                        <input type="text" id="taxCostCurrAmount" name="taxCostCurrAmount" value="{{ $tax->COST_AMOUNT }}" class="form-control-plaintext txt-1">
                                                     </td>
                                                     <td>
-                                                        <input type="text" id="taxSaleCurrCode" name="taxSaleCurrCode" value="{{ $tax->SELL_CURR_CODE }}" class="form-control txt-1">
+                                                        <input type="text" id="taxSaleCurrCode" name="taxSaleCurrCode" value="{{ $tax->SELL_CURR_CODE }}" class="form-control-plaintext txt-1">
                                                     </td>
                                                     <td>
-                                                        <input type="text" id="taxSaleCurrRate" name="taxSaleCurrRate" value="{{ $tax->SELL_CURR_RATE }}" class="form-control txt-1">
+                                                        <input type="text" id="taxSaleCurrRate" name="taxSaleCurrRate" value="{{ $tax->SELL_CURR_RATE }}" class="form-control-plaintext txt-1">
                                                     </td>
                                                     <td>
-                                                        <input type="text" id="taxSaleCurrAmount" name="taxSaleCurrAmount" value="{{ $tax->SELL_AMOUNT }}" class="form-control txt-1">
-                                                    </td>
-                                                    <td>
-                                                        <button type="submit" class="btn btn-primary txt-1" id="updateTax">Update</button>
+                                                        <input type="text" id="taxSaleCurrAmount" name="taxSaleCurrAmount" value="{{ $tax->SELL_AMOUNT }}" class="form-control-plaintext txt-1">
                                                     </td>
                                                 </tr>
-                                                <input type="hidden" name="sfNo" id="sfNo" value="{{ $tax->SF_NO }}">
-                                                <input type="hidden" name="docId" id="docId" value="{{ $tax->DOC_ID }}">
-                                                <input type="hidden" name="itemNumber" id="itemNumber" value="{{ $tax->ITEM_NO }}">
-                                            </form>
                                             @endforeach
                                         @endif
                                     </tbody>

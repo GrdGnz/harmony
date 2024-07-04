@@ -1052,6 +1052,11 @@
                                 </table>
                             </div>
 
+                            <form action="{{ route('sales-folder-air.tempdata.truncate') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-danger txt-1">Clear Itinerary</button>
+                            </form>
+
                             <hr class="w-100">
 
                             <div class="col-md-12 d-flex">
@@ -1648,6 +1653,12 @@
         const unitQuantityInput = document.getElementById('costUnitQuantity');
         const currencyQuantityInput = document.getElementById('costCurrencyQuantity');
 
+        // Default tabs depending on scenarios
+        @if (session('clearedAirItinerary'))
+                new bootstrap.Tab(airTab).show();
+                airTab.style.display = 'block';
+        @endif
+
         function updateTotalUnitCost() {
             getTotalTax().then(() => {
                 const unitAmount = parseFloat(unitAmountInput.value.replace(/,/g, '')) || 0;
@@ -2192,9 +2203,7 @@
                 type: 'POST',
                 data: data,
                 success: function(response) {
-                    $('#successText').text(response.message);
-                    $('#successMessage').show();
-                    $('#errorMessage').hide();
+                    alert(response.message);
 
                     // Update the table with the new data
                     const tableBody = $('#itineraryAir tbody');
@@ -2217,9 +2226,7 @@
                 },
                 error: function(xhr) {
                     const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred';
-                    $('#errorText').text(errorMessage);
-                    $('#errorMessage').show();
-                    $('#successMessage').hide();
+                    alert(errorMessage);
                 }
             });
         });
