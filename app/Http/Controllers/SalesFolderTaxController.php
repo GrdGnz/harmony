@@ -217,4 +217,22 @@ class SalesFolderTaxController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
+
+    public function getTotalTax()
+    {
+        try {
+            $totalCostAmount = SalesFolderTax::sum('COST_AMOUNT');
+
+            if($totalCostAmount) {
+                Log::info('Total tax cost amount: '. $totalCostAmount);
+
+                return response()->json(['totalCostAmount' => $totalCostAmount]);
+            } else {
+                return response()->json(['totalCostAmount' => 0]);
+            }
+
+        } catch(\Exception $e) {
+            return response()->json(['totalCostAmount' => 0], 500);
+        }
+    }
 }

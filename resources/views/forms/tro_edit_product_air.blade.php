@@ -414,8 +414,8 @@
                                                 </div>
                                                 <div class="col-md-2 mb-2 p-1">
                                                     <label for="costTax" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Taxes</label>
-                                                    @if (isset($sfGroup->COST_TTAX_AMT))
-                                                        <input type="text" class="form-control txt-1" id="costTax" name="costTax" value="{{ number_format($sfGroup->COST_TTAX_AMT, 2, '.', ',') }}" readonly>
+                                                    @if (isset($sfTax))
+                                                        <input type="text" class="form-control txt-1" id="costTax" name="costTax" value="{{ number_format($sfTax->sum('COST_AMOUNT'), 2, '.', ',') }}" readonly>
                                                     @else
                                                         <input type="text" class="form-control txt-1" id="costTax" name="costTax" value="">
                                                     @endif

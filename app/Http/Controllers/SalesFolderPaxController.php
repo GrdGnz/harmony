@@ -109,8 +109,8 @@ class SalesFolderPaxController extends Controller
                 'SF_NO' => $request->input('troNumber'),
                 'DOC_ID' => $request->input('docId'),
                 'PROD_CAT' => $request->input('productCategory'),
-                'PNR' => $request->input('passengerPNR'),
-                'PAX_NAME' => $request->input('passengerName'),
+                'PNR' => strtoupper($request->input('passengerPNR')),
+                'PAX_NAME' => strtoupper($request->input('passengerName')),
                 'TICKET_NO' => $request->input('passengerTicketNumber'),
             ]);
 

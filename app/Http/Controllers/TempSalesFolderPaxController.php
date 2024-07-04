@@ -25,9 +25,9 @@ class TempSalesFolderPaxController extends Controller
                 TempSalesFolderPax::create([
                     'SF_NO' => $troNumber,
                     'DOC_ID' => $docId,  // Adjust this if needed
-                    'PAX_NAME' => $ticket['paxName'],
+                    'PAX_NAME' => strtoupper($ticket['paxName']),
                     'TICKET_NO' => $ticket['ticketNo'],
-                    'PNR' => $ticket['pnr']
+                    'PNR' => strtoupper($ticket['pnr'])
                 ]);
             }
 
@@ -66,9 +66,9 @@ class TempSalesFolderPaxController extends Controller
             $newPax = TempSalesFolderPax::create([
                 'SF_NO' => $troNumber,
                 'DOC_ID' => $docId,  // Adjust this if needed
-                'PAX_NAME' => $passengerName,
+                'PAX_NAME' => strtoupper($passengerName),
                 'TICKET_NO' => $ticket,
-                'PNR' => $pnr
+                'PNR' => strtoupper($pnr)
             ]);
 
             $allPax = TempSalesFolderPax::where('SF_NO', $troNumber)->get();

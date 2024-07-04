@@ -15,24 +15,19 @@
         <!-- Main content area -->
         <main class="col-lg-12 px-md-4 p-3">
 
-            <!-- TRO Number and DOC ID of this product -->
-            @if(isset($troNumber))
-                <input type="hidden" name="troNumber" id="troNumber" value="{{ $troNumber }}">
-            @endif
-
-            @if(isset($docId))
-                <input type="hidden" name="docId" id="docId" value="{{ $docId  }}">
-            @endif
-            <!-- important hidden data -->
-
             <a href="{{ route('forms.tro.sf', ['troNumber' => $troNumber]) }}" class="btn marsman-btn-primary txt-1 mb-2">Back to Travel Request Order</a>
 
             <div class="card">
                 <div class="card-header marsman-bg-color-secondary p-0">
-                    <p class="h6 my-2 mx-2">{{ __('Travel Request Order Product Group - New') }} - Doc ID: {{ $docId }}</p>
+                    <p class="h6 my-2 mx-2">{{ __('Product Details - '.$sfGroup->product->PROD_DESCR) }}</p>
                 </div>
                 <div class="card-body bg-white">
 
+                    <div class="col-md-12 justify-content-end d-flex px-4 txt-1">
+                        <button id="updateProduct" type="submit" class="btn btn-primary mt-2 txt-1">Update Product</button>
+                    </div>
+
+                    <hr class="w-100">
 
                     <!-- Tabs -->
                     <ul class="nav nav-tabs mb-3 bg-white" id="myTabs" role="tablist">
@@ -57,6 +52,17 @@
                     </ul>
 
                     <!-- Tab panes -->
+
+                        <!-- TRO Number and DOC ID of this product -->
+                        @if(isset($troNumber))
+                            <input type="hidden" name="troNumber" id="troNumber" value="{{ $troNumber }}">
+                        @endif
+
+                        @if(isset($docId))
+                            <input type="hidden" name="docId" id="docId" value="{{ $docId  }}">
+                        @endif
+                        <!-- important hidden data -->
+
                     <div class="tab-content">
 
                         <!-- Tab 1 :: Sales -->
@@ -103,37 +109,39 @@
                                         </div>
                                     </div>
                                     <!-- Discount -->
-                                    <div class="card mt-2">
-                                        <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                            <p class="mx-2 my-2">{{ __('DISCOUNT') }}</p>
-                                        </div>
-                                        <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12 d-flex">
-                                                <div class="form-group col-md-6 mx-2">
-                                                    <label for="salesDiscountRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
-                                                    <input type="number" class="form-control txt-1" id="salesDiscountRate" name="salesDiscountRate" value="0">
-                                                </div>
-                                                <div class="form-group col-md-4 mx-2">
-                                                    <label for="salesDiscountAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
-                                                    <input type="number" class="form-control txt-1" id="salesDiscountAmount" name="salesDiscountAmount" value="0">
+                                    <div class="d-flex">
+                                        <div class="card mt-2 col-md-6">
+                                            <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
+                                                <p class="mx-2 my-2">{{ __('DISCOUNT') }}</p>
+                                            </div>
+                                            <div class="card-body marsman-bg-color-gray1">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="form-group col-md-6 mx-2">
+                                                        <label for="salesDiscountRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
+                                                        <input type="text" class="form-control txt-1" id="salesDiscountRate" name="salesDiscountRate" value="0">
+                                                    </div>
+                                                    <div class="form-group col-md-4 mx-2">
+                                                        <label for="salesDiscountAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
+                                                        <input type="text" class="form-control txt-1" id="salesDiscountAmount" name="salesDiscountAmount" value="0">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- Commission -->
-                                    <div class="card mt-2">
-                                        <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                            <p class="mx-2 my-2">{{ __('COMMISSION') }}</p>
-                                        </div>
-                                        <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12 d-flex">
-                                                <div class="form-group col-md-6 mx-2">
-                                                    <label for="salesCommissionRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
-                                                    <input type="number" class="form-control txt-1" id="salesCommissionRate" name="salesCommissionRate" value="0">
-                                                </div>
-                                                <div class="form-group col-md-4 mx-2">
-                                                    <label for="salesCommissionAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
-                                                    <input type="number" class="form-control txt-1" id="salesCommissionAmount" name="salesCommissionAmount" value="0">
+                                        <!-- Commission -->
+                                        <div class="card mt-2 col-md-6">
+                                            <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
+                                                <p class="mx-2 my-2">{{ __('COMMISSION') }}</p>
+                                            </div>
+                                            <div class="card-body marsman-bg-color-gray1">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="form-group col-md-6 mx-2">
+                                                        <label for="salesCommissionRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
+                                                        <input type="text" class="form-control txt-1" id="salesCommissionRate" name="salesCommissionRate" value="0">
+                                                    </div>
+                                                    <div class="form-group col-md-4 mx-2">
+                                                        <label for="salesCommissionAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
+                                                        <input type="text" class="form-control txt-1" id="salesCommissionAmount" name="salesCommissionAmount" value="0">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -163,13 +171,13 @@
                                                         <option></option>
                                                     </select>
                                                 </div>
-                                                <div class="form-group mt-2">
+                                            </div>
+                                            <div class="col-md-12 d-flex">
+                                                <div class="form-group col-md-6 p-1">
                                                     <label for="salesTax" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Taxes</label>
                                                     <input type="number" class="form-control txt-1 p-2" id="salesTax" name="salesTax" value="0">
                                                 </div>
-                                            </div>
-                                            <div class="col-md-12 mt-2">
-                                                <div class="form-group">
+                                                <div class="form-group col-md-6 p-1">
                                                     <label for="salesSurcharge" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Surcharge</label>
                                                     <input type="text" class="form-control txt-1 p-2" id="salesSurcharge" name="salesSurcharge" value="0">
                                                 </div>
@@ -210,11 +218,46 @@
                                             <div class="col-md-12 d-flex">
                                                 <div class="form-group">
                                                     <label for="costCurrencyCode" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Code</label>
-                                                    <input type="text" class="form-control txt-1" id="costCurrencyCode" name="costCurrencyCode" value="PHP">
+                                                    @if (isset($sfGroup->COST_CURR_CODE))
+                                                        <input type="text" class="form-control txt-1" id="costCurrencyCode" name="costCurrencyCode" value="{{ $sfGroup->COST_CURR_CODE }}">
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="costCurrencyCode" name="costCurrencyCode" value="PHP">
+                                                    @endif
+
                                                 </div>
                                                 <div class="form-group col-md-8 mx-2">
                                                     <label for="costCurrencyAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Amount</label>
-                                                    <input type="text" class="form-control txt-1" id="costCurrencyAmount" name="costCurrencyAmount" value="0">
+                                                    @if (isset($sfGroup->COST_CURR_RATE))
+                                                        <input type="text" class="form-control txt-1" id="costCurrencyAmount" name="costCurrencyAmount" value="{{ $sfGroup->COST_CURR_RATE }}">
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="costCurrencyAmount" name="costCurrencyAmount" value="0">
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--- Unit -->
+                                        <div class="card mt-2">
+                                            <div class="card-header m-0 p-0">
+
+                                            </div>
+                                            <div class="card-body marsman-bg-color-gray1">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="form-group col-md-6 mx-2">
+                                                        <label for="costUnitAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Unit Amount</label>
+                                                        @if (isset($sfGroup->PUBLISH_AMT))
+                                                            <input type="text" class="form-control txt-1" id="costUnitAmount" name="costUnitAmount" value="{{ number_format($sfGroup->PUBLISH_AMT, 2, '.', ',') }}">
+                                                        @else
+                                                            <input type="text" class="form-control txt-1" id="costUnitAmount" name="costUnitAmount" value="0">
+                                                        @endif
+                                                    </div>
+                                                    <div class="form-group col-md-4 mx-2">
+                                                        <label for="costCurrencyQuantity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Quantity</label>
+                                                        @if (isset($infoPaxCount))
+                                                            <input type="text" class="form-control txt-1" id="costCurrencyQuantity" name="costCurrencyQuantity" value="{{ $infoPaxCount }}">
+                                                        @else
+                                                            <input type="number" class="form-control txt-1" id="costCurrencyQuantity" name="costCurrencyQuantity" value="0">
+                                                        @endif
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -226,16 +269,21 @@
                                         </div>
                                         <!-- Fare Code -->
                                         <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12">
-                                                <div class="form-group mb-2">
+                                            <div class="col-md-12 d-flex">
+                                                <div class="col-md-4 p-1">
                                                     <label for="splFareCode" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Special Fare Code</label>
                                                     <input type="text" class="form-control txt-1" id="splFareCode" name="splFareCode">
                                                 </div>
-                                                <div class="form-group mb-2">
+                                                <div class="col-md-4 p-1">
                                                     <label for="costPublishedRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Published Rate</label>
-                                                    <input type="text" class="form-control txt-1" id="costPublishedRate" name="costPublishedRate">
+                                                    @if (isset($ticketInventory->ANET_AMOUNT))
+                                                        <input type="text" class="form-control txt-1" id="costPublishedRate" name="costPublishedRate" value="{{ number_format($ticketInventory->ANET_AMOUNT, 2, '.', ',') }}">
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="costPublishedRate" name="costPublishedRate">
+                                                    @endif
+
                                                 </div>
-                                                <div class="form-group mb-2">
+                                                <div class="col-md-4 p-1">
                                                     <label for="costNetRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Net Rate</label>
                                                     <input type="text" class="form-control txt-1" id="costNetRate" name="costNetRate">
                                                 </div>
@@ -249,8 +297,16 @@
                                         </div>
                                         <!-- Net Rate -->
                                         <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
+                                            <div class="col-md-12 d-flex">
+                                                <div class="form-group col-md-6 p-1">
+                                                    <label for="nonAirPublishedRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Published Rate</label>
+                                                    @if (isset($ticketInventory->ONET_AMOUNT))
+                                                        <input type="text" class="form-control txt-1" id="nonAirPublishedRate" name="nonAirPublishedRate" value="{{ number_format($ticketInventory->ONET_AMOUNT, 2, '.', ',') }}">
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="nonAirPublishedRate" name="nonAirPublishedRate">
+                                                    @endif
+                                                </div>
+                                                <div class="form-group col-md-6 p-1">
                                                     <label for="nonAirNetRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Net Rate</label>
                                                     <input type="text" class="form-control txt-1" id="nonAirNetRate" name="nonAirNetRate">
                                                 </div>
@@ -285,72 +341,108 @@
                                         </div>
                                     </div>
 
-                                    <div class="card mt-2">
-                                        <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                            <p class="mx-2 my-2">{{ __('DISCOUNT') }}</p>
-                                        </div>
-                                        <!-- Discount -->
-                                        <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12 d-flex">
-                                                <div class="form-group col-md-6 mb-2">
-                                                    <label for="costDiscountRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
-                                                    <input type="text" class="form-control txt-1" id="costDiscountRate" name="costDiscountRate" value="0">
+                                    <div class="d-flex">
+                                        <div class="card mt-2 col-md-6">
+                                            <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
+                                                <p class="mx-2 my-2">{{ __('DISCOUNT') }}</p>
+                                            </div>
+                                            <!-- Discount -->
+                                            <div class="card-body marsman-bg-color-gray1">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="form-group col-md-6 mb-2">
+                                                        <label for="costDiscountRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
+                                                        @if (isset($ticketInventory->COST_DISC_PERC))
+                                                            <input type="text" class="form-control txt-1" id="costDiscountRate" name="costDiscountRate" value="{{ $ticketInventory->COST_DISC_PERC }}">
+                                                        @else
+                                                            <input type="text" class="form-control txt-1" id="costDiscountRate" name="costDiscountRate" value="0">
+                                                        @endif
+                                                    </div>
+                                                    <div class="form-group col-md-6 mb-2 mx-2">
+                                                        <label for="costDiscountAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
+                                                        @if (isset($ticketInventory->COST_DISC_AMOUNT))
+                                                            <input type="text" class="form-control txt-1" id="costDiscountAmount" name="costDiscountAmount" value="{{ number_format($ticketInventory->COST_DISC_AMOUNT, 2, '.', ',') }}">
+                                                        @else
+                                                            <input type="text" class="form-control txt-1" id="costDiscountAmount" name="costDiscountAmount" value="0">
+                                                        @endif
+                                                    </div>
                                                 </div>
-                                                <div class="form-group col-md-6 mb-2 mx-2">
-                                                    <label for="costDiscountAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
-                                                    <input type="text" class="form-control txt-1" id="costDiscountAmount" name="costDiscountAmount" value="0">
+                                            </div>
+                                        </div>
+                                        <div class="card mt-2 col-md-6">
+                                            <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
+                                                <p class="mx-2 my-2">{{ __('COMMISSION') }}</p>
+                                            </div>
+                                            <!-- Commission -->
+                                            <div class="card-body marsman-bg-color-gray1">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="form-group col-md-6 mb-2">
+                                                        <label for="costCommissionRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
+                                                        @if (isset($ticketInventory->COST_COMM_PERC))
+                                                            <input type="text" class="form-control txt-1" id="costCommissionRate" name="costCommissionRate" value="{{ $ticketInventory->COST_COMM_PERC }}">
+                                                        @else
+                                                            <input type="text" class="form-control txt-1" id="costCommissionRate" name="costCommissionRate" value="0">
+                                                        @endif
+                                                    </div>
+                                                    <div class="form-group col-md-6 mb-2 mx-2">
+                                                        <label for="costCommissionAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
+                                                        @if (isset($ticketInventory->COST_COMM_AMOUNT))
+                                                            <input type="text" class="form-control txt-1" id="costCommissionAmount" name="costCommissionAmount" value="{{ number_format($ticketInventory->COST_COMM_AMOUNT, 2, '.', ',') }}">
+                                                        @else
+                                                            <input type="text" class="form-control txt-1" id="costCommissionAmount" name="costCommissionAmount" value="0">
+                                                        @endif
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card mt-2">
-                                        <div class="card-header m-0 p-0 marsman-bg-color-darkgray text-white">
-                                            <p class="mx-2 my-2">{{ __('COMMISSION') }}</p>
-                                        </div>
-                                        <!-- Commission -->
-                                        <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12 d-flex">
-                                                <div class="form-group col-md-6 mb-2">
-                                                    <label for="costCommissionRate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Rate</label>
-                                                    <input type="text" class="form-control txt-1" id="costCommissionRate" name="costCommissionRate" value="0">
-                                                </div>
-                                                <div class="form-group col-md-6 mb-2 mx-2">
-                                                    <label for="costCommissionAmount" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Amount</label>
-                                                    <input type="text" class="form-control txt-1" id="costCommissionAmount" name="costCommissionAmount" value="0">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                </div>
+                                <div class="col-md-12">
                                     <!-- Insurance -->
                                     <div class="card mt-2">
                                         <div class="card-header m-0 p-0">
                                         </div>
                                         <!-- Insurance -->
                                         <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12">
-                                                <div class="form-group mb-2">
+                                            <div class="row col-md-12 d-flex">
+                                                <div class="col-md-4 mb-2 p-1">
                                                     <label for="costInsurance" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Insurance</label>
-                                                    <input type="text" class="form-control txt-1" id="costInsurance" name="costInsurance">
+                                                    @if (isset($sfGroup->COST_INS_AMT))
+                                                        <input type="text" class="form-control txt-1" id="costInsurance" name="costInsurance" value="{{ number_format($sfGroup->COST_INS_AMT, 2, '.', ',') }}" readonly>
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="costInsurance" name="costInsurance" value="0">
+                                                    @endif
                                                 </div>
-                                                <div class="form-group mb-2">
+                                                <div class="col-md-2 mb-2 p-1">
                                                     <label for="costTax" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Taxes</label>
-                                                    <input type="text" class="form-control txt-1" id="costTax" name="costTax" value="0">
+                                                    @if (isset($sfTax))
+                                                        <input type="text" class="form-control txt-1" id="costTax" name="costTax" value="{{ number_format($sfTax->sum('COST_AMOUNT'), 2, '.', ',') }}" readonly>
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="costTax" name="costTax" value="">
+                                                    @endif
                                                 </div>
-                                            </div>
-                                            <div class="form-group d-flex mb-2">
-                                                <div class="form-group col-md-6 mb-2">
+                                                <div class="col-md-2 mb-2 p-1">
                                                     <label for="costTotalUnitCost" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Total Unit Cost</label>
-                                                    <input type="text" class="form-control txt-1" id="costTotalUnitCost" name="costTotalUnitCost" value="0">
+                                                    @if (isset($sfGroup->PUBLISH_AMT))
+                                                        <input type="text" class="form-control txt-1" id="costTotalUnitCost" name="costTotalUnitCost" value="{{ number_format($sfGroup->PUBLISH_AMT, 2, '.', ',') }}" readonly>
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="costTotalUnitCost" name="costTotalUnitCost" value="0">
+                                                    @endif
                                                 </div>
-                                                <div class="form-group col-md-4 mb-2 mx-2">
-                                                    <label for="costUnitQuantity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Quantity.</label>
-                                                    <input type="number" class="form-control txt-1" id="costUnitQuantity" name="costUnitQuantity" value="0">
+                                                <div class="col-md-2 mb-2 p-1">
+                                                    <label for="costUnitQuantity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Quantity</label>
+                                                    @if (isset($sfAirPax))
+                                                        <input type="text" class="form-control txt-1" id="costUnitQuantity" name="costUnitQuantity" value="{{ $sfAirPax->count() }}" readonly>
+                                                    @else
+                                                        <input type="number" class="form-control txt-1" id="costUnitQuantity" name="costUnitQuantity" value="0" readonly>
+                                                    @endif
                                                 </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group">
+                                                <div class="col-md-2 mb-2 p-1">
                                                     <label for="costGrandTotal" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Grand Total</label>
-                                                    <input type="text" class="form-control txt-1" id="costGrandTotal" name="costGrandTotal" value="0">
+                                                    @if (isset($ticketInventory->PUBLISH_AMT) && isset($paxCount))
+                                                        <input type="text" class="form-control txt-1" id="costGrandTotal" name="costGrandTotal" value="{{ number_format(($ticketInventory->PUBLISH_AMT + $ticketInventory->COST_TAX_AMT + $ticketInventory->COST_INS_AMT) * $paxCount, 2, '.', ',') }}" readonly>
+                                                    @else
+                                                        <input type="text" class="form-control txt-1" id="costGrandTotal" name="costGrandTotal" value="0" readonly>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -361,20 +453,16 @@
                                         </div>
                                         <!-- Tour Code -->
                                         <div class="card-body marsman-bg-color-gray1">
-                                            <div class="col-md-12">
-                                                <div class="form-group mb-2">
+                                            <div class="col-md-12 d-flex">
+                                                <div class="col-md-4 mb-2 p-1">
                                                     <label for="tourCode" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Tour Code</label>
                                                     <input type="text" class="form-control txt-1" id="tourCode" name="tourCode">
                                                 </div>
-                                            </div>
-                                            <div class="col-md-12 mb-2">
-                                                <div class="form-group mb-2">
+                                                <div class="col-md-4 mb-2 p-1">
                                                     <label for="mpdMco" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">MPD / MCO</label>
                                                     <input type="text" class="form-control txt-1" id="mpdMco" name="mpdMco">
                                                 </div>
-                                            </div>
-                                            <div class="col-md-12 mb-2">
-                                                <div class="form-group">
+                                                <div class="col-md-4 mb-2 p-1">
                                                     <label for="voucherNumber" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Voucher Number</label>
                                                     <input type="text" class="form-control txt-1" id="voucherNumber" name="voucherNumber">
                                                 </div>
@@ -403,17 +491,16 @@
                                             <div class="col-md-12">
                                                 <div class="form-group mb-2">
                                                     <label for="hotelCode" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Hotel</label>
-                                                    <input list="listHotels" class="form-control txt-1" name="hoteCode" id="hotelCode" value="{{ $sfHotel->HOTEL_CODE }}">
-                                                    <datalist id="listHotels">
+                                                    <select id="hotelCode" name="hotelCode" class="form-control form-select txt-1">
                                                         @foreach ($hotels as $hotel)
-                                                            <option value="{{ $hotel->HOTEL_CODE }}">{{ $hotel->HOTEL_DESCR }}</option>
+                                                            <option value="{{ $hotel->HOTEL_CODE }}" @if($hotel->HOTEL_CODE == $sfHotel->HOTEL_CODE) selected @endif>{{ $hotel->HOTEL_DESCR }}</option>
                                                         @endforeach
-                                                    </datalist>
+                                                    </select>
                                                 </div>
                                                 <div class="col-md-12 d-flex">
                                                     <div class="form-group col-md-6 mx-1 my-1">
                                                         <label for="checkInDate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Check-in Date</label>
-                                                        <input type="text" class="form-control txt-1" id="checkInDate" name="checkInDate" value="{{ \Carbon\Carbon::parse($sfHotel->CHECKIN_DATE)->format('Y-m-d') }}">
+                                                        <input type="date" class="form-control txt-1" id="checkInDate" name="checkInDate" value="{{ \Carbon\Carbon::parse($sfHotel->CHECKIN_DATE)->format('Y-m-d') }}" min="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
                                                     </div>
                                                     <div class="form-group col-md-4 mx-1 my-1">
                                                         <label for="hotelNights" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Number of Nights</label>
@@ -423,7 +510,7 @@
                                                 <div class="col-md-12 d-flex">
                                                     <div class="form-group col-md-6 mx-1 my-1">
                                                         <label for="checkOutDate" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Check-out Date</label>
-                                                        <input type="date" class="form-control txt-1" id="checkOutDate" name="checkOutDate" value="{{ \Carbon\Carbon::parse($sfHotel->CHECKOUT_DATE)->format('Y-m-d') }}">
+                                                        <input type="date" class="form-control txt-1" id="checkOutDate" name="checkOutDate" value="{{ \Carbon\Carbon::parse($sfHotel->CHECKOUT_DATE)->format('Y-m-d') }}" min="{{ \Carbon\Carbon::now()->addDay()->format('Y-m-d') }}" value="{{ \Carbon\Carbon::now()->addDay()->format('Y-m-d') }}">
                                                     </div>
                                                     <div class="form-group col-md-4 mx-1 my-1">
                                                         <label for="roomQuantity" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Room Quantity</label>
@@ -434,34 +521,31 @@
                                                     <div class="form-group col-md-8 mx-1 my-1">
                                                         <label for="roomType" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Room Type</label>
                                                         <input type="checkbox" class="mx-1" value="isVip"> VIP
-                                                        <input type="text" list="listRoomTypes" class="form-control txt-1" value="{{ $sfHotel->ROOM_TYPE }}">
-                                                        <datalist id="listRoomTypes">
+                                                        <select id="roomType" name="roomType" class="form-control forn-select txt-1">
                                                             @foreach ($roomTypes as $roomType)
-                                                                <option value="{{ $roomType->ROOM_CODE }}">{{ $roomType->ROOM_DESCR }}</option>
+                                                                <option value="{{ $roomType->ROOM_CODE }}" @if($roomType->ROOM_CODE == $sfHotel->ROOM_TYPE) selected @endif>{{ $roomType->ROOM_DESCR }}</option>
                                                             @endforeach
-                                                        </datalist>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 d-flex">
                                                     <div class="form-group col-md-8 mx-1 my-1">
                                                         <label for="roomCategory" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Room Category</label>
-                                                        <input type="text" list="listRoomCategories" class="form-control txt-1" id="roomCategory" name="roomCategory" value="{{ $sfHotel->ROOM_CAT }}">
-                                                        <datalist id="listRoomCategories">
+                                                        <select id="roomCategory" name="roomCategory" class="form-control form-select txt-1">
                                                             @foreach ($roomCategories as $roomCategory)
-                                                                <option value="{{ $roomCategory->ROOM_CAT }}">{{ $roomCategory->ROOM_DESCR }}</option>
+                                                                <option value="{{ $roomCategory->ROOM_CAT }}" @if($roomCategory->ROOM_CAT == $sfHotel->ROOM_CAT) selected @endif>{{ $roomCategory->ROOM_DESCR }}</option>
                                                             @endforeach
-                                                        </datalist>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 d-flex">
                                                     <div class="form-group col-md-8 mx-1 my-1">
                                                         <label for="hotelBookingStatus" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Status</label>
-                                                        <input type="text" list="listBookingStatus" id="hotelBookingStatus" name="hotelBookingStatus" class="form-control txt-1" value="{{ $sfHotel->STATUS }}">
-                                                        <datalist id="listBookingStatus">
+                                                        <select id="hotelBookingStatus" name="hotelBookingStatus" class="form-control form-select txt-1">
                                                             @foreach ($bookStatus as $status)
-                                                                <option value="{{ $status->BK_CODE }}">{{  $status->BK_DESCR }}</option>
+                                                                <option value="{{ $status->BK_CODE }}" @if($status->BK_CODE == $sfHotel->STATUS) selected @endif>{{ $status->BK_DESCR }}</option>
                                                             @endforeach
-                                                        </datalist>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -478,20 +562,27 @@
                                         <div class="card-body marsman-bg-color-gray1">
                                             <div class="form-group col-md-12 mx-1 my-1">
                                                 <label for="hotelBreakfast" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Breakfast</label>
-                                                <input type="text" list="listMeals" id="hotelBreakfast" name="hotelBreakfast" class="form-control txt-1" value="{{ $sfHotel->MEAL_CODE_1 }}">
-                                                <datalist id="listMeals">
+                                                <select id="hotelBreakfast" name="hotelBreakfast" class="form-control form-select txt-1">
                                                     @foreach ($meals as $meal)
-                                                        <option value="{{ $meal->MEAL_CODE }}">{{ $meal->MEAL_DESCR }}</option>
+                                                        <option value="{{ $meal->MEAL_CODE }}" @if($meal->MEAL_CODE == $sfHotel->MEAL_CODE_1) selected @endif>{{ $meal->MEAL_DESCR }}</option>
                                                     @endforeach
-                                                </datalist>
+                                                </select>
                                             </div>
                                             <div class="form-group col-md-12 mx-1 my-1">
                                                 <label for="hotelLunch" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Lunch</label>
-                                                <input type="text" list="listMeals" id="hotelLunch" name="hotelLunch" class="form-control txt-1" value="{{ $sfHotel->MEAL_CODE_2 }}">
+                                                <select id="hotelLunch" name="hotelLunch" class="form-control form-select txt-1">
+                                                    @foreach ($meals as $meal)
+                                                        <option value="{{ $meal->MEAL_CODE }}" @if($meal->MEAL_CODE == $sfHotel->MEAL_CODE_2) selected @endif>{{ $meal->MEAL_DESCR }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                             <div class="form-group col-md-12 mx-1 my-1">
                                                 <label for="hotelDinner" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Dinner</label>
-                                                <input type="text" list="listMeals" id="hotelDinner" name="hotelDinner" class="form-control txt-1" value="{{ $sfHotel->MEAL_CODE_3 }}">
+                                                <select id="hotelDinner" name="hotelDinner" class="form-control form-select txt-1">
+                                                    @foreach ($meals as $meal)
+                                                        <option value="{{ $meal->MEAL_CODE }}" @if($meal->MEAL_CODE == $sfHotel->MEAL_CODE_3) selected @endif>{{ $meal->MEAL_DESCR }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -507,11 +598,11 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="hotelConfNo" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Confirmation Number</label>
-                                                    <input type="text" class="form-control txt-1" id="hotelConfNo" name="hotelConfNo">
+                                                    <input type="text" class="form-control txt-1" id="hotelConfNo" name="hotelConfNo" value="{{ $sfGroup->CONF_NO }}">
                                                 </div>
                                                 <div class="form-group mt-2">
                                                     <label for="hotelPaxRefNo" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Passenger Reference Number</label>
-                                                    <input type="text" class="form-control txt-1" id="hotelPaxRefNo" name="hotelPaxRefNo">
+                                                    <input type="text" class="form-control txt-1" id="hotelPaxRefNo" name="hotelPaxRefNo" value="{{ $sfGroup->PAX_REF_NO }}">
                                                 </div>
                                                 <div class="form-group col-md-2 mt-2">
                                                     <label for="hotelGuests" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Number of Guest</label>
@@ -521,11 +612,11 @@
                                             <div class="col-md-6 mx-2">
                                                 <div class="form-group">
                                                     <label for="hotelOtherServices" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Other Services</label>
-                                                    <input type="text" class="form-control txt-1" id="hotelOtherServices" name="hotelOtherServices">
+                                                    <input type="text" class="form-control txt-1" id="hotelOtherServices" name="hotelOtherServices" value="{{ $sfHotel->OTHER_SERVICE }}">
                                                 </div>
                                                 <div class="form-group mt-2">
                                                     <label for="hotelRemarks" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Remarks</label>
-                                                    <textarea class="form-control txt-1" id="hotelRemarks" name="hotelRemarks" rows="5"></textarea>
+                                                    <textarea class="form-control txt-1" id="hotelRemarks" name="hotelRemarks" rows="5">{{ trim($sfHotel->REMARKS) }}</textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -538,39 +629,193 @@
                         <!-- Tab 4 :: Taxes -->
                         <div class="tab-pane fade show" id="addtaxes" role="tabpanel" aria-labelledby="addtaxes-tab">
                             <h4>Taxes</h4>
+
+                            <!-- Notification placeholders -->
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
+
                             <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <thead class="marsman-bg-color-dark text-white">
                                         <tr>
-                                            <th></th>
+                                            <th colspan="2"></th>
                                             <th colspan="3" class="text-center">Cost</th>
                                             <th colspan="5" class="text-center">Sales</th>
-                                            <th></th>
+
                                         </tr>
                                         <tr>
+                                            <th><input type="checkbox" id="selectAll"></th>
                                             <th>Code</th>
                                             <th>Currency</th>
                                             <th>Rate</th>
                                             <th>Amount</th>
-                                            <th>Bill</th>
-                                            <th>Incl.</th>
                                             <th>Currency</th>
                                             <th>Rate</th>
                                             <th>Amount</th>
-                                            <th>Code</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td></td>
-                                        </tr>
+                                        @if (isset($sfTax))
+                                            @foreach ($sfTax as $tax)
+                                            <form action="{{ route('sales-folder-air.update', [
+                                                'sfNo' => $troNumber,
+                                                'docId' => $docId,
+                                                'itemNo' => $tax->ITEM_NO,
+                                            ]) }}" method="POST">
+                                                @csrf
+                                                @method("PUT")
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" class="taxCheckbox" value="{{ $tax->ITEM_NO }}">
+                                                    </td>
+                                                    <td>
+                                                        <input list="dataTaxCode" id="taxCode" name="taxCode" value="{{ $tax->TAX_CODE }}" class="form-control txt-1">
+                                                        <datalist id="dataTaxCode">
+                                                            @if (isset($taxCodes))
+                                                                @foreach ($taxCodes as $taxcode)
+                                                                    <option value="{{ $taxcode->TAX_CODE }}">{{ $taxcode->TAX_DESCR }}</option>
+                                                                @endforeach
+                                                            @endif
+                                                        </datalist>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="taxCostCurrCode" name="taxCostCurrCode" value="{{ $tax->COST_CURR_CODE }}" class="form-control txt-1">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="taxCostCurrRate" name="taxCostCurrRate" value="{{ $tax->COST_CURR_RATE }}" class="form-control txt-1">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="taxCostCurrAmount" name="taxCostCurrAmount" value="{{ $tax->COST_AMOUNT }}" class="form-control txt-1">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="taxSaleCurrCode" name="taxSaleCurrCode" value="{{ $tax->SELL_CURR_CODE }}" class="form-control txt-1">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="taxSaleCurrRate" name="taxSaleCurrRate" value="{{ $tax->SELL_CURR_RATE }}" class="form-control txt-1">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="taxSaleCurrAmount" name="taxSaleCurrAmount" value="{{ $tax->SELL_AMOUNT }}" class="form-control txt-1">
+                                                    </td>
+                                                    <td>
+                                                        <button type="submit" class="btn btn-primary txt-1" id="updateTax">Update</button>
+                                                    </td>
+                                                </tr>
+                                                <input type="hidden" name="sfNo" id="sfNo" value="{{ $tax->SF_NO }}">
+                                                <input type="hidden" name="docId" id="docId" value="{{ $tax->DOC_ID }}">
+                                                <input type="hidden" name="itemNumber" id="itemNumber" value="{{ $tax->ITEM_NO }}">
+                                            </form>
+                                            @endforeach
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="col-md-12 justify-content-start d-flex mt-3">
+                                <button class="btn btn-danger txt-1" id="deleteSelectedTaxData">Delete Selected</button>
+                            </div>
+
+                            <hr class="w-100">
+
+                            <!-- Add new tax data -->
+                            <form id="taxAddForm" action="{{ route('sales-folder-tax.store') }}" method="post">
+                                @csrf
+                                <input type="hidden" id="sfNo" name="sfNo" value="{{ $troNumber }}">
+                                <input type="hidden" id="docId" name="docId" value="{{ $docId }}">
+
+                            <div class="col-md-12 d-flex">
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header m-0 p-0"></div>
+                                        <div class="card-body marsman-bg-color-gray1">
+                                            <div class="form-group">
+                                                <label for="taxCodeNew" class="form-label marsman-bg-color-label text-white m-0 p-2 rounded-top">Tax Code</label>
+                                                <select id="taxCode" name="taxCodeNew" class="form-control form-select txt-1">
+                                                    @if(isset($taxCodes))
+                                                        @foreach ($taxCodes as $tax)
+                                                            <option value="{{ $tax->TAX_CODE }}">{{ trim($tax->TAX_DESCR) }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header m-0 p-0"></div>
+                                        <div class="card-body marsman-bg-color-gray1">
+                                            <div class="form-group mb-2">
+                                                <label for="taxCostCurrCodeNew" class="form-label marsman-bg-color-label text-white m-0 p-2 rounded-top">Cost Currency Code</label>
+                                                <select id="taxCostCurrCodeNew" name="taxCostCurrCodeNew" class="form-control form-select txt-1">
+                                                    <option value="PHP">PHP</option>
+                                                    <option value="USD">USD</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group mb-2">
+                                                <label for="taxCostCurrRateNew" class="form-label marsman-bg-color-label text-white m-0 p-2 rounded-top">Cost Currency Rate</label>
+                                                <input type="number" id="taxCostCurrRateNew" name="taxCostCurrRateNew" class="form-control txt-1" value="0">
+                                            </div>
+                                            <div class="form-group mb-2">
+                                                <label for="taxCostCurrAmountNew" class="form-label marsman-bg-color-label text-white m-0 p-2 rounded-top">Cost Currency Amount</label>
+                                                <input type="number" id="taxCostCurrAmountNew" name="taxCostCurrAmountNew" class="form-control txt-1" value="0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header m-0 p-0"></div>
+                                        <div class="card-body marsman-bg-color-gray1">
+                                            <div class="form-group mb-2">
+                                                <label for="taxSaleCurrCodeNew" class="form-label marsman-bg-color-label text-white m-0 p-2 rounded-top">Sale Currency Code</label>
+                                                <select id="taxSaleCurrCodeNew" name="taxSaleCurrCodeNew" class="form-control form-select txt-1">
+                                                    <option value="PHP">PHP</option>
+                                                    <option value="USD">USD</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group mb-2">
+                                                <label for="taxSaleCurrRateNew" class="form-label marsman-bg-color-label text-white m-0 p-2 rounded-top">Sale Currency Rate</label>
+                                                <input type="number" id="taxSaleCurrRateNew" name="taxSaleCurrRateNew" class="form-control txt-1" value="0">
+                                            </div>
+                                            <div class="form-group mb-2">
+                                                <label for="taxSaleCurrAmountNew" class="form-label marsman-bg-color-label text-white m-0 p-2 rounded-top">Sale Currency Amount</label>
+                                                <input type="number" id="taxSaleCurrAmountNew" name="taxSaleCurrAmountNew" class="form-control txt-1" value="0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-12 justify-content-end d-flex mt-3">
+                                <button type="submit" class="btn btn-primary txt-1" id="addTaxData">Add Tax</button>
+                            </div>
+
+                            </form>
                         </div>
 
                         <!-- Tab 5 :: MIS -->
                         <div class="tab-pane fade show" id="mis" role="tabpanel" aria-labelledby="mis-tab">
+                            <p class="h3">MIS / Other Reference</p>
 
                             <div class="row col-md-12 d-flex mt-2">
                                 <div class="form-group col-md-6">
@@ -695,61 +940,13 @@
                                         </div>
                                     </div>
 
-                                    <div class="card">
-                                        <div class="card-header p-0 marsman-bg-color-darkgray text-white">
-                                            <p class="mx-2 my-2">{{ __('VESSEL RELATED INFO') }}
-                                        </div>
-                                        <div class="card-body marsman-bg-color-gray1">
-                                            <div class="row">
-                                                <div class="form-group col-md-6 mb-2">
-                                                    <label for="embarkationLoc" class="form-label marsman-bg-color-label text-white p-2 m-0 rounded-top">Embarkation Location</label>
-                                                    <input type="text" id="embarkationLoc" name="embarkationLoc"s class="form-control txt-1">
-                                                </div>
-                                                <div class="form-group col-md-6 mb-2">
-                                                    <label for="embarkationLoc" class="form-label txt-gray1 p-2 m-0 rounded-top">Embarkation Location</label>
-                                                    <input type="text" id="embarkationLoc2" name="embarkationLoc2" class="form-control txt-1">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md-4 mb-2">
-                                                    <label for="embarkDate" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top mt-2">Date</label>
-                                                    <input type="date" id="embarkDate" name="embarkDate" class="form-control txt-1">
-                                                </div>
-                                                <div class="form-group col-md-4 mb-2">
-                                                    <input type="checkbox" name="isJoining" value="1">
-                                                    <label for="joiningTotal" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top mt-2">Joining</label>
-                                                    <input type="number" id="joiningTotal" name="joiningTotal" value="0" class="form-control txt-1">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md-12 mb-2">
-                                                    <label for="vesselName" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top mt-2">Vessel Name</label>
-                                                    <input type="checkbox" name="toPrint" value="1" class="mr-2"> Print
-                                                    <select id="vesselName" name="vesselName" class="form-control form-select txt-1">
-                                                        @foreach ($vessels as $vessel)
-                                                            <option value="{{ $vessel->VESSEL_CODE }}">{{ $vessel->VESSEL_NAME }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="form-group col-md-12 mb-2">
-                                                    <label for="vesselPrincipal" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top mt-2">Principal</label>
-                                                    <select id="vesselPrincipal" name="vesselPrincipal" class="form-control txt-1">
-                                                        <option></option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group col-md-12 mb-2">
-                                                    <label for="vesselRemarks" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">Remarks</label>
-                                                    <input type="text" id="vesselRemarks" name="vesselRemarks" class="form-control txt-1">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Tab 6 :: Remarks -->
                         <div class="tab-pane fade show" id="remarks" role="tabpanel" aria-labelledby="remarks-tab">
+                            <p class="h3">Remarks</p>
 
                             <div class="row col-md-12 d-flex mt-2 marsman-bg-color-gray1 p-2">
                                 <div class="col-md-6 mt-2">
@@ -759,7 +956,7 @@
                                             <div class="card-body">
                                                 <div class="form-group mb-2">
                                                     <label for="generalRemarks" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top mt-2">General Remarks</label>
-                                                    <textarea id="generalRemarks" name="generalRemarks" class="form-control txt-1" rows="5"></textarea>
+                                                    <textarea id="generalRemarks" name="generalRemarks" class="form-control txt-1" rows="5">@if(isset($sfGroup->REMARKS)){{ trim($sfGroup->REMARKS) }}@endif</textarea>
                                                 </div>
                                                 <div class="form-group mb-2">
                                                     <label for="fareCalculation" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top mt-2">Fare Calculation</label>
@@ -780,11 +977,11 @@
                                             <div class="card-body">
                                                 <div class="form-group mb-2">
                                                     <label for="longItineraryDesc" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top mt-2">Long Itinerary Description</label>
-                                                    <textarea id="longItineraryDesc" name="longItineraryDesc" class="form-control txt-1" rows="5"></textarea>
+                                                    <textarea id="longItineraryDesc" name="longItineraryDesc" class="form-control txt-1" rows="5">@if(isset($sfGroup->LONG_DESCR)){{ trim($sfGroup->LONG_DESCR) }}@endif</textarea>
                                                 </div>
                                                 <div class="form-group mb-2">
                                                     <label for="airlineReference" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top mt-2">Airline Reference</label>
-                                                    <textarea id="airlineReference" name="airlineReference" class="form-control txt-1" rows="5"></textarea>
+                                                    <textarea id="airlineReference" name="airlineReference" class="form-control txt-1" rows="5">@if(isset($sfGroup->AIRLINE_REMARKS)){{ trim($sfGroup->AIRLINE_REMARKS) }}@endif</textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -794,7 +991,7 @@
 
                         </div>
 
-                        <!-- Tab 6 :: Remarks -->
+                        <!-- Tab 7 :: Passenger -->
                         <div class="tab-pane fade show" id="passenger" role="tabpanel" aria-labelledby="passenger-tab">
                             <p class="h3">Passenger</p>
 
@@ -802,37 +999,58 @@
                                 <table id="passengerList" class="table table-bordered">
                                     <thead class="marsman-bg-color-darkgray text-white">
                                         <tr>
+                                            <th><input type="checkbox" id="selectAllPax"></th>
                                             <th>Passenger Name</th>
                                             <th>Ticket Number</th>
                                             <th>PNR</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        @if (isset($infoPax))
+                                            @foreach ($infoPax as $pax)
+                                                <tr data-sf-no="{{ $pax->SF_NO }}" data-doc-id="{{ $pax->DOC_ID }}" data-item-no="{{ $pax->ITEM_NO }}">
+                                                    <td><input type="checkbox" class="rowCheckbox"></td>
+                                                    <td>
+                                                        <input type="text" name="passengerName" class="form-control txt-1 passenger-name" value="{{ $pax->PAX_NAME }}">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="ticketNumber" class="form-control txt-1 ticket-number number-only" value="{{ $pax->TICKET_NO }}">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="pnr" class="form-control txt-1 pnr" value="{{ $pax->PNR }}">
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-primary txt-1 form-control updatePax">Update</button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
 
+                            <button id="deletePaxSelection" class="btn btn-danger txt-1">Delete Selection</button>
                             <hr class="w-100">
 
-                            <div class="col-md-12 d-flex">
+                            <div class="col-md-12 d-flex mt-2">
                                 <div class="col-md-6">
                                     <div class="card-body marsman-bg-color-gray1">
                                         <div class="form-group">
-                                            <label for="passengerName" class="form-label txt-1 marsman-bg-color-label text-white rounded-top p-2 m-0">Passenger Name</label>
-                                            <input type="text" class="form-control txt-1" id="passengerName" name="passengerName">
+                                            <label for="passengerNameNew" class="form-label txt-1 marsman-bg-color-label text-white rounded-top p-2 m-0">Passenger Name</label>
+                                            <input type="text" class="form-control txt-1" id="passengerNameNew" name="passengerNameNew">
                                         </div>
                                         <div class="form-group mt-2">
-                                            <label for="passengerPNR" class="form-label txt-1 marsman-bg-color-label text-white rounded-top p-2 m-0">PNR</label>
-                                            <input type="text" class="form-control txt-1" id="passengerPNR" name="passengerPNR">
+                                            <label for="passengerPNRNew" class="form-label txt-1 marsman-bg-color-label text-white rounded-top p-2 m-0">PNR</label>
+                                            <input type="text" class="form-control txt-1" id="passengerPNRNew" name="passengerPNRNew" maxlength="6">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="card-body marsman-bg-color-gray1">
                                         <div class="form-group">
-                                            <label for="passengerTicketNumber" class="form-label txt-1 marsman-bg-color-label text-white rounded-top p-2 m-0">Ticket Number</label>
-                                            <input type="text" class="form-control txt-1" id="passengerTicketNumber" name="passengerTicketNumber">
+                                            <label for="passengerTicketNumberNew" class="form-label txt-1 marsman-bg-color-label text-white rounded-top p-2 m-0">Ticket Number</label>
+                                            <input type="text" class="form-control txt-1 number-only" id="passengerTicketNumberNew" name="passengerTicketNumberNew" maxlength="10">
                                         </div>
                                     </div>
                                     <div class="form-group col-md-12 mx-1 my-1 d-flex justify-content-end">
@@ -865,121 +1083,70 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
-        const checkInDate = document.getElementById('checkInDate');
-        const checkOutDate = document.getElementById('checkOutDate');
-        const hotelNights = document.getElementById('hotelNights');
+        if (window.jQuery) {
+            console.log("jQuery is loaded.");
+        } else {
+            console.log("jQuery is not loaded.");
+        }
+
         const productNameSelect = document.getElementById('productType');
-        const categorySelect = document.getElementById('productCategory');
+        const categorySelect = document.getElementById('showCategory');
         const routeSelect = document.getElementById('route');
         const itineraryTabs = document.querySelectorAll('.nav-link.itinerary');
-        const salesTab = document.getElementById('sales-tab');  // Make sure this ID matches your HTML
+        const salesTab = document.getElementById('sales-tab');
+        const airTab = document.getElementById('itineraryAir-tab');
+        const miscTab = document.getElementById('itineraryMisc-tab');
+        const taxTab = document.getElementById('addtaxes-tab');
 
-        // Initially make the product and route select boxes disabled
-        productNameSelect.disabled = true;
-        routeSelect.disabled = true;
+        // Add click event listeners to the close buttons and the background
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const closeButtons = document.querySelectorAll('.close-button');
+        const lightboxContainers = document.querySelectorAll('.lightbox-container');
 
-        // Hide all itinerary tabs initially
-        itineraryTabs.forEach(tab => tab.style.display = 'none');
+        //Cost amount auto update on manual input
+        const costInsuranceInput = document.getElementById('costInsurance');
+        const unitAmountInput = document.getElementById('costUnitAmount');
+        const taxInput = document.getElementById('costTax');
+        const totalUnitCostInput = document.getElementById('costTotalUnitCost');
+        const unitQuantityInput = document.getElementById('costUnitQuantity');
+        const currencyQuantityInput = document.getElementById('costCurrencyQuantity');
 
-        categorySelect.addEventListener('change', function() {
-            const selectedCategory = this.value;
+        //Retrieve quantity
+        unitQuantityInput.value = currencyQuantityInput.value;
 
-            // Enable the product and route select boxes if a category is selected
-            productNameSelect.disabled = !selectedCategory;
-            routeSelect.disabled = !selectedCategory;
+        // Select all elements with the class 'number-only'
+        const numberInputs = document.querySelectorAll('.number-only');
 
-            // Filter products based on the selected category
-            filterProducts();
+        @if (session('newTaxRecord') || session('deletedTaxRecords'))
+                new bootstrap.Tab(taxTab).show();
+                taxTab.style.display = 'block';
+        @endif
 
-            // Reset the product select box to its default option
-            productNameSelect.value = '';
-            routeSelect.value = '';
+        // Add an event listener to each element and not allow letters
+        numberInputs.forEach(function(input) {
+            input.addEventListener('keydown', function(event) {
+                // Allow control keys like backspace, tab, enter, etc.
+                const allowedKeys = [
+                    'Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+                    'Tab', 'Enter', 'Delete'
+                ];
 
-            // Show/hide the appropriate itinerary tab
-            showItineraryTab();
-
-            // Make #sales-tab the active tab
-            if (selectedCategory) {
-                new bootstrap.Tab(salesTab).show();
-            }
-        });
-
-        routeSelect.addEventListener('change', function() {
-            // Filter products based on the selected category and route
-            filterProducts();
-        });
-
-        function filterProducts() {
-            const selectedCategoryName = categorySelect.options[categorySelect.selectedIndex].text.trim();
-            const selectedRoute = routeSelect.options[routeSelect.selectedIndex].text.trim();
-            const routeFilter = selectedRoute === 'Domestic' ? 'DOM' : selectedRoute === 'International' ? 'INTL' : '';
-
-            const options = productNameSelect.querySelectorAll('option');
-            options.forEach(option => {
-                const productDescription = option.text.trim();
-                let showOption = false;
-
-                if (selectedCategoryName === 'HOTEL') {
-                    showOption = productDescription.startsWith('HOTEL');
-                    if (routeFilter) {
-                        showOption = showOption && productDescription.includes(routeFilter);
-                    }
-                } else if (selectedCategoryName === 'AIR') {
-                    showOption = productDescription.startsWith('AIR ');
-                    if (routeFilter) {
-                        showOption = showOption && productDescription.includes(routeFilter);
-                    }
-                } else if (selectedCategoryName === 'CAR / TRANSFER') {
-                    showOption = productDescription.startsWith('CARS') || productDescription.startsWith('TRANSFERS');
-                    if (routeFilter) {
-                        showOption = showOption && productDescription.includes(routeFilter);
-                    }
-                } else if (selectedCategoryName === 'MISCELLANEOUS') {
-                    showOption = productDescription.startsWith('MISCELLANEOUS');
+                // Allow numeric keys, numpad keys, and allowed control keys
+                if (
+                    (event.key >= '0' && event.key <= '9') ||
+                    (event.key >= 'Numpad0' && event.key <= 'Numpad9') ||
+                    allowedKeys.includes(event.key)
+                ) {
+                    return; // Allow the keypress
                 } else {
-                    showOption = option.dataset.category === selectedCategoryName;
+                    event.preventDefault(); // Prevent the keypress
+                    alert('Letters are not allowed. Please enter numbers only.');
                 }
-
-                option.style.display = showOption ? '' : 'none';
             });
-        }
+        });
 
-        function showItineraryTab() {
-            const selectedCategoryName = categorySelect.options[categorySelect.selectedIndex].text.trim();
-            const hotelTab = document.getElementById('itineraryHotel-tab');
-            const miscTab = document.getElementById('itineraryMisc-tab');
-            const airTab = document.getElementById('itineraryAir-tab');
-            const carTab = document.getElementById('itineraryCar-tab');
-            const hotelContent = document.getElementById('itineraryHotel');
-            const miscContent = document.getElementById('itineraryMisc');
-
-            // Hide all itinerary tabs
-            itineraryTabs.forEach(tab => tab.style.display = 'none');
-
-            // Show the appropriate itinerary tab based on the selected category
-            if (selectedCategoryName === 'HOTEL') {
-                hotelTab.style.display = 'block';
-                miscTab.style.display = 'none';
-                carTab.style.display = 'none';
-                airTab.style.display = 'none';
-            } else if (selectedCategoryName === 'MISCELLANEOUS') {
-                miscTab.style.display = 'block';
-                hotelTab.style.display = 'none';
-                carTab.style.display = 'none';
-                airTab.style.display = 'none';
-            } else if (selectedCategoryName === 'AIR') {
-                airTab.style.display = 'block';
-                miscTab.style.display = 'none';
-                hotelTab.style.display = 'none';
-                carTab.style.display = 'none';
-            } else if (selectedCategoryName === 'CAR / TRANSFER') {
-                carTab.style.display = 'block';
-                airTab.style.display = 'none';
-                miscTab.style.display = 'none';
-                hotelTab.style.display = 'none';
-            }
-        }
-
+        // Auto calculate hotel nights upon changing checkout date
         function calculateNights() {
             const checkIn = new Date(checkInDate.value);
             const checkOut = new Date(checkOutDate.value);
@@ -1016,402 +1183,534 @@
             calculateNights();
         });
 
-        document.getElementById('productType').addEventListener('change', function() {
-            var selectedProduct = this.options[this.selectedIndex].text;
-            var hotelTab = document.getElementById('itineraryHotel-tab');
-            var miscTab = document.getElementById('itineraryMisc-tab');
-            var carTab = document.getElementById('itineraryCar-tab');
-            var airTab = document.getElementById('itineraryAir-tab');
+        function updateTotalUnitCost() {
+            const unitAmount = parseFloat(unitAmountInput.value.replace(/,/g, '')) || 0;
+            const tax = parseFloat(taxInput.value.replace(/,/g, '')) || 0;
+            const insurance = parseFloat(costInsuranceInput.value.replace(/,/g, '')) || 0;
+            const totalUnitCost = unitAmount + tax + insurance;
+            totalUnitCostInput.value = formatNumber(totalUnitCost);
+            calculateCostGrandTotal();
+        }
 
-            if (selectedProduct.includes('HOTEL')) {
-                new bootstrap.Tab(hotelTab).show();
-            } else if (selectedProduct.includes('MISCELLANEOUS')) {
-                new bootstrap.Tab(miscTab).show();
-            } else if (selectedProduct.includes('AIR')) {
-                new bootstrap.Tab(airTab).show();
-            } else if (selectedProduct.includes('CAR / TRANSFER')) {
-                new bootstrap.Tab(carTab).show();
+        function updateCurrencyQuantity() {
+            unitQuantityInput.value = currencyQuantityInput.value;
+            calculateCostGrandTotal();
+        }
+
+        unitAmountInput.addEventListener('input', updateTotalUnitCost);
+        taxInput.addEventListener('input', updateTotalUnitCost);
+        costInsuranceInput.addEventListener('input', updateTotalUnitCost);
+        currencyQuantityInput.addEventListener('input', updateCurrencyQuantity);
+
+        // Function to update the #costUnitQuantity input
+        function updatePaxCount() {
+            // Fetch the current TRO number from the form (assuming it's available)
+            var sfNo = $('#troNumber').val();
+            var docId = $('#docId').val();
+
+            // Make an AJAX call to get the count of passengers for the current TRO
+            $.ajax({
+                url: '{{ route('sales-folder-pax.count') }}',
+                data: {
+                    sfNo: sfNo,
+                    docId: docId
+                },
+                headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                method: 'POST',
+                success: function(response) {
+                    //alert(response.count);
+                    // Update the #costUnitQuantity input with the count
+                    console.log('Total current pax count: ' + response.count);
+                    $('#costCurrencyQuantity').val(response.count);
+                    $('#costUnitQuantity').val(response.count);
+                    //calculateCostGrandTotal();
+                    console.log('Value of cost quantity: ' + $('#costUnitQuantity').val());
+                },
+                error: function(error) {
+                    console.error('Error fetching passenger count:', error);
+                }
+            });
+        }
+        //Initial load pax count
+        updatePaxCount();
+
+        function getTotalPax(callback) {
+            // Fetch the current TRO number from the form (assuming it's available)
+            var troNumber = $('#troNumber').val(); // Replace with your actual selector
+
+            // Make an AJAX call to get the count of passengers for the current TRO
+            $.ajax({
+                url: '{{ route('sales-folder-pax.tempdata.count') }}', // Replace with your actual route
+                data: { troNumber: troNumber },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                method: 'POST',
+                success: function(response) {
+                    callback(response.count);
+                },
+                error: function(error) {
+                    console.error('Error fetching passenger count:', error.message);
+                    callback(null);
+                }
+            });
+        }
+
+        getTotalPax(function(count) {
+            if (count !== null) {
+                $('#costUnitQuantity').val(count);
+                console.log('Total current pax count: ' + count);
+                console.log('Value of cost quantity: ' + $('#costUnitQuantity').val());
+                console.log('This is the callback result.');
+            } else {
+                $('#costUnitQuantity').val(0);
+                console.log('Error fetching passenger count. Defaulting to 0');
             }
         });
 
-        //Add Hotel Itinerary
-        function addHotelProduct() {
-            var formData = {
-                troNumber: $('#troNumber').val(),
-                docId: $('#docId').val(),
-                hotelCode: $('#hotelCode').val(),
-                checkInDate: $('#checkInDate').val(),
-                checkOutDate: $('#checkOutDate').val(),
-                roomType: $('#roomType').val(),
-                roomCategory: $('#roomCategory').val(),
-                bookStatus: $('#hotelBookingStatus').val(),
-                numberOfGuest: $('#hotelGuests').val(),
-                roomQuantity: $('#roomQuantity').val(),
-                isVip: $('#isVip').is(':checked') ? 1 : 0,
-                hotelBreakfast: $('#hotelBreakfast').val(),
-                hotelLunch: $('#hotelLunch').val(),
-                hotelDinner: $('#hotelDinner').val(),
-                otherServices: $('#hotelOtherServices').val(),
-                hotelRemarks: $('#hotelRemarks').val(),
-            };
+        function calculateCostGrandTotal() {
+            // Get the values of insurance, tax, unit cost, and quantity
+            var unitQuantity = $('#costUnitQuantity').val();
+            var insurance = parseFloat($('#costInsurance').val().replace(/,/g, '')) || 0;
+            var tax = parseFloat($('#costTax').val().replace(/,/g, '')) || 0;
+            var unitCost = parseFloat($('#costTotalUnitCost').val().replace(/,/g, '')) || 0;
 
-            $.ajax({
-                url: '{{ route('sales-folder-hotel.store') }}',
-                type: 'POST',
-                data: formData,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    console.log(response.data);
-                    alert(response.success);
+            getTotalPax(function(count) {
+                console.log('Get total pax count: ' + count);
+                var quantity = count !== 0 ? count : unitQuantity;
+                console.log('Current quantity: ' + quantity);
+                console.log('Current manual quantity: ' + unitQuantity);
+                $('#costUnitQuantity').val(quantity);
 
-                    //Save Sales Folder Group
-                    saveSalesFolderGroup();
-
-                    // Redirect to the specified route
-                    var troNumber = $('#troNumber').val();
-                    var redirectUrl = '{{ route("forms.tro.sf", ":troNumber") }}';
-                    redirectUrl = redirectUrl.replace(':troNumber', troNumber);
-                    window.location.href = redirectUrl;
-                },
-                error: function(response) {
-                    var errors = response.responseJSON.errors;
-                    $.each(errors, function(key, value) {
-                        console.log(response.data);
-                        alert(value);
-                    });
+                // Calculate the grand total
+                var grandTotal = unitCost * quantity;
+                console.log('Final quantity: ' + quantity);
+                if (quantity === 0) {
+                    grandTotal = 0;
                 }
+
+                // Format the grand total to 2 decimal places with commas
+                var formattedGrandTotal = formatNumber(grandTotal);
+
+                // Update the input field with the formatted grand total
+                console.log('Grand Total is: ' + formattedGrandTotal);
+                $('#costGrandTotal').val(formattedGrandTotal);
             });
         }
 
-        //Add Car/Transfer Itinerary
-        function addCarTransferProduct() {
-            var formData = {
-                troNumber: $('#troNumber').val(),
-                docId: $('#docId').val(),
-                carProvider: $('#carProvider').val(),
-                carType: $('#carType').val(),
-                carCategory: $('#carCategory').val(),
-                carFlightNumber: $('#carFlightNumber').val(),
-                pickUpDate: $('#pickUpDate').val(),
-                pickUpTime: $('#pickUpTime').val(),
-                pickUpLocation: $('#pickUpLocation').val(),
-                dropoffDate: $('#dropoffDate').val(),
-                dropoffTime: $('#dropoffTime').val(),
-                dropoffLocation: $('#dropoffLocation').val(),
-                stopoverFirst: $('#stopoverFirst').val(),
-                stopoverSecond: $('#stopoverSecond').val(),
-                stopoverThird: $('#stopoverThird').val(),
-                pickupPhoneNumber: $('#pickupPhoneNumber').val(),
-                carSpecialRequest: $('#carSpecialRequest').val(),
-                carStatus: $('#carStatus').val(),
-            };
-
-            $.ajax({
-                url: '{{ route('sales-folder-transfer.store') }}',
-                type: 'POST',
-                data: formData,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    console.log(response.data);
-                    alert(response.success);
-
-                    //Save Sales Folder Group
-                    saveSalesFolderGroup();
-
-                    // Redirect to the specified route
-                    var troNumber = $('#troNumber').val();
-                    var redirectUrl = '{{ route("forms.tro.sf", ":troNumber") }}';
-                    redirectUrl = redirectUrl.replace(':troNumber', troNumber);
-                    window.location.href = redirectUrl;
-                },
-                error: function(response) {
-                    var errors = response.responseJSON.errors;
-                    $.each(errors, function(key, value) {
-                        console.log(response.data);
-                        alert(value);
-                    });
-                }
-            });
+        function formatNumber(num) {
+            return num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         }
 
-        //Add Miscellaneous Itinerary
-        function addMiscProduct() {
-            var formData = {
-                troNumber: $('#troNumber').val(),
-                docId: $('#docId').val(),
-                miscType: $('#miscType').val(),
-                procCenter: $('#procCenter').val(),
-                miscStartDate: $('#miscStartDate').val(),
-                miscStartLoc: $('#miscStartLoc').val(),
-                miscEndDate: $('#miscEndDate').val(),
-                miscEndLoc: $('#miscEndLoc').val(),
-                miscServiceClass: $('#miscServiceClass').val(),
-                miscStatus: $('#miscStatus').val(),
-                miscRemarks: $('#miscRemarks').val(),
-            };
+        // Bind the change event to the relevant input fields
+        $('#costInsurance, #costTax, #costTotalUnitCost').on('input', function() {
+            calculateCostGrandTotal();
+        });
 
-            $.ajax({
-                url: '{{ route('sales-folder-misc.store') }}',
-                type: 'POST',
-                data: formData,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    console.log(response.data);
-                    alert(response.success);
+        //Initial load cost grand total
+        updateTotalUnitCost();
+        updateCurrencyQuantity();
+        calculateCostGrandTotal();
 
-                    //Save Sales Folder Group
-                    saveSalesFolderGroup();
+        function getGrandTotal() {
+            // Get the values of insurance, tax, unit cost, and quantity
+            var insurance = parseFloat($('#costInsurance').val().replace(/,/g, '')) || 0;
+            var tax = parseFloat($('#costTax').val().replace(/,/g, '')) || 0;
+            var unitCost = parseFloat($('#costTotalUnitCost').val().replace(/,/g, '')) || 0;
 
-                    // Redirect to the specified route
-                    var troNumber = $('#troNumber').val();
-                    var redirectUrl = '{{ route("forms.tro.sf", ":troNumber") }}';
-                    redirectUrl = redirectUrl.replace(':troNumber', troNumber);
-                    window.location.href = redirectUrl;
-                },
-                error: function(response) {
-                    var errors = response.responseJSON.errors;
-                    $.each(errors, function(key, value) {
-                        console.log(response.data);
-                        alert(value);
-                    });
+            getTotalPax(function(count) {
+                if (count !== null) {
+                    var quantity = count;
+                    console.log('This is the callback result of getting the grand total.');
+                } else {
+                    var quantity = 0;
+                    console.log('Error fetching passenger count. Defaulting to 0');
                 }
             });
+
+            // Calculate the grand total
+            var grandTotal = (insurance + tax + unitCost) * quantity;
+
+            // Format the grand total to 2 decimal places with commas
+            var formattedGrandTotal = formatNumber(grandTotal);
+
+            return formattedGrandTotal;
         }
 
-        // Add Air Itinerary segment
-        $('#addAirItinerary').click(function() {
-            const data = {
-                troNumber: $('#troNumber').val(),
-                docId: $('#docId').val(),
-                airline: $('#airline').val(),
-                flightNumber: $('#flightNumber').val(),
-                serviceClass: $('#serviceClass').val(),
-                departureCity: $('#departureCity').val(),
-                departureDate: $('#departureDate').val(),
-                departureTime: $('#departureTime').val(),
-                arrivalCity: $('#arrivalCity').val(),
-                arrivalDate: $('#arrivalDate').val(),
-                arrivalTime: $('#arrivalTime').val(),
-                _token: '{{ csrf_token() }}'
-            };
+        // Handle select all checkbox
+        $('#selectAll').on('change', function() {
+            $('.taxCheckbox').prop('checked', $(this).prop('checked'));
+        });
 
+        // Handle delete selected tax data
+        $('#deleteSelectedTaxData').click(function() {
+            var selectedIds = $('.taxCheckbox:checked').map(function() {
+                return $(this).val();
+            }).get();
+
+            if (selectedIds.length > 0) {
+                if (confirm('Are you sure you want to delete the selected tax data?')) {
+                    var records = selectedIds.map(function(itemId) {
+                        var row = $('#taxList').find('input[value="' + itemId + '"]').closest('tr');
+                        return {
+                            sfNo: @json($troNumber),
+                            docId: @json($docId),
+                            itemNo: itemId // ITEM_NO from checkbox value
+                        };
+                    });
+
+                    console.log('Selected Records:', records); // Debugging line
+
+                    $.ajax({
+                        url: '{{ route("sales-folder-tax.deleteMultiple") }}',
+                        type: 'DELETE',
+                        data: {
+                            records: records,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            // Redirect back to the previous page
+                            window.location.href = '{{ route("sales-folder-tax.successDelete") }}';
+                        },
+                        error: function(xhr) {
+                            console.error('Error:', xhr.responseText); // Improved error logging
+                            alert('Failed to delete tax data: ' + xhr.responseText);
+                        }
+                    });
+                }
+            } else {
+                alert('Please select at least one tax data to delete.');
+            }
+        });
+
+        // Update the hidden input field with the current tab ID whenever the user switches tabs
+        $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+            $('#currentTab').val($(e.target).attr('data-bs-target').substring(1));
+        });
+
+        // Activate the tab upon redirect if needed
+        const currentTab = "{{ session('currentTab') }}";
+        if (currentTab) {
+            const tabTrigger = document.querySelector(`#myTabs a[data-bs-target="#${currentTab}"]`);
+            if (tabTrigger) {
+                new bootstrap.Tab(tabTrigger).show();
+            }
+        }
+
+        $('#updateProduct').click(function(e) {
+            e.preventDefault();
+
+            // Collect specific field values
+            var troNumber = $('#troNumber').val();
+            var docId = $('#docId').val();
+            var airline = $('#airline').val(); // Assuming this field is present only for 'Air' product type
+            var route = $('#route').val();
+            var costUnitQuantity = $('#costUnitQuantity').val();
+            var costTax = $('#costTax').val();
+            var salesCurrencyCode = $('#salesCurrencyCode').val();
+            var salesCurrencyAmount = $('#salesCurrencyAmount').val();
+            var salesUnitAmount = $('#salesUnitAmount').val();
+            var salesDiscountAmount = $('#salesDiscountAmount').val();
+            var salesDiscountRate = $('#salesDiscountRate').val();
+            var salesCommissionAmount = $('#salesCommissionAmount').val();
+            var salesCommissionRate = $('#salesCommissionRate').val();
+            var salesSurcharge = $('#salesSurcharge').val();
+            var salesTotalUnitAmount = $('#salesTotalUnitAmount').val();
+            var salesGrandTotal = $('#salesGrandTotal').val();
+            var costUnitAmount = $('#costUnitAmount').val();
+            var nonAirNetRate = $('#nonAirNetRate').val();
+            var costCommissionAmount = $('#costCommissionAmount').val();
+            var costCommissionRate = $('#costCommissionRate').val();
+            var costDiscountAmount = $('#costDiscountAmount').val();
+            var costDiscountRate = $('#costDiscountRate').val();
+            var costInsurance = $('#costInsurance').val();
+            var costCurrencyCode = $('#costCurrencyCode').val();
+            var costCurrencyAmount = $('#costCurrencyAmount').val();
+            var costTotalUnitCost = $('#costTotalUnitCost').val();
+            var costGrandTotal = $('#costGrandTotal').val();
+            var longItineraryDesc = $('#longItineraryDesc').val();
+            var generalRemarks = $('#generalRemarks').val();
+            var airlineReference = $('#airlineReference').val();
+            var sfGroupSupressPrint = $('#sfGroupSupressPrint').val();
+            var sfGroupFlag = $('#sfGroupFlag').val();
+            var sfGroupProduct = $('#sfGroupProduct').val();
+            var sfGroupId = $('#sfGroupId').val();
+            var fareCalculation = $('#fareCalculation').val();
+            var paxDescription = $('#paxDescription').val();
+            var confirmationNumber = $('#hotelConfNo').val();
+            var paxReferenceNumber = $('#hotelPaxRefNo').val();
+
+            //SalesFolderHotel data
+            var hotelCode = $('#hotelCode').val();
+            var checkInDate = $('#checkInDate').val();
+            var checkOutDate = $('#checkOutDate').val();
+            var hotelNights = $('#hotelNights').val();
+            var roomType = $('#roomType').val();
+            var roomCategory = $('#roomCategory').val();
+            var bookStatus = $('#hotelBookingStatus').val();
+            var numberOfGuest = $('#hotelGuests').val();
+            var roomQuantity = $('#roomQuantity').val();
+            var isVip = $('#isVip').is(':checked') ? 1 : 0;
+            var hotelBreakfast = $('#hotelBreakfast').val();
+            var hotelLunch = $('#hotelLunch').val();
+            var hotelDinner = $('#hotelDinner').val();
+            var otherServices = $('#hotelOtherServices').val();
+            var hotelRemarks = $('#hotelRemarks').val();
+
+            // AJAX request
             $.ajax({
-                url: '{{ route('sales-folder-air.tempdata.store') }}',
+                url: '{{ route('sales-folder-group.update') }}',
                 type: 'POST',
-                data: data,
+                dataType: 'json',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    _method: 'PUT',
+                    troNumber: troNumber,
+                    docId: docId,
+                    airline: airline,
+                    route: route,
+                    costUnitQuantity: costUnitQuantity,
+                    costTax: costTax,
+                    salesCurrencyCode: salesCurrencyCode,
+                    salesCurrencyAmount: salesCurrencyAmount,
+                    salesUnitAmount: salesUnitAmount,
+                    salesDiscountAmount: salesDiscountAmount,
+                    salesDiscountRate: salesDiscountRate,
+                    salesCommissionAmount: salesCommissionAmount,
+                    salesCommissionRate: salesCommissionRate,
+                    salesSurcharge: salesSurcharge,
+                    salesTotalUnitAmount: salesTotalUnitAmount,
+                    salesGrandTotal: salesGrandTotal,
+                    costUnitAmount: costUnitAmount,
+                    nonAirNetRate: nonAirNetRate,
+                    costCommissionAmount: costCommissionAmount,
+                    costCommissionRate: costCommissionRate,
+                    costDiscountAmount: costDiscountAmount,
+                    costDiscountRate: costDiscountRate,
+                    costInsurance: costInsurance,
+                    costCurrencyCode: costCurrencyCode,
+                    costCurrencyAmount: costCurrencyAmount,
+                    costTotalUnitCost: costTotalUnitCost,
+                    costGrandTotal: costGrandTotal,
+                    longItineraryDesc: longItineraryDesc,
+                    generalRemarks: generalRemarks,
+                    airlineReference: airlineReference,
+                    sfGroupSupressPrint: sfGroupSupressPrint,
+                    sfGroupFlag: sfGroupFlag,
+                    sfGroupProduct: sfGroupProduct,
+                    sfGroupId: sfGroupId,
+                    fareCalculation: fareCalculation,
+                    paxDescription: paxDescription,
+                    confirmationNumber: confirmationNumber,
+                    paxReferenceNumber: paxReferenceNumber
+                },
                 success: function(response) {
-                    $('#successText').text(response.message);
-                    $('#successMessage').show();
-                    $('#errorMessage').hide();
+                    console.log('Update successful:', response);
 
-                    // Update the table with the new data
-                    const tableBody = $('#itineraryAir tbody');
-                    tableBody.empty();
-                    response.data.forEach(function(row) {
-                        tableBody.append(`
-                            <tr>
-                                <td>${row.AL_CODE}</td>
-                                <td>${row.FLIGHT_NUM}</td>
-                                <td>${row.SERVICE_CLASS}</td>
-                                <td>${row.DEPT_CITY}</td>
-                                <td>${row.DEPT_DATE}</td>
-                                <td>${row.DEPT_TIME}</td>
-                                <td>${row.ARVL_CITY}</td>
-                                <td>${row.ARVL_DATE}</td>
-                                <td>${row.ARVL_TIME}</td>
-                            </tr>
-                        `);
+                    // AJAX request to update SalesFolderHotel
+                    $.ajax({
+                        url: '{{ route('sales-folder-hotel.update') }}',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            _method: 'PUT',
+                            sfNo: troNumber,
+                            docId: docId,
+                            hotelCode: hotelCode,
+                            checkInDate: checkInDate,
+                            checkOutDate: checkOutDate,
+                            hotelNights: hotelNights,
+                            roomType: roomType,
+                            roomCategory: roomCategory,
+                            bookStatus: bookStatus,
+                            numberOfGuest: numberOfGuest,
+                            roomQuantity: roomQuantity,
+                            isVip: isVip,
+                            hotelBreakfast: hotelBreakfast,
+                            hotelLunch: hotelLunch,
+                            hotelDinner: hotelDinner,
+                            otherServices: otherServices,
+                            hotelRemarks: hotelRemarks
+                        },
+                        success: function(response) {
+                            console.log('SalesFolderHotel update successful:', response);
+                            alert('Update successful');
+                            // Optionally handle success actions here
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('SalesFolderHotel update error:', error);
+                            alert('Failed to update SalesFolderHotel');
+                            // Optionally handle error actions here
+                        }
                     });
                 },
-                error: function(xhr) {
-                    const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred';
-                    $('#errorText').text(errorMessage);
-                    $('#errorMessage').show();
-                    $('#successMessage').hide();
+                error: function(xhr, status, error) {
+                    console.error('SalesFolderGroup update error:', error);
+                    alert('Failed to update SalesFolderGroup');
+                    // Optionally handle error actions here
                 }
             });
         });
 
-        //Add Temporary Passengers
-        $('#addPax').click(function() {
-
-            const data = {
-                troNumber: $('#troNumber').val(),
-                docId: $('#docId').val(),
-                passengerName: $('#passengerName').val(),
-                productCategory: $('#productCategory').val(),
-                passengerTicketNumber: $('#passengerTicketNumber').val(),
-                passengerPNR: $('#passengerPNR').val(),
-                _token: '{{ csrf_token() }}'
-            };
-
-            $.ajax({
-                url: '{{ route('sales-folder-pax.tempdata.store') }}',
-                type: 'POST',
-                data: data,
-                success: function(response) {
-                    $('#successText').text(response.message);
-                    $('#successMessage').show();
-                    $('#errorMessage').hide();
-
-                    // Update the table with the new data
-                    const tableBody = $('#passengerList tbody');
-                    tableBody.empty();
-                    response.data.forEach(function(row) {
-                        tableBody.append(`
-                            <tr>
-                                <td>${row.PAX_NAME}</td>
-                                <td>${row.TICKET_NO}</td>
-                                <td>${row.PNR}</td>
-                            </tr>
-                        `);
-                    });
-                },
-                error: function(xhr) {
-                    const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred';
-                    $('#errorText').text(errorMessage);
-                    $('#errorMessage').show();
-                    $('#successMessage').hide();
-                }
-            });
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
         });
 
-        // Save data from temp table to permanent table
-        $('#createProduct').on('click', function() {
-            saveSalesFolderGroup();
-        });
-
-        function saveSalesFolderGroup() {
-            var formData = {
-                troNumber: $('#troNumber').val(),
-                docId: $('#docId').val(),
-                productType: $('#productType').val(),
-                productCategory: $('#productCategory').val(),
-                airline: $('#airline').val(),
-                route: $('#route').val(),
-                salesUnitQuantity: $('#salesUnitQuantity').val(),
-                salesTax: $('#salesTax').val(),
-                salesCurrencyCode: $('#salesCurrencyCode').val(),
-                salesCurrencyAmount: $('#salesCurrencyAmount').val(),
-                salesUnitAmount: $('#salesUnitAmount').val(),
-                salesDiscountAmount: $('#salesDiscountAmount').val(),
-                salesDiscountRate: $('#salesDiscountRate').val(),
-                salesCommissionAmount: $('#salesCommissionAmount').val(),
-                salesCommissionRate: $('#salesCommissionRate').val(),
-                salesSurcharge: $('#salesSurcharge').val(),
-                salesTotalUnitAmount: $('#salesTotalUnitAmount').val(),
-                salesGrandTotal: $('#salesGrandTotal').val(),
-                costCommissionAmount: $('#costCommissionAmount').val(),
-                costCommissionRate: $('#costCommissionRate').val(),
-                costDiscountAmount: $('#costDiscountAmount').val(),
-                costDiscountRate: $('#costDiscountRate').val(),
-                costTax: $('#costTax').val(),
-                costCurrencyCode: $('#costCurrencyCode').val(),
-                costCurrencyAmount: $('#costCurrencyAmount').val(),
-                costTotalUnitCost: $('#costTotalUnitCost').val(),
-                costGrandTotal: $('#costGrandTotal').val(),
-                longItineraryDesc: $('#longItineraryDesc').val(),
-                generalRemarks: $('#generalRemarks').val(),
-                airlineReference: $('#airlineReference').val(),
-            };
+        $(document).on('click', '.updatePax', function() {
+            var row = $(this).closest('tr');
+            var sfNo = row.data('sf-no');
+            var docId = row.data('doc-id');
+            var itemNo = row.data('item-no');
+            var paxName = row.find('.passenger-name').val();
+            var ticketNo = row.find('.ticket-number').val();
+            var pnr = row.find('.pnr').val();
 
             $.ajax({
-                url: '{{ route('sales-folder-group.store') }}',
-                method: 'POST',
-                data: formData,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                url: '{{ url('/sales-folder-pax/update') }}/' + sfNo + '/' + docId + '/' + itemNo,
+                type: 'POST', // Use POST method for AJAX
+                data: {
+                    paxName: paxName,
+                    ticketNo: ticketNo,
+                    pnr: pnr,
+                    _token: '{{ csrf_token() }}',
+                    _method: 'PUT'
                 },
                 success: function(response) {
-                    alert('Product group saved successfully');
-
-                    // Check the selected product category and call the corresponding function
-                    var productCategory = $('#productCategory').val();
-
-                    //Save temporary added passengers to SALES_FOLDER_PAX
-                    transferPaxTempData();
-
-                    if (productCategory === 'A') {
-                        var productAdded = transferAirTempData();
-                    } else if (productCategory === 'H') {
-                        var productAdded = addHotelProduct();
-                    } else if (productCategory === 'C') {
-                        var productAdded = addCarTransferProduct();
-                    } else if (productCategory === 'M') {
-                        var productAdded = addMiscProduct();
+                    if (response.success) {
+                        alert('Record updated successfully.');
+                    } else {
+                        alert('Error: ' + response.error);
                     }
                 },
+                error: function(xhr) {
+                    alert('Error: ' + xhr.responseText);
+                }
+            });
+        });
+
+        //Select all passengers
+        $('#selectAllPax').change(function() {
+            $('.rowCheckbox').prop('checked', this.checked);
+        });
+
+
+        //Delete selected passengers
+        $('#deletePaxSelection').click(function() {
+            let idsToDelete = [];
+            $('.rowCheckbox:checked').each(function() {
+                let tr = $(this).closest('tr');
+                idsToDelete.push({
+                    sf_no: tr.data('sf-no'),
+                    doc_id: tr.data('doc-id'),
+                    item_no: tr.data('item-no')
+                });
+            });
+
+            if (idsToDelete.length > 0) {
+                let confirmed = confirm('Are you sure you want to delete the selected records?');
+                if (confirmed) {
+                    $.ajax({
+                        url: '{{ route("sales-folder-pax.deleteMultiple") }}',
+                        type: 'DELETE',
+                        data: {
+                            ids: idsToDelete,
+                            sfNo: @json($troNumber),
+                            docId: @json($docId),
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            console.log(response.success);
+
+                            //Update quantity values in product
+                            $('#costCurrencyQuantity').val(response.totalCount);
+                            $('#costUnitQuantity').val(response.totalCount);
+                            calculateCostGrandTotal();
+
+                            $('.rowCheckbox:checked').closest('tr').remove();
+                        },
+                        error: function(response) {
+                            console.log(response.error);
+                        }
+                    });
+                }
+            } else {
+                alert('No records selected');
+            }
+        });
+
+        //Add passenger data
+        $('#addPax').click(function(e) {
+            e.preventDefault();
+
+            let passengerName = $('#passengerNameNew').val();
+            let passengerPNR = $('#passengerPNRNew').val();
+            let passengerTicketNumber = $('#passengerTicketNumberNew').val();
+            let sf_no = @json($sfGroup->SF_NO);
+            let doc_id = @json($sfGroup->DOC_ID);
+            let productCategory = @json($sfGroup->PROD_CAT);
+
+            $.ajax({
+                url: '{{ route("sales-folder-pax.store") }}',
+                type: 'POST',
+                data: {
+                    passengerName: passengerName,
+                    passengerPNR: passengerPNR,
+                    passengerTicketNumber: passengerTicketNumber,
+                    sf_no: sf_no,
+                    doc_id: doc_id,
+                    productCategory: productCategory,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    alert(response.message);
+
+                    $('#costCurrencyQuantity').val(response.totalCount);
+                    $('#costUnitQuantity').val(response.totalCount);
+                    calculateCostGrandTotal();
+
+                    if (response.data) {
+                        const tableBody = $('#passengerList tbody');
+                        tableBody.empty();
+                        response.data.forEach(function(row) {
+                            console.log("Appending row:", row);
+                            tableBody.append(`
+                                <tr data-sf-no="${row.SF_NO}" data-doc-id="${row.DOC_ID}" data-item-no="${row.ITEM_NO}">
+                                    <td><input type="checkbox" class="rowCheckbox"></td>
+                                    <td>
+                                        <input type="text" name="passengerName" class="form-control txt-1 passenger-name" value="${row.PAX_NAME}">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="ticketNumber" class="form-control txt-1 ticket-number" value="${row.TICKET_NO}">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="pnr" class="form-control txt-1 pnr" value="${row.PNR}">
+                                    </td>
+                                    <td><button class="btn btn-primary txt-1 form-control updatePax">Update</button></td>
+                                </tr>
+                            `);
+                        });
+                    }
+
+                    // Clear the form fields
+                    $('#passengerNameNew').val('');
+                    $('#passengerTicketNumberNew').val('');
+                    $('#passengerPNRNew').val('');
+                },
                 error: function(response) {
-                    //alert('Failed to save product group');
+                    console.log(response);
+                    alert('Error adding passenger. Please check data provided.');
                 }
             });
-        }
+        });
 
-        function transferAirTempData() {
-            $.ajax({
-                url: '{{ route('sales-folder-air.tempdata.transfer') }}',
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    $('#successText').text(response.message);
-                    $('#successMessage').show();
-                    $('#errorMessage').hide();
 
-                    //Save Sales Folder Group
-                    saveSalesFolderGroup();
-
-                    // Clear the temporary table data display
-                    const tableBody = $('#itineraryAir tbody');
-                    tableBody.empty();
-
-                    // Redirect to the specified route
-                    var troNumber = $('#troNumber').val();
-                    var redirectUrl = '{{ route("forms.tro.sf", ":troNumber") }}';
-                    redirectUrl = redirectUrl.replace(':troNumber', troNumber);
-                    window.location.href = redirectUrl;
-                },
-                error: function(xhr) {
-                    const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred';
-                    $('#errorText').text(errorMessage);
-                    $('#errorMessage').show();
-                    $('#successMessage').hide();
-                }
-            });
-        }
-
-        function transferPaxTempData() {
-            $.ajax({
-                url: '{{ route('sales-folder-pax.tempdata.transfer') }}',
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    $('#successText').text(response.message);
-                    $('#successMessage').show();
-                    $('#errorMessage').hide();
-
-                    // Clear the temporary table data display
-                    const tableBody = $('#passengerList tbody');
-                    tableBody.empty();
-                },
-                error: function(xhr) {
-                    const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred';
-                    $('#errorText').text(errorMessage);
-                    $('#errorMessage').show();
-                    $('#successMessage').hide();
-                }
-            });
-        }
     });
+
 </script>
 
 @endsection

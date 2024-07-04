@@ -11,6 +11,8 @@ class SalesFolderHotel extends Model
 
     protected $table = 'SALES_FOLDER_HOTEL';
 
+    protected $primaryKey = null;
+
     protected $fillable = [
       'SF_NO',
       'DOC_ID',

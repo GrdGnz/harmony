@@ -60,15 +60,13 @@ class SalesFolderMiscController extends Controller
             'procCenter' => 'nullable|string|max:255',
             'docOfficer' => 'nullable|string|max:255',
             'miscCategory' => 'nullable|string|max:255',
-            'miscConfNo' => 'nullable|string|max:255',
-            'miscPaxRefNo' => 'nullable|string|max:255',
         ]);
 
         try {
             // Find the SalesFolderMisc record by SF_NO and DOC_ID
             $sfMisc = SalesFolderMisc::where('SF_NO', $validatedData['sfNo'])
-                                     ->where('DOC_ID', $validatedData['docId'])
-                                     ->firstOrFail();
+                ->where('DOC_ID', $validatedData['docId'])
+                ->firstOrFail();
 
             // Update the record with the validated data
             $sfMisc->update([
@@ -84,8 +82,6 @@ class SalesFolderMiscController extends Controller
                 'PROC_CENTER' => $validatedData['procCenter'],
                 'DOC_OFFICER' => $validatedData['docOfficer'],
                 'MISC_CAT' => $validatedData['miscCategory'],
-                'CONF_NO' => $validatedData['miscConfNo'],
-                'PAX_REF_NO' => $validatedData['miscPaxRefNo'],
                 'UPDATE_SOURCE' => 'M',
             ]);
 

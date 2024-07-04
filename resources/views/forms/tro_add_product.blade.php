@@ -835,41 +835,41 @@
                                                 <div class="card-body marsman-bg-color-gray1">
                                                     <div class="form-group">
                                                         <label for="carProvider" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Provider</label>
-                                                        <input type="text" list="listProviders" id="carProvider" name="carProvider" class="form-control txt-1">
-                                                        <datalist id="listProviders">
+                                                        <select id="carProvider" name="carProvider" class="form-control form-select txt-1">
                                                             @if (isset($carSupplier))
                                                                 @foreach ($carSupplier as $supplier)
                                                                     <option value="{{ $supplier->SUPP_ID }}">{{ $supplier->SUPP_NAME }}</option>
                                                                 @endforeach
                                                             @endif
-                                                        </datalist>
+                                                        </select>
                                                     </div>
                                                     <div class="form-group mt-2">
                                                         <label for="carType" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Type</label>
-                                                        <input type="text" list="listCarTypes" id="carType" name="carType" class="form-control txt-1">
-                                                        <datalist id="listCarTypes">
-                                                            <option value="" selected>-- Select Type --</option>
+                                                        <select id="carType" name="carType" class="form-control form-select txt-1">
                                                             @if(isset($carTypes))
                                                                 @foreach ($carTypes as $type)
                                                                     <option value="{{ $type->CAR_CODE }}">{{ $type->CAR_DESCR }}</option>
                                                                 @endforeach
                                                             @endif
-                                                        </datalist>
+                                                        </select>
                                                     </div>
                                                     <div class="form-group mt-2">
                                                         <label for="carCategory" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Category</label>
-                                                        <input type="text" list="listCarCategories" id="carCategory" name="carCategory" class="form-control txt-1">
-                                                        <datalist id="listCarCategories">
+                                                        <select id="carCategory" name="carCategory" class="form-control form-select txt-1">
                                                             @if(isset($carCategories))
                                                                 @foreach ($carCategories as $category)
                                                                     <option value="{{ $category->CAR_CAT }}">{{ $category->CAR_DESCR }}</option>
                                                                 @endforeach
                                                             @endif
-                                                        </datalist>
+                                                        </select>
                                                     </div>
                                                     <div class="form-group mt-2">
                                                         <label for="carStatus" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">*Status</label>
-                                                        <input type="text" list="bookingStatus" id="carStatus" name="carStatus" class="form-control txt-1">
+                                                        <select id="carStatus" name="carStatus" class="form-control form-select txt-1">
+                                                            @foreach ($bookStatus as $status)
+                                                                <option value="{{ $status->BK_CODE }}">{{  $status->BK_DESCR }}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1520,7 +1520,7 @@
                                         </div>
                                         <div class="form-group mt-2">
                                             <label for="passengerPNR" class="form-label txt-1 marsman-bg-color-label text-white rounded-top p-2 m-0">PNR</label>
-                                            <input type="text" class="form-control txt-1" id="passengerPNR" name="passengerPNR">
+                                            <input type="text" class="form-control txt-1" id="passengerPNR" name="passengerPNR" maxlength="6">
                                         </div>
                                     </div>
                                 </div>
@@ -1528,7 +1528,7 @@
                                     <div class="card-body marsman-bg-color-gray1">
                                         <div class="form-group">
                                             <label for="passengerTicketNumber" class="form-label txt-1 marsman-bg-color-label text-white rounded-top p-2 m-0">Ticket Number</label>
-                                            <input type="text" class="form-control txt-1" id="passengerTicketNumber" name="passengerTicketNumber">
+                                            <input type="text" class="form-control txt-1" id="passengerTicketNumber" name="passengerTicketNumber" maxlength="10">
                                         </div>
                                     </div>
                                     <div class="form-group col-md-12 mx-1 my-1 d-flex justify-content-end">
@@ -1649,15 +1649,21 @@
         const currencyQuantityInput = document.getElementById('costCurrencyQuantity');
 
         function updateTotalUnitCost() {
-            const unitAmount = parseFloat(unitAmountInput.value.replace(/,/g, '')) || 0;
-            const tax = parseFloat(taxInput.value.replace(/,/g, '')) || 0;
-            const insurance = parseFloat(costInsuranceInput.value.replace(/,/g, '')) || 0;
-            const totalUnitCost = unitAmount + tax + insurance;
-            totalUnitCostInput.value = formatNumber(totalUnitCost);
-            calculateCostGrandTotal();
+            getTotalTax().then(() => {
+                const unitAmount = parseFloat(unitAmountInput.value.replace(/,/g, '')) || 0;
+                const tax = parseFloat(taxInput.value.replace(/,/g, '')) || 0;
+                const insurance = parseFloat(costInsuranceInput.value.replace(/,/g, '')) || 0;
+                const totalUnitCost = unitAmount + tax + insurance;
+                totalUnitCostInput.value = formatNumber(totalUnitCost);
+                calculateCostGrandTotal();
+                //alert(tax);
+            }).catch((error) => {
+                console.error('Error fetching total tax:', error);
+            });
         }
 
-        function updateCurrencyQuantity() {
+
+        function updateQuantity() {
             unitQuantityInput.value = currencyQuantityInput.value;
             calculateCostGrandTotal();
         }
@@ -1665,7 +1671,7 @@
         unitAmountInput.addEventListener('input', updateTotalUnitCost);
         taxInput.addEventListener('input', updateTotalUnitCost);
         costInsuranceInput.addEventListener('input', updateTotalUnitCost);
-        currencyQuantityInput.addEventListener('input', updateCurrencyQuantity);
+        currencyQuantityInput.addEventListener('input', updateQuantity);
 
         // Popup notification box
         closeButtons.forEach((button) => {
@@ -1710,11 +1716,18 @@
             formatNumber(taxInput);
         };
 
+        // Auto retrieve product category and route of selected type
         document.getElementById('productType').addEventListener('change', function() {
             var selectedOption = this.options[this.selectedIndex];
 
             // Get category and route information from the selected option
             var categoryCode = selectedOption.getAttribute('data-category');
+
+            // If selected product has 'TRANSFER', make the category as 'C'
+            if(selectedOption.getAttribute('data-category') === 'X') {
+                categoryCode = 'C';
+            }
+
             var routeCode = selectedOption.getAttribute('data-route');
 
             // Find descriptions for the selected category and route
@@ -1855,11 +1868,10 @@
         });
 
         //Initial load cost grand total
-        updateTotalUnitCost();
-        updateCurrencyQuantity();
-        calculateCostGrandTotal();
-        //Initial load cost tax
         getTotalTax();
+        updateTotalUnitCost();
+        updateQuantity();
+        calculateCostGrandTotal();
 
         function getGrandTotal() {
             // Get the values of insurance, tax, unit cost, and quantity
@@ -1998,6 +2010,8 @@
                 hotelCode: $('#hotelCode').val(),
                 checkInDate: $('#checkInDate').val(),
                 checkOutDate: $('#checkOutDate').val(),
+                checkOutDate: $('#checkOutDate').val(),
+                hotelNights: $('#hotelNights').val(),
                 roomType: $('#roomType').val(),
                 roomCategory: $('#roomCategory').val(),
                 bookStatus: $('#hotelBookingStatus').val(),
@@ -2231,7 +2245,9 @@
                     //Update product quantity
                     $('#costCurrencyQuantity').val(response.totalCount);
                     $('#costUnitQuantity').val(response.totalCount);
+                    getTotalTax();
                     updateTotalUnitCost();
+                    updateQuantity();
                     calculateCostGrandTotal();
 
                     if (response.data) {
@@ -2293,8 +2309,10 @@
                     success: function(response) {
                         if (response.message) {
                             alert(response.message);
-                            //$('#successMessage').show();
-                            //$('#errorMessage').hide();
+                            getTotalTax();
+                            updateTotalUnitCost();
+                            updateQuantity();
+                            calculateCostGrandTotal();
                         }
 
                         if (response.data) {
@@ -2315,8 +2333,6 @@
                     error: function(xhr) {
                         const errorMessage = xhr.responseJSON ? xhr.responseJSON.error : 'An error occurred';
                         alert(errorMessage);
-                        //$('#errorMessage').show();
-                        //$('#successMessage').hide();
                     }
                 });
             } else {
@@ -2328,6 +2344,7 @@
         // Save data from temp table to permanent table
         $('#createProduct').on('click', function() {
 
+            //Check if a product type is selected
             if (!validateProductType()) {
                 return;
             }
@@ -2445,9 +2462,6 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
-                    // $('#successText').text(response.message);
-                    //$('#successMessage').show();
-                    //$('#errorMessage').hide();
 
                     //Save Sales Folder Group
                     saveSalesFolderGroup();
@@ -2464,9 +2478,6 @@
                 },
                 error: function(xhr) {
                     const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred';
-                   // $('#errorText').text(errorMessage);
-                    //$('#errorMessage').show();
-                    //$('#successMessage').hide();
                 }
             });
         }
@@ -2482,9 +2493,6 @@
                     productCategory: productCategory
                 },
                 success: function(response) {
-                    //$('#successText').text(response.message);
-                    //$('#successMessage').show();
-                    //$('#errorMessage').hide();
 
                     // Clear the temporary table data display
                     const tableBody = $('#passengerList tbody');
@@ -2492,9 +2500,6 @@
                 },
                 error: function(xhr) {
                     const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred';
-                    //$('#errorText').text(errorMessage);
-                    //$('#errorMessage').show();
-                    //$('#successMessage').hide();
                 }
             });
         }
@@ -2538,10 +2543,6 @@
                 type: 'POST',
                 data: formData,
                 success: function(response) {
-                    // Get total tax
-                    getTotalTax();
-                    updateTotalUnitCost();
-
                     // Handle success
                     console.log(response);
                     // Show success message
@@ -2565,6 +2566,12 @@
                             );
                         });
                     }
+
+                    // Update cost
+                    getTotalTax();
+                    updateTotalUnitCost();
+                    updateQuantity();
+                    calculateCostGrandTotal();
                 },
                 error: function(xhr, status, error) {
                     // Handle error
@@ -2596,8 +2603,12 @@
                             taxIds: selectedIds
                         },
                         success: function(response) {
-                            // Get total tax
+                            // Update cost
                             getTotalTax();
+                            updateTotalUnitCost();
+                            updateQuantity();
+                            calculateCostGrandTotal();
+
                             // Handle success
                             console.log(response);
                             // Show success message
@@ -2648,18 +2659,23 @@
             }
         }
 
-        //Get total taxes
         function getTotalTax() {
-            $.ajax({
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                url: "{{ route('sales-folder-tax.tempdata.total') }}",
-                success: function(data) {
-                    var taxTotal = formatNumber(data.totalCostAmount);
-                    $('#costTax').val(taxTotal);
-                }
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    url: "{{ route('sales-folder-tax.tempdata.total') }}",
+                    success: function(data) {
+                        var taxTotal = formatNumber(data.totalCostAmount);
+                        $('#costTax').val(taxTotal);
+                        resolve(); // Resolve the promise when the AJAX call is successful
+                    },
+                    error: function(error) {
+                        reject(error); // Reject the promise if there's an error
+                    }
+                });
             });
         }
 

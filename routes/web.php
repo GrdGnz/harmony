@@ -30,7 +30,6 @@ Route::get('/forms/tro/add-product-with-ticket/{troNumber}', [App\Http\Controlle
 Route::get('/forms/tro/search-ticket/{troNumber}/{docId}', [App\Http\Controllers\TravelRequestOrderController::class, 'searchTicket'])->name('searchTicket.tro');
 Route::get('/inventory/data', [App\Http\Controllers\InventoryController::class, 'getData'])->name('inventory.data');
 
-
 //Sales Folder
 Route::get('/sales-folder/data', [App\Http\Controllers\SalesFolderController::class, 'getData'])->name('sales-folder.data');
 
@@ -44,10 +43,14 @@ Route::get('/sales-folder/data', [App\Http\Controllers\SalesFolderController::cl
 //Sales Folder Hotel
     //Store data
     Route::post('/sales-folder-hotel/store', [App\Http\Controllers\SalesFolderHotelController::class, 'store'])->name('sales-folder-hotel.store');
+    //Update data
+    Route::put('/sales-folder-hotel/update', [App\Http\Controllers\SalesFolderHotelController::class, 'update'])->name('sales-folder-hotel.update');
 
 //Sales Folder Car/Transfer
     //Store data
     Route::post('/sales-folder-transfer/store', [App\Http\Controllers\SalesFolderTransferController::class, 'store'])->name('sales-folder-transfer.store');
+    //Update data
+    Route::put('/sales-folder-transfer/update', [App\Http\Controllers\SalesFolderTransferController::class, 'update'])->name('sales-folder-transfer.update');
 
 //Sales Folder Miscellaneous
     //Store data
