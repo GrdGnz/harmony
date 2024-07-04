@@ -11,6 +11,8 @@ class SalesFolderTransfer extends Model
 
     protected $table = 'SALES_FOLDER_TRANSFER';
 
+    protected $primaryKey = null;
+
     protected $fillable = [
       'SF_NO',
       'DOC_ID',

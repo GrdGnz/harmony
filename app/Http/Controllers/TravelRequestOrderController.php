@@ -315,7 +315,7 @@ class TravelRequestOrderController extends Controller
         $carTypes = CarType::all();
         $carCategories = CarCategory::all();
         $carSupplier = Supplier::where('STATUS', 'AC')
-            ->orderBy('SUPP_NAME', 'asc')
+            //->orderBy('SUPP_NAME', 'asc')
             ->get();
 
         //Miscellaneous
@@ -352,20 +352,15 @@ class TravelRequestOrderController extends Controller
         if($paxTicketNumber != null) {
 
             //clear temporary data
-            $clearTempTable = $this->truncateTemporaryAirTable();
-            $clearTax = $this->truncateTemporaryTaxTable();
+            //$clearTempTable = $this->truncateTemporaryAirTable();
+            //$clearTax = $this->truncateTemporaryTaxTable();
 
             $ticketInventory = Inventory::where('PNR', $paxTicketNumber->PNR)->first();
             $paxCount = TempSalesFolderPax::count();
 
+            $this->saveTemporaryAirTableWithTicket($troNumber, $docId, $paxTicketNumber->TICKET_NO, $paxTicketNumber->PNR);
+            $this->saveTemporaryTaxTable($paxTicketNumber->TICKET_NO, $paxTicketNumber->PNR);
 
-            if($clearTempTable) {
-                $this->saveTemporaryAirTableWithTicket($troNumber, $docId, $paxTicketNumber->TICKET_NO, $paxTicketNumber->PNR);
-            }
-
-            if($clearTax) {
-                $this->saveTemporaryTaxTable($paxTicketNumber->TICKET_NO, $paxTicketNumber->PNR);
-            }
 
             $airTempData = TempSalesFolderAir::all();
             $taxTempData = TempSalesFolderTax::all();
@@ -575,6 +570,11 @@ class TravelRequestOrderController extends Controller
             ->where('DOC_ID', $docId)
             ->first();
 
+        //Sales Folder Transfer
+        $sfTransfer = SalesFolderTransfer::where('SF_NO', $troNumber)
+            ->where('DOC_ID', $docId)
+            ->first();
+
         //Sales Folder Hotel
         $sfMisc = SalesFolderMisc::where('SF_NO', $troNumber)
             ->where('DOC_ID', $docId)
@@ -676,6 +676,11 @@ class TravelRequestOrderController extends Controller
                 'meals',
                 'bookStatus',
                 'sfHotel',
+                'sfGroup',
+                'sfTax',
+                'infoPax',
+                'infoPaxCount',
+                'taxCodes',
             ]));
         } elseif ($productCategory == 'C') {
             return view('forms.tro_edit_product_transfer', compact([
@@ -688,6 +693,12 @@ class TravelRequestOrderController extends Controller
                 'carCategories',
                 'carSupplier',
                 'bookStatus',
+                'sfTransfer',
+                'sfGroup',
+                'sfTax',
+                'infoPax',
+                'infoPaxCount',
+                'taxCodes',
             ]));
         }
     }
