@@ -22,6 +22,7 @@ class SalesFolderGroupController extends Controller
             // Log the entire request
             Log::info('SalesFolderGroup store method called', ['request' => $request->all()]);
 
+
             $salesFolderGroup = new SalesFolderGroup();
 
             // Define attributes and their types
@@ -109,6 +110,8 @@ class SalesFolderGroupController extends Controller
                 'UPDATE_SOURCE' => ['value' => 'M', 'type' => 'string'],
                 'PAX_DESCR' => ['value' => $request->input('paxDescription'), 'type' => 'string'],
                 'FARE_CALC' => ['value' => $request->input('fareCalculation'), 'type' => 'string'],
+                'CONF_NO' => ['value' => $request->input('confirmationNumber'), 'type' => 'string'],
+                'PAX_REF_NO' => ['value' => $request->input('paxReferenceNumber'), 'type' => 'string'],
             ];
 
             // Assign attributes to the salesFolderGroup object
@@ -250,7 +253,7 @@ class SalesFolderGroupController extends Controller
                 'DOC_ID' => $request->input('docId'),
                 'PNR' => null,
                 'AL_PNR' => $request->input('productType') == 'Air' ? $request->input('airline') : null,
-           'QTY' => (int) $request->input('costUnitQuantity'),
+                'QTY' => (int) $request->input('costUnitQuantity'),
                 'TAX_TYPE' => 'N',
                 'TAX_AMT' => (float) $this->unformatNumber($request->input('costTax')),
                 'TAX_RATE' => 0,
@@ -326,6 +329,8 @@ class SalesFolderGroupController extends Controller
                 'GROUP_PRODUCT' => $request->input('sfGroupProduct') == 'Y' ? 'Y' : 'N',
                 'GROUP_ID' => $request->input('sfGroupId'),
                 'UPDATE_SOURCE' => 'M',
+                'CONF_NO' => ['value' => $request->input('confirmationNumber'), 'type' => 'string'],
+                'PAX_REF_NO' => ['value' => $request->input('paxReferenceNumber'), 'type' => 'string'],
             ];
 
             Log::info('Attributes array:', $attributes);

@@ -13,6 +13,8 @@ class SalesFolderHotel extends Model
 
     protected $primaryKey = null;
 
+    public $incrementing = false;
+
     protected $fillable = [
       'SF_NO',
       'DOC_ID',
