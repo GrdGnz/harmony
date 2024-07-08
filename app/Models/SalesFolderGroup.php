@@ -11,7 +11,7 @@ class SalesFolderGroup extends Model
 
     protected $table = 'SALES_FOLDER_GROUP';
 
-    //protected $primaryKey = 'SF_NO';
+    protected $primaryKey = null;
 
     public $timestamps = false;
 

@@ -273,7 +273,7 @@
                                             </div>
                                             <div class="col-md-12 d-flex mt-2">
                                                 <div class="form-group col-md-6">
-                                                    <label for="salesGrandTotal" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        al</label>
+                                                    <label for="salesGrandTotal" class="form-label marsman-bg-color-label text-white txt-1 p-2 m-0 rounded-top">Grand Total</label>
                                                     <input type="text" class="form-control txt-1 p-2" id="salesGrandTotal" name="salesGrandTotal" value="0">
                                                 </div>
                                                 <div class="form-group col-md-6 mx-2">
