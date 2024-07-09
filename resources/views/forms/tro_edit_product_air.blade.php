@@ -1035,11 +1035,11 @@
                                                 </div>
                                                 <div class="form-group mb-2">
                                                     <label for="fareCalculation" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top mt-2">Fare Calculation</label>
-                                                    <textarea id="fareCalculation" name="fareCalculation" class="form-control txt-1" rows="5"></textarea>
+                                                    <textarea id="fareCalculation" name="fareCalculation" class="form-control txt-1" rows="5">@if(isset($sfGroup->FARE_CALC)){{ trim($sfGroup->FARE_CALC) }}@endif</textarea>
                                                 </div>
                                                 <div class="form-group mb-2">
                                                     <label for="paxDescription" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top mt-2">Pax Description</label>
-                                                    <textarea id="paxDescription" name="paxDescription" class="form-control txt-1" rows="5"></textarea>
+                                                    <textarea id="paxDescription" name="paxDescription" class="form-control txt-1" rows="5">@if(isset($sfGroup->PAX_DESCR)){{ trim($sfGroup->PAX_DESCR) }}@endif</textarea>
                                                 </div>
                                             </div>
                                         </div>

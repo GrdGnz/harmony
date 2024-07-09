@@ -899,11 +899,11 @@
                                         <div class="card-body marsman-bg-color-gray1">
                                             <div class="form-group mb-2">
                                                 <label for="pta" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">PTA</label>
-                                                <input type="text" id="pta" name="pta" class="form-control txt-1">
+                                                <input type="text" id="pta" name="pta" class="form-control txt-1" value="@if(isset($sfGroup->PTA)){{ trim($sfGroup->PTA) }}@endif">
                                             </div>
                                             <div class="form-group mb-2">
                                                 <label for="rtt" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top">RTT</label>
-                                                <input type="text" id="rtt" name="rtt" class="form-control txt-1">
+                                                <input type="text" id="rtt" name="rtt" class="form-control txt-1" value="@if(isset($sfGroup->RTT)){{ trim($sfGroup->RTT) }}@endif">
                                             </div>
                                         </div>
                                     </div>
@@ -938,11 +938,11 @@
                                                 </div>
                                                 <div class="form-group mb-2">
                                                     <label for="fareCalculation" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top mt-2">Fare Calculation</label>
-                                                    <textarea id="fareCalculation" name="fareCalculation" class="form-control txt-1" rows="5"></textarea>
+                                                    <textarea id="fareCalculation" name="fareCalculation" class="form-control txt-1" rows="5">@if(isset($sfGroup->FARE_CALC)){{ trim($sfGroup->FARE_CALC) }}@endif</textarea>
                                                 </div>
                                                 <div class="form-group mb-2">
                                                     <label for="paxDescription" class="form-label marsman-bg-color-dark text-white p-2 m-0 rounded-top mt-2">Pax Description</label>
-                                                    <textarea id="paxDescription" name="paxDescription" class="form-control txt-1" rows="5"></textarea>
+                                                    <textarea id="paxDescription" name="paxDescription" class="form-control txt-1" rows="5">@if(isset($sfGroup->PAX_DESCR)){{ trim($sfGroup->PAX_DESCR) }}@endif</textarea>
                                                 </div>
                                             </div>
                                         </div>
