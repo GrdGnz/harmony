@@ -240,34 +240,30 @@ class SalesFolderGroupController extends Controller
     public function update(Request $request)
     {
         try {
-            // Validate the request
-            $request->validate([
-                'troNumber' => 'required|string',
-                'docId' => 'required|integer',
-                // Add more validation rules for other fields as needed
-            ]);
+
+            // Retrieve the existing SalesFolderGroup record
+            $salesFolderGroup = SalesFolderGroup::where('SF_NO', $request->input('troNumber'))
+                ->where('DOC_ID', (int) $this->unformatNumber($request->input('docId')))
+                ->firstOrFail();
 
             // Prepare the attributes based on the provided $attributes array
             $attributes = [
-                'SF_NO' => $request->input('troNumber'),
-                'DOC_ID' => $request->input('docId'),
                 'PNR' => null,
-                'AL_PNR' => $request->input('productType') == 'Air' ? $request->input('airline') : null,
-                'QTY' => (int) $request->input('costUnitQuantity'),
+                'QTY' => (int) $this->unformatNumber($request->input('costUnitQuantity')),
                 'TAX_TYPE' => 'N',
                 'TAX_AMT' => (float) $this->unformatNumber($request->input('costTax')),
                 'TAX_RATE' => 0,
                 'CHARGE_AMT' => 0,
                 'SELL_CURR_CODE' => $request->input('salesCurrencyCode'),
-                'SELL_CURR_RATE' => (float) $request->input('salesCurrencyAmount'),
+                'SELL_CURR_RATE' => (float) $this->unformatNumber($request->input('salesCurrencyAmount')),
                 'SELL_AMT' => (float) $this->unformatNumber($request->input('salesUnitAmount')),
                 'SELL_TTAX_AMT' => 0,
                 'SELL_DISC_AMT' => (float) $this->unformatNumber($request->input('salesDiscountAmount')),
-                'SELL_DISC_PERC' => (float) $request->input('salesDiscountRate'),
+                'SELL_DISC_PERC' => (float) $this->unformatNumber($request->input('salesDiscountRate')),
                 'SELL_COMM_AMT' => (float) $this->unformatNumber($request->input('salesCommissionAmount')),
-                'SELL_COMM_PERC' => (float) $request->input('salesCommissionRate'),
+                'SELL_COMM_PERC' => (float) $this->unformatNumber($request->input('salesCommissionRate')),
                 'SELL_INS_AMT' => 0,
-                'SELL_SURCHARGE' => (float) $request->input('salesSurcharge'),
+                'SELL_SURCHARGE' => (float) $this->unformatNumber($request->input('salesSurcharge')),
                 'TTL_SELL_AMT' => (float) $this->unformatNumber($request->input('salesTotalUnitAmount')),
                 'SELL_GRAND_TOTAL' => (float) $this->unformatNumber($request->input('salesGrandTotal')),
                 'PUBLISH_AMT' => (float) $this->unformatNumber($request->input('costUnitAmount')),
@@ -276,13 +272,13 @@ class SalesFolderGroupController extends Controller
                 'NET_FARE_FLAG' => 'N',
                 'NAIR_NETT_AMT' => (float) $this->unformatNumber($request->input('nonAirNetRate')),
                 'COST_COMM_AMT' => (float) $this->unformatNumber($request->input('costCommissionAmount')),
-                'COST_COMM_PERC' => (float) $request->input('costCommissionRate'),
+                'COST_COMM_PERC' => (float) $this->unformatNumber($request->input('costCommissionRate')),
                 'COST_DISC_AMT' => (float) $this->unformatNumber($request->input('costDiscountAmount')),
-                'COST_DISC_PERC' => (float) $request->input('costDiscountRate'),
+                'COST_DISC_PERC' => (float) $this->unformatNumber($request->input('costDiscountRate')),
                 'COST_TTAX_AMT' => (float) $this->unformatNumber($request->input('costTax')),
                 'COST_INS_AMT' => (float) $this->unformatNumber($request->input('costInsurance')),
                 'COST_CURR_CODE' => $request->input('costCurrencyCode'),
-                'COST_CURR_RATE' => (float) $request->input('costCurrencyAmount'),
+                'COST_CURR_RATE' => (float) $this->unformatNumber($request->input('costCurrencyAmount')),
                 'TTL_COST_AMT' => (float) $this->unformatNumber($request->input('costTotalUnitCost')),
                 'COST_GRAND_TOTAL' => (float) $this->unformatNumber($request->input('costGrandTotal')),
                 'INCOME' => 0,
@@ -314,8 +310,6 @@ class SalesFolderGroupController extends Controller
                 'LONG_DESCR' => $request->input('longItineraryDesc'),
                 'REMARKS' => $request->input('generalRemarks'),
                 'AIRLINE_REMARKS' => $request->input('airlineReference'),
-                'FARE_CALC' => $request->input('fareCalculation'),
-                'PAX_DESCR' => $request->input('paxDescription'),
                 'PRINT_LONG_DESCR' => 'N',
                 'CASH_INV_CNT' => 0,
                 'CREDIT_INV_CNT' => 1,
@@ -329,29 +323,28 @@ class SalesFolderGroupController extends Controller
                 'GROUP_PRODUCT' => $request->input('sfGroupProduct') == 'Y' ? 'Y' : 'N',
                 'GROUP_ID' => $request->input('sfGroupId'),
                 'UPDATE_SOURCE' => 'M',
-                'CONF_NO' => ['value' => $request->input('confirmationNumber'), 'type' => 'string'],
-                'PAX_REF_NO' => ['value' => $request->input('paxReferenceNumber'), 'type' => 'string'],
+                'PAX_DESCR' => $request->input('paxDescription'),
+                'FARE_CALC' => $request->input('fareCalculation'),
+                'CONF_NO' => $request->input('confirmationNumber'),
+                'PAX_REF_NO' => $request->input('paxReferenceNumber'),
             ];
 
+            // Assign attributes to the salesFolderGroup object
+            foreach ($attributes as $key => $value) {
+                $salesFolderGroup->$key = $value;
+            }
+
+            // Log attributes array
             Log::info('Attributes array:', $attributes);
 
-            // Use DB transaction for atomic operation
-            DB::beginTransaction();
-
-            // Update the SalesFolderGroup record
-            DB::table('SALES_FOLDER_GROUP')
-                ->where('SF_NO', $attributes['SF_NO'])
-                ->where('DOC_ID', $attributes['DOC_ID'])
-                ->update($attributes);
+            // Save the updated SalesFolderGroup record
+            $salesFolderGroup->save();
 
             // Add product category in response
             $group = DB::table('SALES_FOLDER_GROUP')
-                            ->where('SF_NO', $attributes['SF_NO'])
-                            ->where('DOC_ID', $attributes['DOC_ID'])
-                            ->first();
-
-            // Commit transaction if all queries succeed
-            DB::commit();
+                ->where('SF_NO', $request->input('troNumber'))
+                ->where('DOC_ID', $request->input('docId'))
+                ->first();
 
             // Return a JSON response indicating success
             return response()->json([
@@ -359,9 +352,6 @@ class SalesFolderGroupController extends Controller
                 'category' => $group->PROD_CAT,
             ]);
         } catch (\Exception $e) {
-            // Rollback transaction if any errors occur
-            DB::rollback();
-
             // Log the error
             Log::error('Error updating Sales Folder Group: ' . $e->getMessage());
 
@@ -369,5 +359,6 @@ class SalesFolderGroupController extends Controller
             return response()->json(['error' => 'Failed to update Sales Folder Group.'], 500);
         }
     }
+
 
 }
